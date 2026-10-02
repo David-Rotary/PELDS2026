@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module Builder · President-Elect Toolkit</title>
+<link rel="stylesheet" href="app/toolkit.css">
+<style>
+  .bwrap{max-width:1400px;margin:0 auto;padding:18px 16px 60px;display:grid;grid-template-columns:minmax(380px,1fr) minmax(360px,1fr);gap:18px;align-items:start}
+  @media (max-width:980px){.bwrap{grid-template-columns:1fr}}
+  .ed .icard{border:1px solid var(--line);border-radius:12px;margin:10px 0;background:#fff}
+  .ed .ihead{display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer;border-radius:12px}
+  .ed .ihead:hover{background:var(--soft)}
+  .ed .ihead .tt{flex:1;font-weight:600;font-size:.93rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ed .ihead button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:2px 8px;cursor:pointer;font-size:.8rem}
+  .ed .ibody{padding:4px 14px 14px;border-top:1px solid var(--line)}
+  .ed .icard.sel{border-color:var(--azure);box-shadow:0 0 0 2px rgba(0,103,200,.15)}
+  .sub{border-left:3px solid var(--gold);padding:4px 0 4px 12px;margin:10px 0;background:#fffcf4;border-radius:0 8px 8px 0}
+  .sub .row{justify-content:space-between}
+  .addbar{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .help{font-size:.78rem;color:var(--ink2);margin-top:2px}
+  .pv{position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto}
+  .pv .stage{min-height:200px}
+  textarea{min-height:70px;resize:vertical}
+  .field textarea.tall{min-height:140px}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <a class="brand" href="START%20HERE.html"><div class="mark">9815</div><div><b>Module Builder</b><span>Create content for the President-Elect Toolkit — no coding needed</span></div></a>
+  <nav class="nav">
+    <button type="button" id="bNew">New</button>
+    <button type="button" id="bOpen">Open a module file</button>
+    <button type="button" id="bSave"><b>Save module file</b></button>
+    <button type="button" id="bHelp">How it works</button>
+  </nav>
+</div></header>
+
+<div class="bwrap">
+  <section class="ed">
+    <div class="card" id="helpCard">
+      <h2>How it works</h2>
+      <ol class="small">
+        <li>Fill in the module details, then add pages with the buttons below — <b>Read, Scenario, Reflect, Quiz</b> and more.</li>
+        <li>Watch the preview on the right. Click a page to preview it.</li>
+        <li>Click <b>Save module file</b>. It downloads a small <i>.js</i> file (check your Downloads folder).</li>
+        <li>Send that file to the toolkit coordinator. Or add it yourself: copy it into the <i>modules</i> folder and add its name to <i>modules/_module-list.js</i>.</li>
+        <li>To test it straight away, open <i>START HERE.html</i> and click <b>Try a module file</b> on the home page.</li>
+      </ol>
+      <p class="small muted"><b>Formatting:</b> leave a blank line between paragraphs · start a line with <code>- </code> for a bullet · <code>**bold**</code> · <code>*italic*</code> · <code>&gt; </code> for a highlighted box · <code>[link text](resources/file.pdf)</code> to link a document in the resources folder.<br>
+      <b>Writing tips:</b> make scenarios real dilemmas with no obvious answer · give every choice an honest outcome · ask reflection questions that only the President-Elect can answer about <i>their</i> club.</p>
+      <p class="small muted">Your work is kept in this browser as you type, but <b>Save module file</b> is the only way to keep it safe.</p>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h2>Module details</h2>
+      <div id="meta"></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Pages</h2><span class="small muted" id="count"></span></div>
+      <div id="items"></div>
+      <div class="small muted" style="margin-top:12px">Add a page:</div>
+      <div class="addbar" id="add"></div>
+    </div>
+  </section>
+
+  <section class="pv">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px"><b>Preview</b><span class="small muted">This is how President-Elects will see it</span></div>
+      <div class="stage" id="preview"><p class="muted">Add a page to see a preview.</p></div>
+    </div>
+  </section>
+</div>
+
+<input type="file" id="fOpen" accept=".js,.txt,.json" class="hidden">
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script>
+(function () {
+  'use strict';
+  var el = PE.el, esc = PE.esc, DRAFT = 'pe-toolkit-builder-draft';
+  var pvState = { answers: {}, checks: {}, visited: {}, quiz: {}, scen: {}, profile: {}, me: {} };
+
+  /* field kinds: text, area (tall textarea), lines (one per line -> array), select, number, list (repeating group) */
+  var S = {
+    text:      { label: 'Read', desc: 'Short guidance or explanation', f: [['title', 'text', 'Page title'], ['body', 'area', 'Text', 'Keep it short — 150 to 300 words is plenty.']] },
+    scenario:  { label: 'Scenario', desc: 'A dilemma with choices and outcomes', f: [['title', 'text', 'Scenario title'], ['setup', 'area', 'The situation', 'Set the scene in 2–4 short paragraphs. Make it feel real.'],
+                ['choices', 'list', 'Choices', '3 or 4 is ideal', [['text', 'text', 'Choice'], ['outcome', 'area', 'What happens / why'], ['verdict', 'select', 'Rating', '', ['strong', 'mixed', 'weak']]]],
+                ['debrief', 'area', 'Debrief (shown after any choice)', 'The key lesson, and where to get help.']] },
+    reflect:   { label: 'Reflect', desc: 'A question they answer for their own club', f: [['title', 'text', 'Short title'], ['prompt', 'area', 'The question'], ['hint', 'area', 'Prompts to think about (optional)'], ['plan', 'select', 'Which part of "My Plan" does this feed?', '', PE.planSections]] },
+    quiz:      { label: 'Quick quiz', desc: 'Multiple choice with explanations', f: [['title', 'text', 'Quiz title'], ['questions', 'list', 'Questions', '', [['q', 'text', 'Question'], ['options', 'lines', 'Options (one per line)'], ['answer', 'number', 'Correct option number (1 = first)'], ['explain', 'area', 'Explanation']]]] },
+    checklist: { label: 'Checklist', desc: 'Tick-box list they keep', f: [['title', 'text', 'Title'], ['intro', 'area', 'Intro (optional)'], ['items', 'lines', 'Items (one per line)']] },
+    discuss:   { label: 'Discuss', desc: 'Questions for a group or board', f: [['title', 'text', 'Title'], ['intro', 'area', 'Intro (optional)'], ['questions', 'lines', 'Questions (one per line)']] },
+    resource:  { label: 'Resources', desc: 'Links to documents or websites', f: [['title', 'text', 'Title'], ['intro', 'area', 'Intro (optional)'], ['items', 'list', 'Resources', 'For a document on the drive put it in the resources folder and write resources/File name.pdf', [['label', 'text', 'Name'], ['file', 'text', 'File or web address'], ['note', 'text', 'Short note']]]] },
+    ai:        { label: 'AI helper', desc: 'A copy-and-paste prompt for ChatGPT etc.', f: [['title', 'text', 'Title'], ['intro', 'area', 'What it does and how to use it'], ['prompt', 'area', 'The prompt to copy']] },
+    glossary:  { label: 'Glossary', desc: 'Terms and meanings', f: [['title', 'text', 'Title'], ['terms', 'list', 'Terms', '', [['term', 'text', 'Term'], ['meaning', 'area', 'Meaning']]]] },
+    calendar:  { label: 'Calendar', desc: 'Month-by-month cards', f: [['title', 'text', 'Title'], ['intro', 'area', 'Intro (optional)'], ['months', 'list', 'Months', '', [['month', 'text', 'Month'], ['theme', 'text', 'Theme / focus'], ['tasks', 'lines', 'Things to do (one per line)']]]] },
+    roleplay:  { label: 'AI role-play', desc: 'Practise a conversation with an AI character (needs internet)', f: [['title', 'text', 'Title'], ['who', 'text', 'Who the AI plays', 'e.g. Margaret, club Treasurer (made-up names only)'],
+                ['setup', 'area', 'The situation (shown to the President-Elect)'], ['goal', 'area', 'Their goal in the conversation'],
+                ['character', 'area', 'Character notes for the AI (hidden)', 'Personality, what they want, what they are worried about, what would change their mind, and what would make them dig in.'],
+                ['opener', 'area', 'The character\'s first line'], ['coaching', 'area', 'What good looks like (hidden, used for feedback)', 'Behaviours you want to see, and common mistakes.']] },
+    profile:   { label: 'Self-profile', desc: '"Which type are you?" quiz', f: [['title', 'text', 'Title'], ['intro', 'area', 'Intro'],
+                ['questions', 'list', 'Questions', 'Option 1 counts toward result 1, option 2 toward result 2, and so on.', [['q', 'text', 'Question'], ['options', 'lines', 'Options (one per line, same order as results)']]],
+                ['results', 'list', 'Results', '', [['label', 'text', 'Short label'], ['title', 'text', 'Result title'], ['text', 'area', 'What it means']]]] }
+  };
+  var META = [['title', 'text', 'Module title'], ['presenter', 'text', 'Presenter(s)', 'e.g. Jane Citizen, District Membership Chair'], ['contact', 'text', 'Contact (optional)', 'Email or phone for follow-up questions'],
+    ['summary', 'area', 'One-line summary', 'Shown on the module card'], ['minutes', 'number', 'Roughly how many minutes?'], ['colour', 'select', 'Colour', '', Object.keys(PE.colours)]];
+
+  var m, sel = 0, open = {};
+  function blank() { return { id: '', title: 'New module', presenter: '', contact: '', summary: '', minutes: 15, colour: 'azure', items: [] }; }
+  function newItem(type) {
+    var it = { type: type, id: type.slice(0, 3) + Math.random().toString(36).slice(2, 7), title: '' };
+    if (type === 'scenario') it.choices = [{ text: '', outcome: '', verdict: 'strong' }, { text: '', outcome: '', verdict: 'mixed' }, { text: '', outcome: '', verdict: 'weak' }];
+    if (type === 'quiz') it.questions = [{ q: '', options: [], answer: 0, explain: '' }];
+    if (type === 'reflect') it.plan = 'Notes';
+    return it;
+  }
+  function persist() { try { localStorage.setItem(DRAFT, JSON.stringify(m)); } catch (e) {} }
+  var pvT; function changed() { persist(); clearTimeout(pvT); pvT = setTimeout(preview, 250); }
+
+  /* quiz answers are stored 0-based; shown 1-based */
+  function getV(o, k, kind) { var v = o[k]; if (kind === 'lines') return (v || []).join('\n'); if (k === 'answer') return v == null ? 1 : +v + 1; return v == null ? '' : v; }
+  function setV(o, k, kind, v) { if (kind === 'lines') o[k] = PE.lines(v); else if (k === 'answer') o[k] = Math.max(0, (+v || 1) - 1); else if (kind === 'number') o[k] = +v || 0; else o[k] = v; }
+
+  function fields(obj, spec, host, onTitle) {
+    spec.forEach(function (f) {
+      var k = f[0], kind = f[1], label = f[2], help = f[3], extra = f[4];
+      if (kind === 'list') {
+        var wrap = el('div'); wrap.appendChild(el('div', 'field', '<span>' + esc(label) + '</span>' + (help ? '<div class="help">' + esc(help) + '</div>' : '')));
+        obj[k] = obj[k] || [];
+        var box = el('div'); wrap.appendChild(box);
+        function draw() {
+          box.innerHTML = '';
+          obj[k].forEach(function (row, i) {
+            var s = el('div', 'sub'), hd = el('div', 'row');
+            hd.innerHTML = '<b class="small">' + (i + 1) + '</b><span><button type="button" class="btn sm" data-a="up">↑</button> <button type="button" class="btn sm" data-a="dn">↓</button> <button type="button" class="btn sm" data-a="rm">Remove</button></span>';
+            hd.querySelector('[data-a=up]').onclick = function () { if (i) { obj[k].splice(i - 1, 0, obj[k].splice(i, 1)[0]); draw(); changed(); } };
+            hd.querySelector('[data-a=dn]').onclick = function () { if (i < obj[k].length - 1) { obj[k].splice(i + 1, 0, obj[k].splice(i, 1)[0]); draw(); changed(); } };
+            hd.querySelector('[data-a=rm]').onclick = function () { obj[k].splice(i, 1); draw(); changed(); };
+            s.appendChild(hd); fields(row, extra, s); box.appendChild(s);
+          });
+          var add = el('button', 'btn sm', '+ Add ' + label.toLowerCase().replace(/s$/, '')); add.type = 'button';
+          add.onclick = function () { var r = {}; extra.forEach(function (x) { if (x[1] === 'select') r[x[0]] = x[4][0]; if (x[1] === 'lines') r[x[0]] = []; }); obj[k].push(r); draw(); changed(); };
+          box.appendChild(add);
+        }
+        draw(); host.appendChild(wrap); return;
+      }
+      var lab = el('label', 'field'); lab.appendChild(el('span', null, esc(label)));
+      var inp;
+      if (kind === 'select') { inp = el('select'); extra.forEach(function (o) { var op = el('option', null, esc(o)); op.value = o; inp.appendChild(op); }); }
+      else if (kind === 'area' || kind === 'lines') { inp = el('textarea'); if (k === 'body' || k === 'setup' || k === 'prompt' && extra !== 'short') inp.className = 'tall'; }
+      else { inp = el('input'); inp.type = kind === 'number' ? 'number' : 'text'; if (kind === 'number') inp.min = k === 'answer' ? 1 : 0; }
+      inp.value = getV(obj, k, kind);
+      inp.oninput = function () { setV(obj, k, kind, inp.value); if (k === 'title' && onTitle) onTitle(inp.value); changed(); };
+      inp.onchange = inp.oninput;
+      lab.appendChild(inp); if (help) lab.appendChild(el('div', 'help', esc(help)));
+      host.appendChild(lab);
+    });
+  }
+
+  function drawMeta() {
+    var h = document.getElementById('meta'); h.innerHTML = '';
+    fields(m, META, h);
+  }
+  function drawItems() {
+    var h = document.getElementById('items'); h.innerHTML = '';
+    document.getElementById('count').textContent = m.items.length + ' page' + (m.items.length === 1 ? '' : 's');
+    m.items.forEach(function (it, i) {
+      var c = el('div', 'icard' + (i === sel ? ' sel' : '')), hd = el('div', 'ihead');
+      hd.innerHTML = '<span class="pill">' + esc(PE.typeNames[it.type] || it.type) + '</span><span class="tt">' + esc(it.title || '(untitled)') + '</span>' +
+        '<button type="button" data-a="up" title="Move up">↑</button><button type="button" data-a="dn" title="Move down">↓</button><button type="button" data-a="cp" title="Duplicate">Copy</button><button type="button" data-a="rm" title="Delete">Delete</button>';
+      var body = el('div', 'ibody' + (open[it.id] ? '' : ' hidden'));
+      fields(it, S[it.type] ? S[it.type].f : [['title', 'text', 'Title']], body, function (t) { hd.querySelector('.tt').textContent = t || '(untitled)'; });
+      hd.onclick = function (e) {
+        var a = e.target.dataset && e.target.dataset.a;
+        if (a === 'up' && i) { m.items.splice(i - 1, 0, m.items.splice(i, 1)[0]); sel = i - 1; }
+        else if (a === 'dn' && i < m.items.length - 1) { m.items.splice(i + 1, 0, m.items.splice(i, 1)[0]); sel = i + 1; }
+        else if (a === 'cp') { var cp = JSON.parse(JSON.stringify(it)); cp.id = it.type.slice(0, 3) + Math.random().toString(36).slice(2, 7); cp.title += ' (copy)'; m.items.splice(i + 1, 0, cp); sel = i + 1; }
+        else if (a === 'rm') { if (!confirm('Delete this page?')) return; m.items.splice(i, 1); sel = Math.max(0, i - 1); }
+        else if (!a) { open[it.id] = !open[it.id]; sel = i; }
+        else return;
+        changed(); drawItems();
+      };
+      c.appendChild(hd); c.appendChild(body); h.appendChild(c);
+    });
+    preview();
+  }
+  function preview() {
+    var p = document.getElementById('preview'); p.innerHTML = '';
+    p.style.setProperty('--accent', PE.colours[m.colour] || PE.colours.azure);
+    var it = m.items[sel];
+    if (!it) { p.innerHTML = '<p class="muted">Add a page to see a preview.</p>'; return; }
+    p.appendChild(PE.renderItem(m, it, pvState, function () {}));
+  }
+  function load(obj) { m = obj; m.items = m.items || []; sel = 0; open = {}; if (m.items[0]) open[m.items[0].id] = true; drawMeta(); drawItems(); persist(); }
+
+  var add = document.getElementById('add');
+  Object.keys(S).forEach(function (t) {
+    var b = el('button', 'btn sm', '+ ' + S[t].label); b.type = 'button'; b.title = S[t].desc;
+    b.onclick = function () { var it = newItem(t); m.items.push(it); sel = m.items.length - 1; open = {}; open[it.id] = true; changed(); drawItems(); };
+    add.appendChild(b);
+  });
+
+  document.getElementById('bNew').onclick = function () { if (confirm('Start a new, empty module? (Save your current one first if you need it.)')) load(blank()); };
+  document.getElementById('bOpen').onclick = function () { document.getElementById('fOpen').click(); };
+  document.getElementById('fOpen').onchange = function () {
+    var f = this.files[0], inp = this; if (!f) return; var r = new FileReader();
+    r.onload = function () { try { load(PE.parseModuleText(r.result)); PE.toast('Opened ' + f.name); } catch (e) { alert('That file could not be opened as a module.\n\n' + e.message); } inp.value = ''; };
+    r.readAsText(f);
+  };
+  document.getElementById('bSave').onclick = function () {
+    if (!m.title || m.title === 'New module') { alert('Please give your module a title first.'); return; }
+    m.id = m.id || PE.slug(m.title);
+    var name = m.id + '.js';
+    PE.download(name, PE.moduleToFile(m), 'text/javascript');
+    PE.toast('Saved ' + name + ' — check your Downloads folder');
+  };
+  document.getElementById('bHelp').onclick = function () { var h = document.getElementById('helpCard'); h.classList.toggle('hidden'); if (!h.classList.contains('hidden')) h.scrollIntoView({ behavior: 'smooth' }); };
+
+  var d = null; try { d = JSON.parse(localStorage.getItem(DRAFT) || 'null'); } catch (e) {}
+  load(d && d.items ? d : blank());
+})();
+</script>
+</body>
+</html>

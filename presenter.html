@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Presenter screen · PE Toolkit</title>
+<link rel="stylesheet" href="app/toolkit.css">
+<style>
+  body{background:#0d1b36;color:#fff;min-height:100vh}
+  .ps{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+  .side{background:#132544;padding:16px;overflow:auto;max-height:100vh;position:sticky;top:0}
+  .side h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin:18px 0 8px}
+  .side button.ctl{display:block;width:100%;text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;margin:6px 0;cursor:pointer;font-size:.9rem}
+  .side button.ctl:hover{background:rgba(255,255,255,.14)}
+  .side button.ctl.on{border-color:var(--gold);background:rgba(247,168,27,.15)}
+  .side .sub{font-size:.75rem;opacity:.65}
+  .side .mini{font-size:.8rem;opacity:.8;line-height:1.5}
+  .stage{padding:4vh 5vw;display:flex;flex-direction:column}
+  .stage h1{font-size:clamp(1.8rem,3.2vw,3rem);margin-bottom:.4em}
+  .stage .lead{font-size:clamp(1.05rem,1.6vw,1.45rem);opacity:.92;max-width:70ch}
+  .ps .stage .kind{color:var(--gold);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:8px}
+  .qrwrap{display:flex;gap:5vw;align-items:center;flex-wrap:wrap;margin:auto 0}
+  .qr{background:#fff;border-radius:22px;padding:18px;width:min(42vh,420px)}
+  .qr svg,.qr img{width:100%;height:auto;display:block}
+  .code{display:inline-block;background:var(--gold);color:var(--royal);font-weight:800;font-size:1.6rem;padding:4px 16px;border-radius:10px;letter-spacing:.06em}
+  .bars{margin-top:3vh;display:grid;gap:14px;max-width:1100px}
+  .bar{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 16px;position:relative;overflow:hidden}
+  .bar .fill{position:absolute;left:0;top:0;bottom:0;background:rgba(0,162,224,.35);transition:width .6s}
+  .bar .t{position:relative;display:flex;gap:14px;align-items:baseline;font-size:clamp(1rem,1.5vw,1.3rem)}
+  .bar .t b{color:var(--gold)} .bar .t .n{margin-left:auto;font-weight:800;white-space:nowrap}
+  .bar .o{position:relative;margin-top:8px;font-size:clamp(.9rem,1.2vw,1.1rem);opacity:.9;display:none}
+  .reveal .bar .o{display:block}
+  .reveal .bar.strong{border-color:#5fd18d} .reveal .bar.mixed{border-color:#f7c35b} .reveal .bar.weak{border-color:#ff7b8f}
+  .reveal .bar .verd{display:inline-block}
+  .verd{display:none;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-right:6px}
+  .strong .verd{color:#5fd18d} .mixed .verd{color:#f7c35b} .weak .verd{color:#ff7b8f}
+  .wall{columns:3 280px;column-gap:14px;margin-top:2vh}
+  .note{break-inside:avoid;background:#fff8dc;color:#2b2b2b;border-radius:10px;padding:12px 14px;margin:0 0 14px;font-size:1.05rem;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+  .themes{background:#fff;color:var(--ink);border-radius:16px;padding:18px 22px;margin-top:2vh;max-width:1100px}
+  .login{max-width:420px;margin:12vh auto;background:#fff;color:var(--ink);border-radius:18px;padding:24px}
+  .field input{color:var(--ink)}
+  .badge{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.12)}
+  @media (max-width:800px){.ps{grid-template-columns:1fr}.side{position:static;max-height:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script src="app/qrcode.js"></script>
+<script src="modules/_module-list.js"></script>
+<script>
+(function () {
+  'use strict';
+  var ai = PE.ai, C = window.PE_CONFIG || {}, esc = PE.esc, el = PE.el, app = document.getElementById('app');
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k) || ''; localStorage.setItem(k, v); } catch (e) { } return ''; }
+  var admin = ls('pe-admin'), room = ls('pe-room') || 'prepelds', access = '', act = { type: 'idle' }, timer = null, themes = '';
+
+  function api(action, body) { body = body || {}; body.admin = admin; body.room = room; return ai.post('/api/live/' + action, body); }
+  function joinURL() {
+    var base = String(C.SITE_URL || '').replace(/\/?$/, '/');
+    if (!C.SITE_URL && /^https?:/.test(location.protocol)) base = location.href.replace(/[?#].*$/, '').replace(/[^\/]*$/, '');
+    if (!/^https?:/.test(base)) return '';
+    return base + 'join.html?code=' + encodeURIComponent(access) + (room !== 'prepelds' ? '&room=' + encodeURIComponent(room) : '');
+  }
+
+  /* ---------- login ---------- */
+  function login(msg) {
+    app.innerHTML = '<div class="login"><h2>Presenter screen</h2><p class="muted small">For PELDS presenters. Runs the live votes and the worries wall on the big screen.</p>' +
+      (msg ? '<div class="warn">' + esc(msg) + '</div>' : '') +
+      '<label class="field"><span>Presenter password</span><input id="a" type="password" value="' + esc(admin) + '"></label>' +
+      '<label class="field"><span>Session name</span><input id="r" value="' + esc(room) + '"></label><p class="small muted">Leave as <b>prepelds</b> unless two sessions run at once.</p>' +
+      '<button class="btn pri" id="go">Start</button></div>';
+    document.getElementById('go').onclick = function () {
+      admin = document.getElementById('a').value.trim(); room = document.getElementById('r').value.trim() || 'prepelds';
+      ls('pe-admin', admin); ls('pe-room', room); connect();
+    };
+  }
+  function connect() {
+    if (!ai.url) return login('The online service is not set up: add AI_URL in app/config.js.');
+    api('whoami').then(function (r) {
+      if (!r.ok) return login(r.error === 'bad_admin' ? 'That password was not accepted.' : 'Could not connect (' + (r.error || 'error') + ').');
+      access = r.accessCode;
+      return api('state').then(function (s) { act = s.activity || { type: 'idle' }; layout(); });
+    }).catch(function () { login('Could not reach the online service. Check the internet connection.'); });
+  }
+
+  /* ---------- main layout ---------- */
+  var scenarios = [];
+  function layout() {
+    app.innerHTML = '<div class="ps"><aside class="side" id="side"></aside><main class="stage" id="stage"></main></div>';
+    side(); stage(); tick();
+  }
+  function side() {
+    var s = document.getElementById('side');
+    var h = '<div class="row" style="justify-content:space-between"><b>Presenter</b><span class="badge">' + esc(room) + '</span></div>' +
+      '<h3>Screens</h3><button class="ctl ' + (act.type === 'idle' ? 'on' : '') + '" data-a="idle">Welcome &amp; QR code<div class="sub">People scan to join</div></button>' +
+      '<button class="ctl ' + (act.type === 'wall' ? 'on' : '') + '" data-a="wall">Worries wall<div class="sub">"What worries you most?"</div></button>';
+    if (act.type === 'poll') h += '<h3>This vote</h3>' +
+      '<button class="ctl" data-a="toggle">' + (act.open ? 'Close voting' : 'Re-open voting') + '</button>' +
+      '<button class="ctl" data-a="reveal">' + (act.reveal ? 'Hide outcomes' : 'Reveal outcomes') + '</button>';
+    if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI</button><button class="ctl" data-a="clearw">Clear the wall…</button>';
+    h += '<h3>Scenario votes</h3>';
+    scenarios.forEach(function (x, i) { h += '<button class="ctl ' + (act.type === 'poll' && act.id === x.id ? 'on' : '') + '" data-s="' + i + '">' + esc(x.it.title) + '<div class="sub">' + esc(x.m.title) + '</div></button>'; });
+    h += '<h3>Today</h3><div class="mini" id="usage">…</div>' +
+      '<h3>Screen</h3><button class="ctl" data-a="fs">Full screen</button><button class="ctl" data-a="logout">Sign out</button>';
+    s.innerHTML = h;
+    s.querySelectorAll('[data-a]').forEach(function (b) { b.onclick = function () { action(b.dataset.a); }; });
+    s.querySelectorAll('[data-s]').forEach(function (b) { b.onclick = function () { startPoll(scenarios[+b.dataset.s]); }; });
+    api('usage').then(function (u) { var e = document.getElementById('usage'); if (e && !u.error) e.innerHTML = 'AI coach requests: <b>' + u.calls + '</b> of ' + u.dailyLimit + '<br>Devices using AI: <b>' + u.devices + '</b>'; });
+  }
+  function setAct(a) { act = a; themes = ''; return api('set', { activity: a }).then(function (r) { if (r.error) PE.toast('Could not update: ' + r.error); side(); stage(); }); }
+  function startPoll(x) {
+    var it = x.it;
+    setAct({ type: 'poll', id: x.id, title: it.title, setup: it.setup, options: (it.choices || []).map(function (c) { return c.text; }), open: true, reveal: false });
+  }
+  function action(a) {
+    if (a === 'idle') setAct({ type: 'idle', title: 'Welcome, Presidents-Elect!', message: 'You\'re in. Votes will appear here automatically. Keep this page open.' });
+    if (a === 'wall') setAct({ type: 'wall', title: 'What worries you most about being President?', open: true });
+    if (a === 'toggle') { act.open = !act.open; setAct(act); }
+    if (a === 'reveal') {
+      var x = scenarios.find(function (s) { return s.id === act.id; });
+      act.reveal = !act.reveal;
+      if (act.reveal && x) { act.open = false; act.outcomes = x.it.choices.map(function (c) { return c.outcome; }); act.verdicts = x.it.choices.map(function (c) { return c.verdict; }); }
+      setAct(act);
+    }
+    if (a === 'themes') {
+      var t = document.getElementById('themes'); if (!t) return;
+      t.className = 'themes'; t.innerHTML = ''; t.appendChild(ai.thinking());
+      ai.post('/api/coach', { mode: 'themes', admin: admin, payload: { room: room } }).then(function (r) {
+        themes = r.text || ('Could not get themes: ' + (r.message || r.error)); t.innerHTML = '<h2 style="margin-top:0">Themes</h2>' + PE.md(themes);
+      }).catch(function () { t.innerHTML = 'Could not reach the AI coach.'; });
+    }
+    if (a === 'clearw') { if (window.confirm('Remove every note from the wall for this session?')) api('clear', { what: 'worries' }).then(function () { stage(); }); }
+    if (a === 'fs') { var d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(function () { }); else if (document.exitFullscreen) document.exitFullscreen().catch(function () { }); }
+    if (a === 'logout') { ls('pe-admin', ''); admin = ''; clearTimeout(timer); login(); }
+  }
+
+  /* ---------- the big screen ---------- */
+  function stage() {
+    var s = document.getElementById('stage'); if (!s) return;
+    if (act.type === 'idle') {
+      var url = joinURL(), qr = '';
+      if (url && window.qrcode) { var q = qrcode(0, 'M'); q.addData(url); q.make(); qr = q.createSvgTag({ cellSize: 8, margin: 2, scalable: true }); }
+      s.innerHTML = '<div class="kind">Join in</div><h1>Grab your phone</h1>' +
+        '<div class="qrwrap"><div class="qr">' + (qr || '<p style="color:#333">Open this presenter screen from the online web address (or set SITE_URL in app/config.js) to show the QR code.</p>') + '</div>' +
+        '<div class="lead" style="max-width:40ch"><p><b>1.</b> Open your phone\'s camera</p><p><b>2.</b> Point it at the square code</p><p><b>3.</b> Tap the link that pops up</p>' +
+        '<p style="margin-top:2em">No app. No password. No name needed.</p><p class="small" style="opacity:.7;word-break:break-all">' + esc(url) + '</p>' +
+        (access ? '<p>Access code: <span class="code">' + esc(access) + '</span></p>' : '') + '</div></div>';
+    } else if (act.type === 'poll') {
+      s.innerHTML = '<div class="kind">Vote on your phone · <span id="tot">0</span> ' + (act.open ? '· voting open' : '· voting closed') + '</div><h1>' + esc(act.title) + '</h1><div class="lead">' + PE.md(act.setup) + '</div>' +
+        '<div class="bars ' + (act.reveal ? 'reveal' : '') + '" id="bars">' + (act.options || []).map(function (o, i) {
+          var v = (act.verdicts || [])[i] || '';
+          return '<div class="bar ' + v + '"><div class="fill" style="width:0"></div><div class="t"><b>' + String.fromCharCode(65 + i) + '</b><span>' + esc(o) + '</span><span class="n">0</span></div>' +
+            '<div class="o"><span class="verd">' + ({ strong: 'Strong choice', mixed: 'Partly there', weak: 'Risky choice' }[v] || '') + '</span>' + PE.md((act.outcomes || [])[i] || '').replace(/<\/?p>/g, ' ') + '</div></div>';
+        }).join('') + '</div>';
+    } else if (act.type === 'wall') {
+      s.innerHTML = '<div class="kind">Anonymous · on your phone · <span id="wc">0</span> so far</div><h1>' + esc(act.title) + '</h1><div id="themes">' + (themes ? '' : '') + '</div><div class="wall" id="wall"></div>';
+      if (themes) { var t = document.getElementById('themes'); t.className = 'themes'; t.innerHTML = '<h2 style="margin-top:0">Themes</h2>' + PE.md(themes); }
+    }
+  }
+  function tick() {
+    clearTimeout(timer);
+    var p;
+    if (act.type === 'poll') p = api('results', { poll: act.id }).then(function (r) {
+      var c = r.counts || {}, n = (act.options || []).length, tot = 0, i;
+      for (i = 0; i < n; i++) tot += c[i] || 0;
+      var bars = document.querySelectorAll('#bars .bar'); var t = document.getElementById('tot'); if (t) t.textContent = tot + (tot === 1 ? ' vote' : ' votes');
+      bars.forEach(function (b, i) { var k = c[i] || 0; b.querySelector('.n').textContent = k + (tot ? ' · ' + Math.round(100 * k / tot) + '%' : ''); b.querySelector('.fill').style.width = (tot ? 100 * k / tot : 0) + '%'; });
+    });
+    else if (act.type === 'wall') p = api('worries').then(function (r) {
+      var w = document.getElementById('wall'); if (!w) return; var list = r.worries || [];
+      document.getElementById('wc').textContent = list.length;
+      var h = list.map(function (x) { return '<div class="note">' + esc(x.text) + '</div>'; }).join('');
+      if (w._h !== h) { w._h = h; w.innerHTML = h; }
+    });
+    Promise.resolve(p).catch(function () { }).then(function () { timer = setTimeout(tick, 2500); });
+  }
+
+  /* ---------- start ---------- */
+  PE.loadFiles(window.PE_MODULE_FILES || [], 'modules/', function () {
+    PE.modules.forEach(function (m) { m.items.forEach(function (it) { if (it.type === 'scenario') scenarios.push({ id: m.id + '.' + it.id, m: m, it: it }); }); });
+    if (admin) connect(); else login();
+  });
+})();
+</script>
+</body>
+</html>

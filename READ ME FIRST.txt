@@ -1,0 +1,41 @@
+PRESIDENT-ELECT LEADERSHIP TOOLKIT - Rotary District 9815
+=========================================================
+
+FOR PRESIDENTS-ELECT
+1. If you received this as a zip file, EXTRACT (unzip) the whole folder first.
+2. Double-click "START HERE.html". It opens in your web browser
+   (Chrome or Edge recommended). No internet needed.
+3. Work through the modules. Your answers are saved on this computer
+   and collected in "My Plan", which you can print or save as a PDF.
+4. To keep your answers safe or move them to another computer:
+   My Plan > "Save a backup file", then "Load a backup file" on the other one.
+
+FOR PRESENTERS (make your own module)
+1. Double-click "Module Builder.html".
+2. Fill in your module details and add pages (Read, Scenario, Reflect,
+   Quiz, Checklist, Discuss, Resources, AI helper, Glossary, Calendar...).
+3. Click "Save module file". A small .js file goes to your Downloads folder.
+4. Test it: open START HERE.html and click "Try a module file".
+5. Send the .js file (plus any PDFs it links to) to the toolkit coordinator.
+
+ADDING A MODULE TO THE TOOLKIT (coordinator)
+- Copy the module's .js file into the "modules" folder.
+- Open modules\_module-list.js in Notepad and add its file name to the list.
+  The order of the list is the order on the home page.
+- Put any documents it links to in the "resources" folder.
+
+FOLDERS
+  START HERE.html       the toolkit
+  Module Builder.html   the module-making tool for presenters
+  modules\              one file per module + the module list
+  resources\            PDFs and documents the modules link to
+  app\                  the toolkit's engine and styles (no need to touch)
+
+Questions: David Button, District Webmaster & Communications Chair
+
+ONLINE EXTRAS (optional - see the "PE Toolkit Online" setup guide)
+  join.html        phone page people reach by scanning the QR code
+  presenter.html   big-screen page for live votes and the worries wall
+  app\config.js    the only file to edit to switch the AI coach on
+With no internet (or config.js left blank) everything above still works
+offline, and the AI features simply stay hidden.

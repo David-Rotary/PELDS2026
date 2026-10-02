@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Join the session · District 9815</title>
+<link rel="stylesheet" href="app/toolkit.css">
+<style>
+  body{background:var(--royal);min-height:100vh}
+  .j{max-width:560px;margin:0 auto;padding:18px 16px 40px;color:#fff}
+  .j header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .j .mark{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--royal);display:grid;place-items:center;font-weight:800;font-size:.85rem;flex:none}
+  .panel{background:#fff;color:var(--ink);border-radius:20px;padding:22px 20px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+  .panel h1{font-size:1.5rem} .panel .lead{font-size:1.1rem}
+  .vbtn{display:block;width:100%;text-align:left;font-size:1.1rem;padding:16px 18px;margin:10px 0;border-radius:16px;border:2px solid var(--line);background:#fff;cursor:pointer;line-height:1.35}
+  .vbtn b{color:var(--azure);margin-right:6px}
+  .vbtn.mine{border-color:var(--azure);background:#eef5ff}
+  .vbtn .o{display:none;font-size:.95rem;margin-top:8px;color:var(--ink2)}
+  .reveal .vbtn .o{display:block}
+  .reveal .vbtn.strong{border-color:var(--good)} .reveal .vbtn.weak{border-color:var(--bad)} .reveal .vbtn.mixed{border-color:var(--mid)}
+  .ok{background:#effaf3;border:1px solid #bfe6cd;color:var(--good);border-radius:12px;padding:10px 14px;font-weight:600;margin-top:10px}
+  textarea.big{width:100%;min-height:130px;font-size:1.1rem;padding:14px;border-radius:14px;border:2px solid var(--line)}
+  .btn.huge{font-size:1.1rem;padding:14px 22px;width:100%;justify-content:center}
+  .wait{text-align:center;padding:24px 6px}
+  .pulse{width:14px;height:14px;border-radius:50%;background:var(--gold);margin:0 auto 14px;animation:pl 1.6s infinite}
+  @keyframes pl{0%{box-shadow:0 0 0 0 rgba(247,168,27,.6)}70%{box-shadow:0 0 0 18px rgba(247,168,27,0)}100%{box-shadow:0 0 0 0 rgba(247,168,27,0)}}
+  .foot{text-align:center;margin-top:18px;font-size:.9rem;opacity:.9} .foot a{color:#fff}
+</style>
+</head>
+<body>
+<div class="j">
+  <header><div class="mark">9815</div><div><b>District 9815 · Presidents-Elect</b><div class="small" style="opacity:.85">You're connected. Keep this page open.</div></div></header>
+  <div class="panel" id="p"><div class="wait"><div class="pulse"></div>Connecting…</div></div>
+  <div class="foot"><a id="tk" href="START%20HERE.html">Open the full toolkit on this device →</a></div>
+</div>
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script>
+(function () {
+  'use strict';
+  var ai = PE.ai, p = document.getElementById('p'), esc = PE.esc, room = ai.room();
+  var code = ai.code(), dev = ai.device(), last = '', act = null, myVote = null, timer;
+  document.getElementById('tk').href = 'START%20HERE.html' + (code ? '?code=' + encodeURIComponent(code) : '');
+
+  function show(html) { if (html !== last) { last = html; p.innerHTML = html; wire(); } }
+  function render() {
+    if (!ai.url) return show('<h1>Almost there</h1><p>This page needs the online version of the toolkit. Ask the presenter for the link or QR code.</p>');
+    if (!act) return show('<div class="wait"><div class="pulse"></div>Connecting…</div>');
+    if (act.type === 'poll') {
+      var h = '<div class="small muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure)">Vote</div><h1>' + esc(act.title) + '</h1>' +
+        (act.setup ? '<div class="lead">' + PE.md(act.setup) + '</div>' : '') + '<p><b>What would you do?</b> Tap one.' + (act.open ? ' You can change your mind.' : '') + '</p><div class="' + (act.reveal ? 'reveal' : '') + '">';
+      (act.options || []).forEach(function (o, i) {
+        var v = (act.verdicts || [])[i] || '';
+        h += '<button class="vbtn ' + (myVote === i ? 'mine ' : '') + (act.reveal ? v : '') + '" data-i="' + i + '"' + (act.open ? '' : ' disabled') + '><b>' + String.fromCharCode(65 + i) + '</b>' + esc(o) +
+          (act.reveal && act.outcomes ? '<div class="o">' + PE.md(act.outcomes[i] || '').replace(/<\/?p>/g, ' ') + '</div>' : '') + '</button>';
+      });
+      h += '</div>' + (myVote != null ? '<div class="ok">✓ Your vote: ' + String.fromCharCode(65 + myVote) + (act.reveal ? '' : ' · watch the big screen') + '</div>' : '') +
+        (!act.open && myVote == null ? '<p class="muted">Voting is closed.</p>' : '');
+      return show(h);
+    }
+    if (act.type === 'wall') {
+      return show('<div class="small" style="font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">Anonymous</div><h1>' + esc(act.title || 'What worries you most about being President?') + '</h1>' +
+        '<p class="muted">Your name is not attached. Send as many as you like, one at a time.</p><textarea class="big" id="w" maxlength="400" placeholder="Type here…"></textarea>' +
+        '<button class="btn pri huge" id="ws" style="margin-top:10px">Send</button><div id="wm"></div>');
+    }
+    show('<div class="wait"><div class="pulse"></div><h1>' + esc(act.title || 'Welcome!') + '</h1><p class="lead">' + esc(act.message || 'You\'re in. When the presenter starts a vote, it will appear here automatically.') + '</p></div>');
+  }
+  function wire() {
+    p.querySelectorAll('.vbtn').forEach(function (b) {
+      b.onclick = function () {
+        var i = +b.dataset.i; myVote = i; last = ''; render();
+        ai.post('/api/live/vote', { room: room, poll: act.id, choice: i, device: dev, code: code }).then(function (r) {
+          if (r.error === 'bad_code') PE.toast('Access code not accepted. Please scan the QR code again.');
+          else if (r.error) PE.toast('Voting has closed');
+        }).catch(function () { PE.toast('No connection — try again'); });
+      };
+    });
+    var ws = document.getElementById('ws');
+    if (ws) ws.onclick = function () {
+      var w = document.getElementById('w'), t = w.value.trim(); if (!t) { w.focus(); return; }
+      ws.disabled = true;
+      ai.post('/api/live/worry', { room: room, text: t, device: dev, code: code }).then(function (r) {
+        var m = document.getElementById('wm');
+        if (r.ok) { w.value = ''; m.innerHTML = '<div class="ok">✓ Sent. Thank you! Add another if you like.</div>'; }
+        else m.innerHTML = '<div class="warn">' + (r.error === 'too_many' ? 'Thanks, that\'s the maximum from one phone.' : r.error === 'bad_code' ? 'Access code not accepted. Please scan the QR code again.' : 'Could not send. Try again.') + '</div>';
+      }).catch(function () { PE.toast('No connection — try again'); }).then(function () { ws.disabled = false; });
+    };
+  }
+  function poll() {
+    if (!ai.url) return render();
+    fetch(ai.url + '/api/live/state?room=' + encodeURIComponent(room) + '&device=' + encodeURIComponent(dev), { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        var a = j.activity || { type: 'idle' };
+        if (a.type === 'poll' && (!act || act.id !== a.id)) myVote = null;   // a new vote has started
+        if (j.myVote != null) myVote = j.myVote;
+        act = a; render();   // render() only redraws when something visible changed, so typing is never lost
+      })
+      .catch(function () { if (!act) show('<h1>No connection</h1><p>Check your Wi-Fi or mobile data. This page will keep trying.</p>'); });
+  }
+  function loop() { clearTimeout(timer); if (!document.hidden) poll(); timer = setTimeout(loop, 4000); }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) loop(); });
+  loop();
+})();
+</script>
+</body>
+</html>

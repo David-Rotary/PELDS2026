@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>President-Elect Leadership Toolkit · District 9815</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="app/toolkit.css">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <a class="brand" href="#/"><div class="mark">9815</div><div><b>President-Elect Toolkit</b><span>Rotary District 9815 · Learn · Question · Plan</span></div></a>
+  <nav class="nav">
+    <a href="#/" data-nav="home">Home</a>
+    <a href="#/plan" data-nav="plan">My Plan</a>
+    <a href="#/resources" data-nav="resources">Library</a>
+    <button type="button" id="boardBtn">Board mode</button>
+    <a href="#/help" data-nav="help">Help</a>
+    <span class="aistatus" id="aiStatus" title="AI coach status"><i></i><span>Offline mode</span></span>
+  </nav>
+</div></header>
+
+<main class="wrap" id="view"><p class="muted">Loading the toolkit…</p></main>
+
+<input type="file" id="fileMod" accept=".js,.txt,.json" class="hidden">
+<input type="file" id="fileBackup" accept=".json" class="hidden">
+
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script src="modules/_module-list.js"></script>
+<script>
+(function () {
+  'use strict';
+  var st = PE.load(), view = document.getElementById('view'), loadErrors = [];
+  function save() { PE.save(); }
+  function $(s, r) { return (r || document).querySelector(s); }
+  var el = PE.el, esc = PE.esc;
+  function mod(id) { return PE.modules.find(function (m) { return m.id === id; }); }
+  function colour(m) { return PE.colours[m.colour] || m.colour || PE.colours.azure; }
+  function progress(m) {
+    var n = m.items.length, v = 0; if (!n) return 0;
+    m.items.forEach(function (it) { if (st.visited[PE.k(m, it)]) v++; }); return Math.round(100 * v / n);
+  }
+  function overall() {
+    var n = 0, v = 0; PE.modules.forEach(function (m) { m.items.forEach(function (it) { n++; if (st.visited[PE.k(m, it)]) v++; }); });
+    return n ? Math.round(100 * v / n) : 0;
+  }
+  function answeredCount() { return Object.keys(st.answers).filter(function (k) { return (st.answers[k] || '').trim(); }).length; }
+  function setNav(n) { document.querySelectorAll('[data-nav]').forEach(function (a) { a.classList.toggle('on', a.dataset.nav === n); }); }
+  function warnings() {
+    var h = '';
+    if (!PE.storageOK) h += '<div class="warn"><b>Heads up:</b> this browser is not letting the toolkit save on this computer. Your answers will last until you close this window — use <b>My Plan → Save a backup file</b> before you finish.</div>';
+    if (loadErrors.length) h += '<div class="warn"><b>Some modules could not be found:</b> ' + loadErrors.map(esc).join(', ') + '. Check they are in the <i>modules</i> folder and named exactly as listed in <i>_module-list.js</i>.</div>';
+    return h;
+  }
+
+  /* ---------- HOME ---------- */
+  function home() {
+    setNav('home');
+    var me = st.me, pct = overall();
+    view.innerHTML = warnings() +
+      '<section class="hero"><div><h1>' + (me.name ? 'Welcome, ' + esc(me.name.split(' ')[0]) + '.' : 'Your year in the chair starts here.') + '</h1>' +
+      '<p>Short, practical modules from District 9815 leaders. Work through real dilemmas, ask yourself the hard questions, and build your own Presidential Plan as you go. Everything works offline and stays on this computer.</p>' +
+      '<div class="row"><a class="btn gold" href="#/m/' + (PE.modules[0] ? PE.modules[0].id : '') + '/0">Start with module 1</a><a class="btn" href="#/plan">Open My Plan</a></div></div>' +
+      '<div class="stat"><div class="small">Your progress</div><div style="font-size:2.2rem;font-weight:800">' + pct + '%</div><div class="meter"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="small" style="margin-top:10px">' + answeredCount() + ' reflections written · ' + PE.modules.length + ' modules</div></div></section>' +
+      '<div style="margin:22px 0 10px"><input class="search" id="q" placeholder="Search everything — e.g. grants, treasurer, membership, polio…" autocomplete="off"></div>' +
+      '<div class="results card hidden" id="res" style="padding:0;margin-bottom:16px"></div>' +
+      '<h2 style="margin-top:18px">Modules</h2><div class="grid" id="mods"></div>' +
+      '<div class="card noprint" style="margin-top:26px"><h3>Presenting at PELDS or Pre-PELDS?</h3><p class="muted">Build your own module with <a href="Module%20Builder.html" target="_blank">Module Builder</a> — no coding. Then test it here:</p>' +
+      '<button class="btn" id="tryMod" type="button">Try a module file</button></div>';
+    var g = $('#mods');
+    PE.modules.forEach(function (m, i) {
+      var p = progress(m), a = el('a', 'mcard' + (m._temp ? ' temp' : ''));
+      a.href = '#/m/' + m.id + '/0'; a.style.setProperty('--accent', colour(m));
+      a.innerHTML = '<div class="bar"></div><div class="b"><div class="meta">Module ' + (i + 1) + (m.minutes ? ' · about ' + m.minutes + ' min' : '') + (m._temp ? ' · <b>preview only</b>' : '') + '</div>' +
+        '<h3>' + esc(m.title) + '</h3><div class="small muted">' + esc(m.summary || '') + '</div>' +
+        '<div class="foot">' + (m.presenter ? '<span>' + esc(m.presenter) + '</span>' : '') + '<div class="meter light"><i style="width:' + p + '%"></i></div><span>' + p + '%</span></div></div>';
+      g.appendChild(a);
+    });
+    $('#tryMod').onclick = function () { $('#fileMod').click(); };
+    var q = $('#q'), res = $('#res');
+    q.oninput = function () {
+      var f = q.value.trim().toLowerCase(); res.innerHTML = '';
+      if (f.length < 3) { res.classList.add('hidden'); return; }
+      var hits = 0;
+      PE.modules.forEach(function (m) {
+        m.items.forEach(function (it, i) {
+          var t = PE.itemText(it), at = t.toLowerCase().indexOf(f); if (at < 0 || hits > 30) return; hits++;
+          var a = el('a'); a.href = '#/m/' + m.id + '/' + i;
+          a.innerHTML = '<b>' + esc(it.title) + '</b> <span class="pill">' + esc(PE.typeNames[it.type] || it.type) + '</span><div class="small muted">' + esc(m.title) + ' — …' + esc(t.substr(Math.max(0, at - 50), 140)) + '…</div>';
+          res.appendChild(a);
+        });
+      });
+      if (!hits) res.innerHTML = '<div style="padding:12px" class="muted">Nothing found for that yet.</div>';
+      res.classList.remove('hidden');
+    };
+  }
+
+  /* ---------- MODULE ---------- */
+  function module(id, idx) {
+    setNav('');
+    var m = mod(id); if (!m) { view.innerHTML = '<p>Module not found. <a href="#/">Back home</a></p>'; return; }
+    idx = Math.max(0, Math.min(+idx || 0, m.items.length - 1));
+    var it = m.items[idx];
+    if (it) { st.visited[PE.k(m, it)] = 1; save(); }
+    view.style.setProperty('--accent', colour(m));
+    view.innerHTML = warnings() + '<div class="mod"><aside class="card steps" id="steps"></aside><section><div class="card stage" id="stage"></div>' +
+      '<div class="pager"><a class="btn" id="prev">← Back</a><span class="row"><button class="btn sm noprint" id="board1" type="button">Show on big screen</button></span><a class="btn pri" id="next">Next →</a></div></section></div>';
+    var s = $('#steps');
+    s.innerHTML = '<div class="mt">' + esc(m.title) + '</div>' + (m.presenter ? '<div class="small muted" style="margin:-4px 4px 10px 18px">' + esc(m.presenter) + (m.contact ? '<br>' + esc(m.contact) : '') + '</div>' : '');
+    m.items.forEach(function (x, i) {
+      var a = el('a', (i === idx ? 'on ' : '') + (st.visited[PE.k(m, x)] ? 'done' : ''));
+      a.href = '#/m/' + m.id + '/' + i; a.innerHTML = '<span class="dot">' + (st.visited[PE.k(m, x)] ? '✓' : i + 1) + '</span><span>' + esc(x.title) + '<br><span class="small muted">' + esc(PE.typeNames[x.type] || x.type) + '</span></span>';
+      s.appendChild(a);
+    });
+    if (it) $('#stage').appendChild(PE.renderItem(m, it, st, save));
+    else $('#stage').innerHTML = '<p class="muted">This module has no pages yet.</p>';
+    var pi = PE.modules.indexOf(m), nextMod = PE.modules[pi + 1];
+    var prev = $('#prev'), next = $('#next');
+    if (idx > 0) prev.href = '#/m/' + m.id + '/' + (idx - 1); else { prev.href = '#/'; prev.textContent = '← Home'; }
+    if (idx < m.items.length - 1) next.href = '#/m/' + m.id + '/' + (idx + 1);
+    else if (nextMod) { next.href = '#/m/' + nextMod.id + '/0'; next.textContent = 'Next module: ' + nextMod.title + ' →'; }
+    else { next.href = '#/plan'; next.textContent = 'Finish: open My Plan →'; }
+    $('#board1').onclick = function () { board(m, idx); };
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- MY PLAN ---------- */
+  function plan() {
+    setNav('plan');
+    var me = st.me;
+    view.innerHTML = warnings() + '<div class="card"><div class="row noprint" style="justify-content:space-between"><h1 style="margin:0">My Presidential Plan</h1>' +
+      '<div class="row"><button class="btn pri" id="print" type="button">Print / save as PDF</button><button class="btn" id="exp" type="button">Save a backup file</button><button class="btn" id="imp" type="button">Load a backup file</button></div></div>' +
+      '<p class="muted noprint">Everything you write in the Reflect pages lands here, grouped into the parts of a plan. Edit it here too. Take it to your first board meeting, your Assistant Governor, or into Rotary Club Central.</p>' +
+      '<div class="row" style="gap:16px"><label class="field" style="flex:1;min-width:200px"><span>Your name</span><input id="nm" value="' + esc(me.name || '') + '"></label>' +
+      '<label class="field" style="flex:1;min-width:200px"><span>Club</span><input id="cl" value="' + esc(me.club || '') + '"></label>' +
+      '<label class="field" style="width:160px"><span>Rotary year</span><input id="yr" value="' + esc(me.year || '2027–28') + '"></label></div><div id="secs"></div></div>';
+    ['nm:name', 'cl:club', 'yr:year'].forEach(function (p) { var a = p.split(':'), i = $('#' + a[0]); i.oninput = function () { st.me[a[1]] = i.value; save(); }; });
+    var groups = {};
+    PE.modules.forEach(function (m) { m.items.forEach(function (it) { if (it.type !== 'reflect') return; var g = it.plan || 'Notes'; (groups[g] = groups[g] || []).push({ m: m, it: it }); }); });
+    var order = PE.planSections.concat(Object.keys(groups).filter(function (g) { return PE.planSections.indexOf(g) < 0; }));
+    var secs = $('#secs'), any = false;
+    order.forEach(function (g) {
+      if (!groups[g]) return; any = true;
+      var sec = el('div', 'plansec'); sec.appendChild(el('h3', null, esc(g)));
+      groups[g].forEach(function (x) {
+        var key = PE.k(x.m, x.it), val = st.answers[key] || '';
+        sec.appendChild(el('div', 'planq', esc(x.it.title) + ' <small>· ' + esc(x.m.title) + '</small>'));
+        var ta = el('textarea', 'ans noprint'); ta.style.minHeight = '90px'; ta.value = val; ta.placeholder = 'Not answered yet';
+        var pr = el('div', 'printans', esc(val || '—'));
+        ta.oninput = function () { st.answers[key] = ta.value; pr.textContent = ta.value || '—'; save(); };
+        sec.appendChild(ta); sec.appendChild(pr);
+      });
+      secs.appendChild(sec);
+    });
+    if (!any) secs.innerHTML = '<p class="muted">No reflection questions are loaded yet.</p>';
+    if (PE.ai.available) secs.parentNode.insertBefore(PE.ai.planBox(st, save, function () {
+      return { club: st.me.club || '', year: st.me.year || '', sections: order.filter(function (g) { return groups[g]; }).map(function (g) {
+        return { section: g, items: groups[g].map(function (x) { return { q: x.it.title + ': ' + (x.it.prompt || '').replace(/\*\*/g, '').slice(0, 160), a: st.answers[PE.k(x.m, x.it)] || '' }; }) };
+      }) };
+    }), secs);
+    $('#print').onclick = function () { window.print(); };
+    $('#exp').onclick = function () {
+      var name = 'PE-Toolkit-backup-' + PE.slug(st.me.name || 'my') + '-' + new Date().toISOString().slice(0, 10) + '.json';
+      PE.download(name, JSON.stringify({ toolkit: 'PE-9815', saved: new Date().toISOString(), data: st }, null, 1), 'application/json');
+      PE.toast('Backup file saved to your Downloads');
+    };
+    $('#imp').onclick = function () { $('#fileBackup').click(); };
+  }
+
+  /* ---------- LIBRARY ---------- */
+  function library() {
+    setNav('resources');
+    view.innerHTML = warnings() + '<div class="card"><h1>Resource library</h1><p class="muted">Every document and link mentioned in the modules, in one place. Files open from the <i>resources</i> folder on this drive.</p><input class="search" id="lq" placeholder="Filter…"><div id="lib" style="margin-top:12px"></div></div>';
+    var all = [], seen = {};
+    PE.modules.forEach(function (m) { m.items.forEach(function (it) { if (it.type === 'resource') (it.items || []).forEach(function (r) { if (seen[r.file + r.label]) return; seen[r.file + r.label] = 1; all.push({ r: r, m: m }); }); }); });
+    function draw() {
+      var f = $('#lq').value.toLowerCase(), box = $('#lib'); box.innerHTML = '';
+      all.forEach(function (x) {
+        if (f && (x.r.label + ' ' + (x.r.note || '') + ' ' + x.m.title).toLowerCase().indexOf(f) < 0) return;
+        var a = el('a', 'res'); a.href = x.r.file; a.target = '_blank';
+        a.innerHTML = '<div class="ic">' + PE.fileIcon(x.r.file) + '</div><div><b>' + esc(x.r.label) + '</b><div class="small muted">' + esc(x.r.note || '') + ' · from <i>' + esc(x.m.title) + '</i>' + (/^https?:/i.test(x.r.file) ? ' · needs internet' : '') + '</div></div>';
+        box.appendChild(a);
+      });
+      if (!box.children.length) box.innerHTML = '<p class="muted">No resources match.</p>';
+    }
+    $('#lq').oninput = draw; draw();
+  }
+
+  /* ---------- HELP ---------- */
+  function help() {
+    setNav('help');
+    view.innerHTML = '<div class="card body" style="max-width:820px">' + PE.md([
+      '## How to use this toolkit',
+      'Work through the modules in any order. Each one is a handful of short pages:',
+      '- **Read**: short, practical guidance.',
+      '- **Scenario**: a real-life dilemma. Pick what you would do and see the likely outcome. There is rarely one perfect answer.',
+      '- **Reflect**: a question for *you*. Your answer is saved on this computer and collected in **My Plan**.',
+      '- **Quick quiz, Checklist, Discuss, Calendar, Glossary**: quick tools to test and organise yourself.',
+      '- **AI helper**: copies a ready-made prompt to paste into ChatGPT, Claude, Gemini or Copilot (needs internet only for that step).',
+      '**Board mode** shows a module full-screen with big text, so you can run the same questions and scenarios with your incoming board. Use the arrow keys to move, and click a choice to reveal its outcome after the group has voted.',
+      '**Your answers are private.** They stay in this browser on this computer. Nothing is sent anywhere. To move to another computer, or to be safe, use **My Plan → Save a backup file**, then **Load a backup file** on the other computer.',
+      '> Opened this from a zip file? Extract (unzip) the whole folder first, otherwise the modules and documents will not open.',
+      '## For presenters',
+      'Open **Module Builder.html** in this folder to create or edit a module. Save the file it gives you, then either send it to the toolkit coordinator, or put it in the *modules* folder and add its file name to *modules/_module-list.js*.'
+    ].join('\n')) +
+    '<p class="small muted">Toolkit version ' + PE.version + '</p></div>';
+  }
+
+  /* ---------- BOARD MODE ---------- */
+  function slidesFor(m) { return m.items.filter(function (it) { return ['text', 'scenario', 'reflect', 'discuss', 'quiz', 'checklist'].indexOf(it.type) >= 0; }); }
+  function board(m, startIdx) {
+    if (!m) {
+      var pk = el('div', 'board');
+      pk.innerHTML = '<div class="bt"><span class="t">Board mode — choose a module to show</span><button id="pc">Close</button></div><div class="slide"><h2>Which module?</h2><div id="pl"></div></div>';
+      document.body.appendChild(pk);
+      PE.modules.forEach(function (x) { var bb = el('button', 'bchoice', '<b>' + esc(x.title) + '</b> <span style="opacity:.7">· ' + slidesFor(x).length + ' slides</span>'); bb.onclick = function () { pk.remove(); board(x, 0); }; $('#pl', pk).appendChild(bb); });
+      $('#pc', pk).onclick = function () { pk.remove(); };
+      return;
+    }
+    var slides = slidesFor(m); if (!slides.length) { PE.toast('This module has nothing to show in Board mode'); return; }
+    var i = Math.max(0, slides.indexOf(m.items[startIdx || 0]));
+    var b = el('div', 'board'); document.body.appendChild(b);
+    b.innerHTML = '<div class="bt"><span class="t">' + esc(m.title) + '</span><span id="bn"></span><button id="bp">←</button><button id="bx">→</button><button id="bc">Close (Esc)</button></div><div class="slide" id="bs"></div><div class="bfoot">Arrow keys to move · click an option to reveal its outcome</div>';
+    function draw() {
+      var it = slides[i], s = $('#bs', b), h = '<div class="kind">' + esc(PE.typeNames[it.type]) + '</div><h2>' + esc(it.title) + '</h2>';
+      if (it.type === 'text') h += '<div class="big">' + PE.md(it.body) + '</div>';
+      if (it.type === 'reflect') h += '<div class="big">' + PE.md(it.prompt) + '</div>' + (it.hint ? '<div class="big" style="opacity:.75">' + PE.md(it.hint) + '</div>' : '');
+      if (it.type === 'discuss') h += (it.intro ? '<div class="big">' + PE.md(it.intro) + '</div>' : '') + '<ol>' + PE.lines(it.questions).map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ol>';
+      if (it.type === 'checklist') h += '<ul>' + PE.lines(it.items).map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul>';
+      if (it.type === 'quiz') h += '<ol>' + (it.questions || []).map(function (q) { return '<li>' + esc(q.q) + '</li>'; }).join('') + '</ol>';
+      if (it.type === 'scenario') {
+        h += '<div class="big">' + PE.md(it.setup) + '</div>';
+        (it.choices || []).forEach(function (c, ci) { h += '<button class="bchoice ' + (c.verdict || 'mixed') + '"><b>' + String.fromCharCode(65 + ci) + '.</b> ' + esc(c.text) + '<div class="o">' + PE.md(c.outcome) + '</div></button>'; });
+        if (it.debrief) h += '<details class="big" style="margin-top:10px"><summary>Debrief</summary>' + PE.md(it.debrief) + '</details>';
+      }
+      s.innerHTML = h; s.scrollTop = 0;
+      s.querySelectorAll('.bchoice').forEach(function (x) { x.onclick = function () { x.classList.toggle('show'); }; });
+      $('#bn', b).textContent = (i + 1) + ' / ' + slides.length;
+    }
+    function go(d) { i = Math.max(0, Math.min(slides.length - 1, i + d)); draw(); }
+    function key(e) { if (e.key === 'ArrowRight' || e.key === 'PageDown') go(1); else if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(-1); else if (e.key === 'Escape') close(); }
+    function close() { document.removeEventListener('keydown', key); b.remove(); if (document.fullscreenElement) document.exitFullscreen().catch(function () {}); }
+    $('#bp', b).onclick = function () { go(-1); }; $('#bx', b).onclick = function () { go(1); }; $('#bc', b).onclick = close;
+    document.addEventListener('keydown', key);
+    try { if (b.requestFullscreen) b.requestFullscreen().catch(function () {}); } catch (e) {}
+    draw();
+  }
+  document.getElementById('boardBtn').onclick = function () {
+    var p = location.hash.split('/'); board(p[1] === 'm' ? mod(p[2]) : null, p[1] === 'm' ? +p[3] : 0);
+  };
+
+  /* ---------- file inputs ---------- */
+  function readFile(input, fn) {
+    input.onchange = function () {
+      var f = input.files[0]; if (!f) return; var r = new FileReader();
+      r.onload = function () { try { fn(r.result, f.name); } catch (e) { alert('Sorry, that file could not be read.\n\n' + e.message); } input.value = ''; };
+      r.readAsText(f);
+    };
+  }
+  readFile($('#fileMod'), function (txt) {
+    var m = PE.register(PE.parseModuleText(txt), { temp: true });
+    PE.toast('Previewing "' + m.title + '" (until you close this window)'); location.hash = '#/m/' + m.id + '/0'; route();
+  });
+  readFile($('#fileBackup'), function (txt) {
+    var d = JSON.parse(txt); if (!d.data || d.toolkit !== 'PE-9815') throw new Error('This is not a toolkit backup file.');
+    if (!confirm('Replace the answers on this computer with the ones in this backup file?')) return;
+    Object.keys(d.data).forEach(function (k) { st[k] = d.data[k]; }); save(); PE.toast('Backup loaded'); route();
+  });
+
+  /* ---------- router ---------- */
+  function route() {
+    view.style.removeProperty('--accent');
+    var p = (location.hash || '#/').slice(2).split('/');
+    if (p[0] === 'm') module(decodeURIComponent(p[1]), p[2]);
+    else if (p[0] === 'plan') plan();
+    else if (p[0] === 'resources') library();
+    else if (p[0] === 'help') help();
+    else home();
+  }
+  window.addEventListener('hashchange', route);
+
+  var waiting = 2;
+  function ready() { if (--waiting) return; route(); }
+  PE.loadFiles(window.PE_MODULE_FILES || [], 'modules/', function (errs) {
+    loadErrors = errs;
+    if (!window.PE_MODULE_FILES) loadErrors = ['_module-list.js'];
+    ready();
+  });
+  PE.ai.check().then(function (on) {
+    var b = document.getElementById('aiStatus');
+    b.classList.toggle('on', on); b.lastChild.textContent = on ? 'AI coach on' : 'Offline mode';
+    b.title = on ? 'Connected: AI coaching features are available' : 'Everything works offline. AI coaching appears when connected.';
+    ready();
+  });
+})();
+</script>
+</body>
+</html>
