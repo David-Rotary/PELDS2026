@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>My Commitment Card · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B2A5C;--royal:#17458F;--azure:#0067C8;--gold:#F7A81B;--ink:#1b2333;--ink2:#4a5468;--line:#d9e0ea;
+  --display:'Fraunces',Georgia,serif;--body:'Hanken Grotesk','Segoe UI',system-ui,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--body);color:var(--ink);background:linear-gradient(135deg,#0B2A5C,#17458F 55%,#0067C8);min-height:100vh}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.top{color:#fff;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.top a{color:#fff;font-size:.9rem}
+.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.25)}
+.head{background:linear-gradient(135deg,#0B2A5C,#17458F 60%,#0067C8);color:#fff;padding:18px 20px 16px;position:relative}
+.head .k{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.head h1{font-family:var(--display);font-weight:600;font-size:1.65rem;margin:.2em 0 0;line-height:1.1}
+.head h1 em{color:var(--gold);font-weight:500}
+.rb{display:flex;height:5px}.rb i{flex:1}
+.body{padding:16px 20px 20px}
+.sec{margin:14px 0 4px;font-weight:800;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--royal);border-bottom:2px solid var(--gold);padding-bottom:3px}
+label{display:block;margin:8px 0}
+label span{display:block;font-size:.82rem;font-weight:600;color:var(--ink2);margin-bottom:3px}
+input,textarea{width:100%;font:inherit;font-size:1rem;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fbfcfe}
+textarea{min-height:56px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;border-radius:999px;padding:11px 18px;font:800 .95rem var(--body);cursor:pointer;background:var(--gold);color:var(--navy)}
+.btn.alt{background:#eef3fb;color:var(--royal)}
+.saved{font-size:.85rem;color:#c8f7d8;min-height:1.2em;margin-top:6px}
+.foot{font-size:.8rem;color:var(--ink2);margin-top:12px}
+.printonly{display:none}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff}
+  .top,.btns,.saved,.foot.screen{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .card{box-shadow:none;border:1px solid #bbb;border-radius:12px;break-inside:avoid;page-break-inside:avoid}
+  .card+.card{margin-top:8mm}
+  .head{padding:8px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rb{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .head h1{font-size:1.15rem}
+  .body{padding:4px 14px 8px;font-size:.8rem}
+  .sec{margin:6px 0 1px;font-size:.66rem}
+  label{display:flex;align-items:flex-end;gap:8px;margin:0;min-height:7mm}
+  label span{flex:none;width:44%;margin:0;font-size:.74rem}
+  .two{gap:14px}
+  .two label span{width:auto}
+  input,textarea{flex:1;border:0;border-bottom:1px solid #999;border-radius:0;padding:1px 0;min-height:0;height:5mm;background:transparent;font-size:.8rem;resize:none}
+  textarea{height:12mm}
+  .foot{margin-top:6px;font-size:.66rem}
+  .printonly{display:block}
+  body.blank .filled{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>District 9815 · Pre-PELDS 2026</b><a href="index.html" id="tk">Open the PE Toolkit →</a></div>
+  <div id="cards"></div>
+  <div class="btns">
+    <button class="btn" id="print">Print / save as PDF</button>
+    <button class="btn alt" id="blank">Print blank cards (2 per page)</button>
+  </div>
+  <div class="saved" id="saved"></div>
+  <p class="foot screen" style="color:#dfe8f7">Your card is saved on this device only. Nothing is sent anywhere.</p>
+</div>
+<script>
+(function () {
+  var KEY = 'pe-commitment-card', data = {};
+  try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  /* pre-fill name and club from the toolkit, if this device has used it */
+  try { var tk = JSON.parse(localStorage.getItem('pe-toolkit-9815-v1') || '{}'); if (tk.me) { data.name = data.name || tk.me.name || ''; data.club = data.club || tk.me.club || ''; } } catch (e) {}
+  var code = /[?&]code=([^&#]+)/.exec(location.search); if (code) document.getElementById('tk').href = 'index.html?code=' + code[1];
+
+  var F = [
+    ['sec', 'Me'], ['two', ['name', 'Name'], ['club', 'Club']],
+    ['why', 'Why I said yes (one line)', 'input'],
+    ['sec', 'My first three moves'],
+    ['m1', 'This week', 'input'], ['m2', 'This month', 'input'], ['m3', 'Before 1 July', 'input'],
+    ['sec', 'My membership pledge'],
+    ['p1', 'Two people I will personally invite', 'input'], ['p2', 'How I will welcome every new member', 'input'], ['p3', 'One drifting member I will call', 'input'],
+    ['sec', 'My mentor'],
+    ['two', ['mentor', 'I will ask…'], ['by', '…by (date)']],
+    ['goals', 'My two or three goals for the year', 'textarea']
+  ];
+  function esc(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function field(k, label, kind) {
+    var v = esc(data[k]);
+    return '<label><span>' + label + '</span>' + (kind === 'textarea' ? '<textarea data-k="' + k + '">' + v + '</textarea>' : '<input data-k="' + k + '" value="' + v + '">') + '</label>';
+  }
+  function card(extra) {
+    var h = '<div class="card ' + (extra || '') + '"><div class="head"><div class="k">My commitment card</div><h1>From <em>Why me?</em> to <em>Why not me?</em></h1></div>' +
+      '<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div><div class="body">';
+    F.forEach(function (f) {
+      if (f[0] === 'sec') h += '<div class="sec">' + f[1] + '</div>';
+      else if (f[0] === 'two') h += '<div class="two">' + field(f[1][0], f[1][1]) + field(f[2][0], f[2][1]) + '</div>';
+      else h += field(f[0], f[1], f[2]);
+    });
+    return h + '<div class="foot">Help all year: your AG · rotary9815.org.au → Your Role · Club Assist · the PE Toolkit</div></div></div>';
+  }
+  var box = document.getElementById('cards');
+  box.innerHTML = card('filled');
+  box.addEventListener('input', function (e) {
+    var k = e.target.dataset.k; if (!k) return; data[k] = e.target.value;
+    try { localStorage.setItem(KEY, JSON.stringify(data)); document.getElementById('saved').textContent = 'Saved on this device ✓'; } catch (x) { document.getElementById('saved').textContent = 'Tip: print or save as PDF to keep it.'; }
+  });
+  document.getElementById('print').onclick = function () { document.body.classList.remove('blank'); window.print(); };
+  document.getElementById('blank').onclick = function () {
+    var saved = data; data = {};
+    var extra = document.createElement('div'); extra.className = 'printonly'; extra.innerHTML = card() + card();
+    document.body.classList.add('blank'); box.appendChild(extra);
+    window.print();
+    setTimeout(function () { extra.remove(); document.body.classList.remove('blank'); data = saved; }, 500);
+  };
+})();
+</script>
+</body>
+</html>

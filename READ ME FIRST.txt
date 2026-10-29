@@ -39,3 +39,11 @@ ONLINE EXTRAS (optional - see the "PE Toolkit Online" setup guide)
   app\config.js    the only file to edit to switch the AI coach on
 With no internet (or config.js left blank) everything above still works
 offline, and the AI features simply stay hidden.
+
+PRE-PELDS TALK AND MENTOR EXTRAS
+  talk.html             the 20-minute presentation. Arrow keys to move,
+                        N = speaker notes and timer, F = full screen.
+                        Words are editable at the top of the file.
+  videos\               put the five short clips here (see RECORDING-LIST.txt)
+  commitment-card.html  fill-in card for phones, or print blank cards 2 per page
+  modules\your-mentor.js  the "Your mentor for the year" module

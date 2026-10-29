@@ -69,7 +69,7 @@
       '<div class="results card hidden" id="res" style="padding:0;margin-bottom:16px"></div>' +
       '<h2 style="margin-top:18px">Modules</h2><div class="grid" id="mods"></div>' +
       '<div class="card noprint" style="margin-top:26px"><h3>Presenting at PELDS or Pre-PELDS?</h3><p class="muted">Build your own module with <a href="Module%20Builder.html" target="_blank">Module Builder</a> — no coding. Then test it here:</p>' +
-      '<button class="btn" id="tryMod" type="button">Try a module file</button></div>';
+      '<div class="row"><button class="btn" id="tryMod" type="button">Try a module file</button><a class="btn" href="talk.html" target="_blank">Pre-PELDS talk</a><a class="btn" href="commitment-card.html" target="_blank">Commitment card</a></div></div>';
     var g = $('#mods');
     PE.modules.forEach(function (m, i) {
       var p = progress(m), a = el('a', 'mcard' + (m._temp ? ' temp' : ''));

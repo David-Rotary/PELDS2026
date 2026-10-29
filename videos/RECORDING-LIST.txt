@@ -1,0 +1,33 @@
+VIDEOS FOR THE PRE-PELDS TALK (talk.html)
+=========================================
+Save each clip in this "videos" folder with EXACTLY these names (MP4).
+Until a clip is here, its slide shows the step-by-step version instead,
+so the talk always works. Keep each clip short: 30-60 seconds.
+
+1. mentor-letter.mp4    (slide 4)  45-60 sec, YOU talking to camera on your
+   phone, landscape, quiet room. "A letter to a new President": when you were
+   first asked, your "why me?" moment, what the year gave you, one thing you'd
+   tell yourself, "you can do this, and you won't be alone."
+
+2. leadership-flow.mp4  (slide 9)  30-40 sec screen recording:
+   rotary9815.org.au -> Your Role -> Leadership Hub -> Start Guided Flow ->
+   Lead Your Club -> Year Planner.
+
+3. membership-hub.mp4   (slide 13) 30-40 sec: Membership Hub sections, then
+   Club Assist -> Victoria -> sub-topic "Retention & engagement" -> open a card.
+
+4. club-central.mp4     (slide 15) about 40 sec: my.rotary.org sign in ->
+   Rotary Club Central -> year selector -> Membership goal with history -> Save.
+   Blur or crop any personal details.
+
+5. club-assist.mp4      (slide 16) about 30 sec: Club Assist -> Victoria ->
+   "Club President" -> the Club President Essentials courses ->
+   "Ask a Zone Specialist" button.
+
+Tip (Windows): press Win + Alt + R to record the screen with the Xbox Game Bar,
+or use the Snipping Tool's video option. Trim in the Photos app.
+
+IMPORTANT - FILE FORMAT: save clips as MP4 (H.264). Chrome and Edge on
+Windows will NOT play iPhone HEVC / .mov clips. On an iPhone set
+Settings > Camera > Formats > "Most Compatible" before recording, or
+convert the clip to MP4 before copying it here.
