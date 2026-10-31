@@ -16,6 +16,7 @@
     <a href="#/resources" data-nav="resources">Library</a>
     <button type="button" id="boardBtn">Board mode</button>
     <a href="#/help" data-nav="help">Help</a>
+    <a class="aistatus hidden" id="liveBack" href="join.html" style="background:var(--gold);color:var(--royal);font-weight:700;text-decoration:none">● Live session</a>
     <span class="aistatus" id="aiStatus" title="AI coach status"><i></i><span>Offline mode</span></span>
   </nav>
 </div></header>
@@ -292,6 +293,7 @@
   PE.ai.check().then(function (on) {
     var b = document.getElementById('aiStatus');
     b.classList.toggle('on', on); b.lastChild.textContent = on ? 'AI coach on' : 'Offline mode';
+    if (PE.ai.live && PE.ai.code()) { var lb = document.getElementById('liveBack'); lb.href = 'join.html?code=' + encodeURIComponent(PE.ai.code()); lb.classList.remove('hidden'); }
     b.title = on ? 'Connected: AI coaching features are available' : 'Everything works offline. AI coaching appears when connected.';
     ready();
   });
