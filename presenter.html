@@ -101,7 +101,7 @@
     if (act.type === 'poll') h += '<h3>This vote</h3>' +
       '<button class="ctl" data-a="toggle">' + (act.open ? 'Close voting' : 'Re-open voting') + '</button>' +
       '<button class="ctl" data-a="reveal">' + (act.reveal ? 'Hide outcomes' : 'Reveal outcomes') + '</button>';
-    if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI</button><button class="ctl" data-a="clearw">Clear the wall…</button>';
+    if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI<div class="sub">Also appears on everyone\'s phone</div></button><button class="ctl" data-a="clearw">Clear the wall…</button>';
     h += '<h3>Scenario votes</h3>';
     scenarios.forEach(function (x, i) { h += '<button class="ctl ' + (act.type === 'poll' && act.id === x.id ? 'on' : '') + '" data-s="' + i + '">' + esc(x.it.title) + '<div class="sub">' + esc(x.m.title) + '</div></button>'; });
     h += '<h3>Today</h3><div class="mini" id="usage">…</div>' +
@@ -123,14 +123,18 @@
     if (a === 'reveal') {
       var x = scenarios.find(function (s) { return s.id === act.id; });
       act.reveal = !act.reveal;
-      if (act.reveal && x) { act.open = false; act.outcomes = x.it.choices.map(function (c) { return c.outcome; }); act.verdicts = x.it.choices.map(function (c) { return c.verdict; }); }
-      setAct(act);
+      if (act.reveal && x) {
+        act.open = false; act.outcomes = x.it.choices.map(function (c) { return c.outcome; }); act.verdicts = x.it.choices.map(function (c) { return c.verdict; });
+        /* send the final vote counts with the reveal, so phones can show the room's split too */
+        api('results', { poll: act.id }).then(function (r) { act.counts = r.counts || {}; setAct(act); }).catch(function () { setAct(act); });
+      } else setAct(act);
     }
     if (a === 'themes') {
       var t = document.getElementById('themes'); if (!t) return;
       t.className = 'themes'; t.innerHTML = ''; t.appendChild(ai.thinking());
       ai.post('/api/coach', { mode: 'themes', admin: admin, payload: { room: room } }).then(function (r) {
         themes = r.text || ('Could not get themes: ' + (r.message || r.error)); t.innerHTML = '<h2 style="margin-top:0">Themes</h2>' + PE.md(themes);
+        if (r.text) { act.themes = r.text.slice(0, 8000); api('set', { activity: act }).then(function () { PE.toast('Themes sent to everyone\'s phone'); }); }
       }).catch(function () { t.innerHTML = 'Could not reach the AI coach.'; });
     }
     if (a === 'clearw') { if (window.confirm('Remove every note from the wall for this session?')) api('clear', { what: 'worries' }).then(function () { stage(); }); }
@@ -158,6 +162,7 @@
         }).join('') + '</div>';
     } else if (act.type === 'wall') {
       s.innerHTML = '<div class="kind">Anonymous · on your phone · <span id="wc">0</span> so far</div><h1>' + esc(act.title) + '</h1><div id="themes">' + (themes ? '' : '') + '</div><div class="wall" id="wall"></div>';
+      if (!themes && act.themes) themes = act.themes;
       if (themes) { var t = document.getElementById('themes'); t.className = 'themes'; t.innerHTML = '<h2 style="margin-top:0">Themes</h2>' + PE.md(themes); }
     }
   }

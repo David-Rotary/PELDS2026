@@ -25,6 +25,9 @@
   .wait{text-align:center;padding:24px 6px}
   .pulse{width:14px;height:14px;border-radius:50%;background:var(--gold);margin:0 auto 14px;animation:pl 1.6s infinite}
   @keyframes pl{0%{box-shadow:0 0 0 0 rgba(247,168,27,.6)}70%{box-shadow:0 0 0 18px rgba(247,168,27,0)}100%{box-shadow:0 0 0 0 rgba(247,168,27,0)}}
+  .pct{float:right;font-weight:800;color:var(--royal);margin-left:10px}
+  .themes{background:#faf6fc;border-left:4px solid var(--violet);border-radius:12px;padding:12px 14px;margin:0 0 18px;font-size:1.02rem;line-height:1.5}
+  .themes p{margin:.5em 0} .themes ul{padding-left:1.2em;margin:.4em 0}
   .foot{text-align:center;margin-top:18px;font-size:.9rem;opacity:.9} .foot a{color:#fff}
 </style>
 </head>
@@ -53,7 +56,9 @@
         (act.setup ? '<div class="lead">' + PE.md(act.setup) + '</div>' : '') + '<p><b>What would you do?</b> Tap one.' + (act.open ? ' You can change your mind.' : '') + '</p><div class="' + (act.reveal ? 'reveal' : '') + '">';
       (act.options || []).forEach(function (o, i) {
         var v = (act.verdicts || [])[i] || '';
-        h += '<button class="vbtn ' + (myVote === i ? 'mine ' : '') + (act.reveal ? v : '') + '" data-i="' + i + '"' + (act.open ? '' : ' disabled') + '><b>' + String.fromCharCode(65 + i) + '</b>' + esc(o) +
+        var pct = '';
+        if (act.reveal && act.counts) { var tot = 0; Object.keys(act.counts).forEach(function (k) { tot += act.counts[k]; }); if (tot) pct = '<span class="pct">' + Math.round(100 * (act.counts[i] || 0) / tot) + '%</span>'; }
+        h += '<button class="vbtn ' + (myVote === i ? 'mine ' : '') + (act.reveal ? v : '') + '" data-i="' + i + '"' + (act.open ? '' : ' disabled') + '>' + pct + '<b>' + String.fromCharCode(65 + i) + '</b>' + esc(o) +
           (act.reveal && act.outcomes ? '<div class="o">' + PE.md(act.outcomes[i] || '').replace(/<\/?p>/g, ' ') + '</div>' : '') + '</button>';
       });
       h += '</div>' + (myVote != null ? '<div class="ok">✓ Your vote: ' + String.fromCharCode(65 + myVote) + (act.reveal ? '' : ' · watch the big screen') + '</div>' : '') +
@@ -61,7 +66,8 @@
       return show(h);
     }
     if (act.type === 'wall') {
-      return show('<div class="small" style="font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">Anonymous</div><h1>' + esc(act.title || 'What worries you most about being President?') + '</h1>' +
+      var th = act.themes ? '<div class="themes"><div class="small" style="font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">What the room is worried about</div>' + PE.md(act.themes) + '</div>' : '';
+      return show(th + '<div class="small" style="font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">Anonymous</div><h1>' + esc(act.title || 'What worries you most about being President?') + '</h1>' +
         '<p class="muted">Your name is not attached. Send as many as you like, one at a time.</p><textarea class="big" id="w" maxlength="400" placeholder="Type here…"></textarea>' +
         '<button class="btn pri huge" id="ws" style="margin-top:10px">Send</button><div id="wm"></div>');
     }
