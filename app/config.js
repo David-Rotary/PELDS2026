@@ -13,7 +13,7 @@
                 Used for the QR code on the presenter screen.
    ============================================================ */
 window.PE_CONFIG = {
-  AI_URL: '',
+  AI_URL: 'https://pe-coach.david-button.workers.dev/',
   ACCESS_CODE: '',
-  SITE_URL: ''
+  SITE_URL: 'https://david-rotary.github.io/PELDS2026/'
 };
