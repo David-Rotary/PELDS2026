@@ -11,7 +11,7 @@
   PE.planSections = ['My why', 'Our club today', 'Vision & goals', 'Members & engagement',
     'Projects & community', 'Foundation & giving', 'My team & support', 'Public image', 'Notes'];
   PE.typeNames = { text: 'Read', reflect: 'Reflect', scenario: 'Scenario', quiz: 'Quick quiz', checklist: 'Checklist',
-    resource: 'Resources', ai: 'AI helper', discuss: 'Discuss', glossary: 'Glossary', calendar: 'Calendar', profile: 'Self-profile', video: 'Video', roleplay: 'Practise (AI)' };
+    resource: 'Resources', ai: 'AI helper', discuss: 'Discuss', glossary: 'Glossary', calendar: 'Calendar', profile: 'Self-profile', video: 'Video', roleplay: 'Practise (AI)', rating: 'Health check' };
 
   /* ---------- module registration ---------- */
   PE.register = function (m, opts) {
@@ -300,6 +300,35 @@
     return box;
   };
 
+  /* rating: score a few statements 1-5, then see where to start */
+  R.rating = function (it, ctx) {
+    var box = el('div'), key = PE.k(ctx.m, it); ctx.st.quiz[key] = ctx.st.quiz[key] || {};
+    var a = ctx.st.quiz[key], scale = PE.lines(it.scale).length ? PE.lines(it.scale) : ['Not yet', 'A little', 'Sometimes', 'Mostly', 'Absolutely'];
+    if (it.intro) box.appendChild(el('div', 'body', PE.md(it.intro)));
+    var res = el('div', 'profres');
+    function sum() {
+      var rows = it.items || [], n = 0, tot = 0; res.innerHTML = '';
+      rows.forEach(function (r, i) { if (a[i] != null) { n++; tot += +a[i] + 1; } });
+      if (n < rows.length) { res.appendChild(el('p', 'small muted', 'Rated ' + n + ' of ' + rows.length + '.')); return; }
+      var order = rows.map(function (r, i) { return i; }).sort(function (x, y) { return a[x] - a[y]; });
+      var h = '<b>Your score: ' + tot + ' out of ' + rows.length * 5 + '.</b> Start with:';
+      order.slice(0, 2).forEach(function (i) { var r = rows[i]; h += '<div style="margin-top:8px"><b>' + inline(r.label) + '</b>' + (r.tip ? PE.md(r.tip) : '') + '</div>'; });
+      res.appendChild(el('div', 'callout', h));
+    }
+    (it.items || []).forEach(function (r, i) {
+      var b = el('div', 'qblock'); b.appendChild(el('div', null, '<b>' + inline(r.label) + '</b>' + (r.hint ? '<div class="small muted">' + inline(r.hint) + '</div>' : '')));
+      var row = el('div', 'row'); row.style.marginTop = '8px';
+      scale.forEach(function (lab, j) {
+        var ob = el('button', 'opt', (j + 1) + ' · ' + PE.esc(lab)); ob.type = 'button'; ob.style.width = 'auto'; ob.style.margin = '0';
+        if (a[i] != null && +a[i] === j) ob.classList.add('right');
+        ob.onclick = function () { a[i] = j; ctx.save(); row.querySelectorAll('.opt').forEach(function (x, k) { x.classList.toggle('right', k === j); }); sum(); };
+        row.appendChild(ob);
+      });
+      b.appendChild(row); box.appendChild(b);
+    });
+    box.appendChild(res); sum(); return box;
+  };
+
   PE.renderItem = function (m, it, st, save) {
     var wrap = el('div');
     wrap.appendChild(el('div', 'kind', PE.typeNames[it.type] || it.type));
@@ -315,7 +344,7 @@
     var parts = [it.title, it.body, it.prompt, it.hint, it.setup, it.debrief, it.intro, it.goal];
     (it.choices || []).forEach(function (c) { parts.push(c.text, c.outcome); });
     (it.questions || []).forEach(function (q) { parts.push(typeof q === 'string' ? q : q.q); });
-    (it.items || []).forEach(function (r) { parts.push(typeof r === 'string' ? r : r.label + ' ' + (r.note || '')); });
+    (it.items || []).forEach(function (r) { parts.push(typeof r === 'string' ? r : r.label + ' ' + (r.note || r.hint || '')); });
     (it.terms || []).forEach(function (t) { parts.push(t.term, t.meaning); });
     (it.months || []).forEach(function (m) { parts.push(m.month, m.theme, PE.lines(m.tasks).join(' ')); });
     return parts.filter(Boolean).join(' ');
