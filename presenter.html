@@ -36,6 +36,10 @@
   .verd{display:none;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-right:6px}
   .strong .verd{color:#5fd18d} .mixed .verd{color:#f7c35b} .weak .verd{color:#ff7b8f}
   .wall{columns:3 280px;column-gap:14px;margin-top:2vh}
+  .split{position:relative;display:flex;gap:18px;flex-wrap:wrap;margin-top:6px;font-size:clamp(.85rem,1.1vw,1rem)}
+  .split:empty{display:none}
+  .rl{padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.1)} .rl.pe{border:1px solid #F7A81B} .rl.mc{border:1px solid #00A2E0}
+  .rb{display:block;margin-top:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#8a5a00} .rb.mc{color:#00658c}
   .note{break-inside:avoid;background:#fff8dc;color:#2b2b2b;border-radius:10px;padding:12px 14px;margin:0 0 14px;font-size:1.05rem;box-shadow:0 3px 10px rgba(0,0,0,.25)}
   .themes{background:#fff;color:var(--ink);border-radius:16px;padding:18px 22px;margin-top:2vh;max-width:1100px}
   .login{max-width:420px;margin:12vh auto;background:#fff;color:var(--ink);border-radius:18px;padding:24px}
@@ -97,14 +101,16 @@
     var s = document.getElementById('side');
     var h = '<div class="row" style="justify-content:space-between"><b>Presenter</b><span class="badge">' + esc(room) + '</span></div>' +
       '<h3>Screens</h3><button class="ctl ' + (act.type === 'idle' ? 'on' : '') + '" data-a="idle">Welcome &amp; QR code<div class="sub">People scan to join</div></button>' +
-      '<button class="ctl ' + (act.type === 'wall' ? 'on' : '') + '" data-a="wall">Worries wall<div class="sub">"What worries you most?"</div></button>';
+      '<button class="ctl ' + (act.type === 'wall' && act.id !== 'barriers' ? 'on' : '') + '" data-a="wall">Worries wall<div class="sub">"What worries you most about being President?"</div></button>' +
+      '<button class="ctl ' + (act.type === 'wall' && act.id === 'barriers' ? 'on' : '') + '" data-a="barriers">Membership barriers wall<div class="sub">"Biggest barrier to growing or keeping members?"</div></button>';
     if (act.type === 'poll') h += '<h3>This vote</h3>' +
       '<button class="ctl" data-a="toggle">' + (act.open ? 'Close voting' : 'Re-open voting') + '</button>' +
       '<button class="ctl" data-a="reveal">' + (act.reveal ? 'Hide outcomes' : 'Reveal outcomes') + '</button>';
     if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI<div class="sub">Also appears on everyone\'s phone</div></button>';
     h += '<h3>Scenario votes</h3>';
     scenarios.forEach(function (x, i) { h += '<button class="ctl ' + (act.type === 'poll' && act.id === x.id ? 'on' : '') + '" data-s="' + i + '">' + esc(x.it.title) + '<div class="sub">' + esc(x.m.title) + '</div></button>'; });
-    h += '<h3>Reset for a new session</h3><button class="ctl" data-a="clearv">Clear all votes…<div class="sub">Every scenario vote and the talk poll</div></button><button class="ctl" data-a="clearw">Clear the wall…<div class="sub">Removes every worry and the themes</div></button>';
+    h += '<h3>Reset for a new session</h3><button class="ctl" data-a="clearv">Clear all votes…<div class="sub">Every scenario vote and the talk poll</div></button><button class="ctl" data-a="clearw">Clear the wall…<div class="sub">Removes every answer on both walls, and the themes</div></button>';
+    h += '<h3>Results</h3><button class="ctl" data-a="download">Download results<div class="sub">Votes by role, walls and themes, as a spreadsheet</div></button>';
     h += '<h3>Today</h3><div class="mini" id="usage">…</div>' +
       '<h3>Screen</h3><button class="ctl" data-a="fs">Full screen</button><button class="ctl" data-a="logout">Sign out</button>';
     s.innerHTML = h;
@@ -119,7 +125,9 @@
   }
   function action(a) {
     if (a === 'idle') setAct({ type: 'idle', title: 'Welcome, Presidents-Elect!', message: 'You\'re in. Votes will appear here automatically. Keep this page open.' });
-    if (a === 'wall') setAct({ type: 'wall', title: 'What worries you most about being President?', open: true });
+    if (a === 'wall') setAct({ type: 'wall', id: 'worries', title: 'What worries you most about being President?', open: true });
+    if (a === 'barriers') setAct({ type: 'wall', id: 'barriers', title: 'What\'s the biggest barrier to growing or keeping members in your club?', open: true });
+    if (a === 'download') download();
     if (a === 'toggle') { act.open = !act.open; setAct(act); }
     if (a === 'reveal') {
       var x = scenarios.find(function (s) { return s.id === act.id; });
@@ -133,7 +141,7 @@
     if (a === 'themes') {
       var t = document.getElementById('themes'); if (!t) return;
       t.className = 'themes'; t.innerHTML = ''; t.appendChild(ai.thinking());
-      ai.post('/api/coach', { mode: 'themes', admin: admin, payload: { room: room } }).then(function (r) {
+      ai.post('/api/coach', { mode: 'themes', admin: admin, payload: { room: room, topic: act.id || 'worries', question: act.title } }).then(function (r) {
         themes = r.text || ('Could not get themes: ' + (r.message || r.error)); t.innerHTML = '<h2 style="margin-top:0">Themes</h2>' + PE.md(themes);
         if (r.text) { act.themes = r.text.slice(0, 8000); api('set', { activity: act }).then(function () { PE.toast('Themes sent to everyone\'s phone'); }); }
       }).catch(function () { t.innerHTML = 'Could not reach the AI coach.'; });
@@ -160,7 +168,7 @@
         '<div class="bars ' + (act.reveal ? 'reveal' : '') + '" id="bars">' + (act.options || []).map(function (o, i) {
           var v = (act.verdicts || [])[i] || '';
           return '<div class="bar ' + v + '"><div class="fill" style="width:0"></div><div class="t"><b>' + String.fromCharCode(65 + i) + '</b><span>' + esc(o) + '</span><span class="n">0</span></div>' +
-            '<div class="o"><span class="verd">' + ({ strong: 'Strong choice', mixed: 'Partly there', weak: 'Risky choice' }[v] || '') + '</span>' + PE.md((act.outcomes || [])[i] || '').replace(/<\/?p>/g, ' ') + '</div></div>';
+            '<div class="split"></div><div class="o"><span class="verd">' + ({ strong: 'Strong choice', mixed: 'Partly there', weak: 'Risky choice' }[v] || '') + '</span>' + PE.md((act.outcomes || [])[i] || '').replace(/<\/?p>/g, ' ') + '</div></div>';
         }).join('') + '</div>';
     } else if (act.type === 'wall') {
       s.innerHTML = '<div class="kind">Anonymous · on your phone · <span id="wc">0</span> so far</div><h1>' + esc(act.title) + '</h1><div id="themes">' + (themes ? '' : '') + '</div><div class="wall" id="wall"></div>';
@@ -168,6 +176,39 @@
       if (themes) { var t = document.getElementById('themes'); t.className = 'themes'; t.innerHTML = '<h2 style="margin-top:0">Themes</h2>' + PE.md(themes); }
     }
   }
+  /* ---------- download all results as a CSV spreadsheet ---------- */
+  var TALK = { 'talk-said-yes': { title: 'When you said yes to being President, you felt…', options: ['Excited — bring it on', 'Nervous, but willing', 'Talked into it', 'Still not sure why I said yes'] } };
+  var ROLE = { pe: 'President-Elect', mc: 'Membership Chair', other: 'Other', '': 'Not given' };
+  function download() {
+    api('export').then(function (r) {
+      if (!r || r.error) { PE.toast('Could not download: ' + ((r && r.error) || 'error')); return; }
+      var q = function (v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+      var line = function (a) { return a.map(q).join(','); };
+      var info = function (id) { var x = scenarios.find(function (s) { return s.id === id; }); return x ? { title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) } : (TALK[id] || { title: id, options: [] }); };
+      var out = [line(['District 9815 · ' + room + ' · downloaded ' + new Date().toLocaleString('en-AU')]), ''];
+      /* 1. summary */
+      out.push(line(['VOTE SUMMARY']), line(['Question', 'Option', 'Presidents-Elect', 'Membership Chairs', 'Other / not given', 'Total']));
+      var polls = {}; (r.votes || []).forEach(function (v) { var p = polls[v.poll] = polls[v.poll] || {}; var o = p[v.choice] = p[v.choice] || { pe: 0, mc: 0, x: 0 }; if (v.role === 'pe') o.pe++; else if (v.role === 'mc') o.mc++; else o.x++; });
+      Object.keys(polls).forEach(function (id) {
+        var inf = info(id), p = polls[id], n = Math.max(inf.options.length, Math.max.apply(null, Object.keys(p).map(Number)) + 1);
+        for (var i = 0; i < n; i++) { var o = p[i] || { pe: 0, mc: 0, x: 0 }; out.push(line([inf.title, String.fromCharCode(65 + i) + '. ' + (inf.options[i] || ''), o.pe, o.mc, o.x, o.pe + o.mc + o.x])); }
+      });
+      /* 2. walls */
+      out.push('', line(['WALL ANSWERS']), line(['Question', 'Answer', 'Role', 'Time']));
+      var walls = { worries: 'What worries you most about being President?', barriers: 'What\'s the biggest barrier to growing or keeping members in your club?' };
+      (r.worries || []).forEach(function (w) { out.push(line([walls[w.topic] || w.topic, w.text, ROLE[w.role] || w.role, new Date(w.ts).toLocaleString('en-AU')])); });
+      /* 3. themes on screen now */
+      if (themes || act.themes) out.push('', line(['AI THEMES (' + (act.title || '') + ')']), line([themes || act.themes]));
+      /* 4. every vote */
+      out.push('', line(['EVERY VOTE']), line(['Question', 'Choice', 'Role', 'Time']));
+      (r.votes || []).forEach(function (v) { var inf = info(v.poll); out.push(line([inf.title, String.fromCharCode(65 + v.choice) + '. ' + (inf.options[v.choice] || ''), ROLE[v.role] || v.role, new Date(v.ts).toLocaleString('en-AU')])); });
+      var blob = new Blob(['\ufeff' + out.join('\r\n')], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'PELDS-session-results-' + new Date().toISOString().slice(0, 10) + '.csv';
+      document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+      PE.toast('Results downloaded — check your Downloads folder');
+    }).catch(function () { PE.toast('Could not reach the online service'); });
+  }
+
   function tick() {
     clearTimeout(timer);
     var p;
@@ -176,11 +217,18 @@
       for (i = 0; i < n; i++) tot += c[i] || 0;
       var bars = document.querySelectorAll('#bars .bar'); var t = document.getElementById('tot'); if (t) t.textContent = tot + (tot === 1 ? ' vote' : ' votes');
       bars.forEach(function (b, i) { var k = c[i] || 0; b.querySelector('.n').textContent = k + (tot ? ' · ' + Math.round(100 * k / tot) + '%' : ''); b.querySelector('.fill').style.width = (tot ? 100 * k / tot : 0) + '%'; });
+      /* split by role: % of each role's votes that went to each option */
+      var br = r.byRole || {}, shown = ['pe', 'mc'].filter(function (k) { return br[k]; });
+      var rt = {}; shown.forEach(function (k) { rt[k] = 0; for (var j = 0; j < n; j++) rt[k] += br[k][j] || 0; });
+      bars.forEach(function (b, i) {
+        var sp = b.querySelector('.split'); if (!sp) return;
+        sp.innerHTML = shown.length ? shown.map(function (k) { var v = br[k][i] || 0; return '<span class="rl ' + k + '">' + (k === 'pe' ? 'Presidents-Elect' : 'Membership Chairs') + ' <b>' + (rt[k] ? Math.round(100 * v / rt[k]) : 0) + '%</b></span>'; }).join('') : '';
+      });
     });
-    else if (act.type === 'wall') p = api('worries').then(function (r) {
+    else if (act.type === 'wall') p = api('worries', { topic: act.id || 'worries' }).then(function (r) {
       var w = document.getElementById('wall'); if (!w) return; var list = r.worries || [];
       document.getElementById('wc').textContent = list.length;
-      var h = list.map(function (x) { return '<div class="note">' + esc(x.text) + '</div>'; }).join('');
+      var h = list.map(function (x) { return '<div class="note">' + esc(x.text) + (x.role === 'pe' || x.role === 'mc' ? '<span class="rb ' + x.role + '">' + (x.role === 'pe' ? 'PE' : 'Membership') + '</span>' : '') + '</div>'; }).join('');
       if (w._h !== h) { w._h = h; w.innerHTML = h; }
     });
     Promise.resolve(p).catch(function () { }).then(function () { timer = setTimeout(tick, 2500); });
