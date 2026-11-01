@@ -101,9 +101,10 @@
     if (act.type === 'poll') h += '<h3>This vote</h3>' +
       '<button class="ctl" data-a="toggle">' + (act.open ? 'Close voting' : 'Re-open voting') + '</button>' +
       '<button class="ctl" data-a="reveal">' + (act.reveal ? 'Hide outcomes' : 'Reveal outcomes') + '</button>';
-    if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI<div class="sub">Also appears on everyone\'s phone</div></button><button class="ctl" data-a="clearw">Clear the wall…</button>';
+    if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI<div class="sub">Also appears on everyone\'s phone</div></button>';
     h += '<h3>Scenario votes</h3>';
     scenarios.forEach(function (x, i) { h += '<button class="ctl ' + (act.type === 'poll' && act.id === x.id ? 'on' : '') + '" data-s="' + i + '">' + esc(x.it.title) + '<div class="sub">' + esc(x.m.title) + '</div></button>'; });
+    h += '<h3>Reset for a new session</h3><button class="ctl" data-a="clearv">Clear all votes…<div class="sub">Every scenario vote and the talk poll</div></button><button class="ctl" data-a="clearw">Clear the wall…<div class="sub">Removes every worry and the themes</div></button>';
     h += '<h3>Today</h3><div class="mini" id="usage">…</div>' +
       '<h3>Screen</h3><button class="ctl" data-a="fs">Full screen</button><button class="ctl" data-a="logout">Sign out</button>';
     s.innerHTML = h;
@@ -137,7 +138,8 @@
         if (r.text) { act.themes = r.text.slice(0, 8000); api('set', { activity: act }).then(function () { PE.toast('Themes sent to everyone\'s phone'); }); }
       }).catch(function () { t.innerHTML = 'Could not reach the AI coach.'; });
     }
-    if (a === 'clearw') { if (window.confirm('Remove every note from the wall for this session?')) api('clear', { what: 'worries' }).then(function () { stage(); }); }
+    if (a === 'clearw') { if (window.confirm('Remove every note from the wall for this session?')) api('clear', { what: 'worries' }).then(function () { if (act.type === 'wall' && act.themes) { delete act.themes; setAct(act); } else { themes = ''; stage(); } PE.toast('Wall cleared'); }); }
+    if (a === 'clearv') { if (window.confirm('Clear every vote in this session (all scenarios and the talk poll)?')) api('clear', { what: 'votes' }).then(function () { if (act.type === 'poll') { act.open = true; act.reveal = false; delete act.counts; delete act.outcomes; delete act.verdicts; setAct(act); } PE.toast('All votes cleared'); }); }
     if (a === 'fs') { var d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(function () { }); else if (document.exitFullscreen) document.exitFullscreen().catch(function () { }); }
     if (a === 'logout') { ls('pe-admin', ''); admin = ''; clearTimeout(timer); login(); }
   }
