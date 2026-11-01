@@ -33,9 +33,9 @@
 </head>
 <body>
 <div class="j">
-  <header><div class="mark">9815</div><div><b>District 9815 · Presidents-Elect</b><div class="small" style="opacity:.85">You're connected. Keep this page open.</div></div></header>
+  <header><div class="mark">9815</div><div><b>District 9815 · Pre-PELDS</b><div class="small" style="opacity:.85">You're connected. Keep this page open.</div></div></header>
   <div class="panel" id="p"><div class="wait"><div class="pulse"></div>Connecting…</div></div>
-  <div class="foot"><a id="tk" href="START%20HERE.html" target="_blank">Open the full toolkit on this device ↗</a><br><span style="opacity:.75;font-size:.82rem">It opens in a new tab, so this page stays here for the next vote.</span></div>
+  <div class="foot"><a id="tk" href="START%20HERE.html" target="_blank">Open the full toolkit on this device ↗</a><br><span style="opacity:.75;font-size:.82rem">It opens in a new tab, so this page stays here for the next vote.</span><div id="roleline" style="margin-top:10px;font-size:.85rem;opacity:.85"></div></div>
 </div>
 <script src="app/engine.js"></script>
 <script src="app/config.js"></script>
@@ -45,11 +45,17 @@
   'use strict';
   var ai = PE.ai, p = document.getElementById('p'), esc = PE.esc, room = ai.room();
   var code = ai.code(), dev = ai.device(), last = '', act = null, myVote = null, timer;
+  var role = ''; try { role = localStorage.getItem('pe-role') || ''; } catch (e) {}
+  var ROLE_NAME = { pe: 'President-Elect', mc: 'Membership Chair', other: 'Something else' };
   document.getElementById('tk').href = 'START%20HERE.html' + (code ? '?code=' + encodeURIComponent(code) : '');
 
   function show(html) { if (html !== last) { last = html; p.innerHTML = html; wire(); } }
   function render() {
     if (!ai.url) return show('<h1>Almost there</h1><p>This page needs the online version of the toolkit. Ask the presenter for the link or QR code.</p>');
+    if (!role) return show('<h1>Welcome!</h1><p class="lead">One quick tap so we can compare how different roles see things. Your name is never recorded.</p>' +
+      '<button class="vbtn pickrole" data-r="pe"><b>👤</b>I\'m a President-Elect</button>' +
+      '<button class="vbtn pickrole" data-r="mc"><b>🤝</b>I\'m a Membership Chair</button>' +
+      '<button class="vbtn pickrole" data-r="other"><b>✦</b>Something else</button>');
     if (!act) return show('<div class="wait"><div class="pulse"></div>Connecting…</div>');
     if (act.type === 'poll') {
       var h = '<div class="small muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure)">Vote</div><h1>' + esc(act.title) + '</h1>' +
@@ -74,10 +80,13 @@
     show('<div class="wait"><div class="pulse"></div><h1>' + esc(act.title || 'Welcome!') + '</h1><p class="lead">' + esc(act.message || 'You\'re in. When the presenter starts a vote, it will appear here automatically.') + '</p></div>');
   }
   function wire() {
-    p.querySelectorAll('.vbtn').forEach(function (b) {
+    p.querySelectorAll('.pickrole').forEach(function (b) {
+      b.onclick = function () { role = b.dataset.r; try { localStorage.setItem('pe-role', role); } catch (e) {} last = ''; render(); drawRole(); };
+    });
+    p.querySelectorAll('.vbtn:not(.pickrole)').forEach(function (b) {
       b.onclick = function () {
         var i = +b.dataset.i; myVote = i; last = ''; render();
-        ai.post('/api/live/vote', { room: room, poll: act.id, choice: i, device: dev, code: code }).then(function (r) {
+        ai.post('/api/live/vote', { room: room, poll: act.id, choice: i, device: dev, code: code, role: role }).then(function (r) {
           if (r.error === 'bad_code') PE.toast('Access code not accepted. Please scan the QR code again.');
           else if (r.error) PE.toast('Voting has closed');
         }).catch(function () { PE.toast('No connection — try again'); });
@@ -87,7 +96,7 @@
     if (ws) ws.onclick = function () {
       var w = document.getElementById('w'), t = w.value.trim(); if (!t) { w.focus(); return; }
       ws.disabled = true;
-      ai.post('/api/live/worry', { room: room, text: t, device: dev, code: code }).then(function (r) {
+      ai.post('/api/live/worry', { room: room, text: t, device: dev, code: code, role: role }).then(function (r) {
         var m = document.getElementById('wm');
         if (r.ok) { w.value = ''; m.innerHTML = '<div class="ok">✓ Sent. Thank you! Add another if you like.</div>'; }
         else m.innerHTML = '<div class="warn">' + (r.error === 'too_many' ? 'Thanks, that\'s the maximum from one phone.' : r.error === 'bad_code' ? 'Access code not accepted. Please scan the QR code again.' : 'Could not send. Try again.') + '</div>';
@@ -106,6 +115,12 @@
       })
       .catch(function () { if (!act) show('<h1>No connection</h1><p>Check your Wi-Fi or mobile data. This page will keep trying.</p>'); });
   }
+  function drawRole() {
+    var r = document.getElementById('roleline'); if (!r) return;
+    r.innerHTML = role ? 'You\'re voting as: <b>' + ROLE_NAME[role] + '</b> · <a href="#" id="chrole" style="color:#fff">change</a>' : '';
+    var c = document.getElementById('chrole'); if (c) c.onclick = function (e) { e.preventDefault(); role = ''; try { localStorage.removeItem('pe-role'); } catch (x) {} last = ''; render(); drawRole(); };
+  }
+  drawRole();
   function loop() { clearTimeout(timer); if (!document.hidden) poll(); timer = setTimeout(loop, 4000); }
   document.addEventListener('visibilitychange', function () { if (!document.hidden) loop(); });
   loop();
