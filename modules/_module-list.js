@@ -7,6 +7,7 @@
 window.PE_MODULE_FILES = [
   "welcome.js",
   "your-mentor.js",
+  "membership-partnership.js",
   "year-in-the-chair.js",
   "practise-conversations.js",
   "presidential-plan.js",
