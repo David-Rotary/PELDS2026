@@ -118,12 +118,11 @@ var SLIDES = [
     lead: '<p>The people who used to walk beside a new President have moved on, moved away, or are tired.</p><p>So today, and through the toolkit all year, <b>let us be that mentor for you.</b></p>',
     notes: 'Acknowledge the reality without doom. Key line: "You are not on your own this year — the District has your back." Pause.' },
 
-  { type: 'video', mins: 1.25, file: 'videos/mentor-letter.mp4', loop: false, sound: true,
+  { type: 'quote', mins: 1.5,
     kicker: 'A letter to a new President',
-    title: 'What I wish someone had told me',
-    fallback: '<div class="big-q">You don\'t have to be the best Rotarian in the room. You just have to care, ask good questions, and let other people shine.</div><div class="src">— a past President\'s advice (record your own version)</div>',
-    notes: 'Play your 45–60 second talking-to-camera video. Suggested outline (in your own words): when you were first asked; the "why me?" moment; what the year actually gave you (confidence, friendships, skills); one thing you\'d tell yourself; "you can do this, and you won\'t be alone."',
-    record: 'mentor-letter.mp4 — you talking to camera on your phone, 45–60 sec, landscape, quiet room.' },
+    quote: 'You don\'t have to be the best Rotarian in the room. You just have to care, ask good questions, and let other people shine.',
+    src: 'What I wish someone had told me — David Button, two-time club President',
+    notes: 'Tell it in person, about 60–90 seconds, from your own story:\n• When I was first asked to be President, my honest first thought was…\n• What the year actually gave me: confidence, friendships, skills I still use.\n• The thing I wish someone had told me (the quote on screen).\n• Close: "You can do this — and this year you won\'t be doing it alone."\nPause before moving on.' },
 
   { type: 'grid', mins: 1.5, cols: 3,
     kicker: 'The reframe',
@@ -364,6 +363,8 @@ var SLIDES = [
   deck.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
   deck.addEventListener('touchend', function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); sx = null; });
   go(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  /* the run sheet can jump straight to a slide by changing the #number */
+  window.addEventListener('hashchange', function () { var n = parseInt(location.hash.slice(1), 10); if (n && n - 1 !== cur) go(n - 1); });
 })();
 </script>
 </body>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Run Sheet · Pre-PELDS · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B2A5C;--royal:#17458F;--azure:#0067C8;--sky:#00A2E0;--gold:#F7A81B;--ink:#1b2333;--ink2:#4a5468;--line:#dfe4ec;--soft:#f3f6fb;
+  --display:'Fraunces',Georgia,serif;--body:'Hanken Grotesk','Segoe UI',system-ui,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--body);color:var(--ink);background:#f4f6fa;line-height:1.45}
+header{background:linear-gradient(135deg,#0B2A5C,#17458F 60%,#0067C8);color:#fff;padding:16px 20px 14px;position:sticky;top:0;z-index:10}
+header .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;max-width:980px;margin:0 auto}
+header h1{font-family:var(--display);font-weight:600;font-size:1.45rem;margin:0;flex:1;min-width:220px}
+header h1 em{color:var(--gold);font-weight:500}
+.clock{font-weight:800;font-size:1.4rem;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.12);padding:4px 12px;border-radius:10px}
+.hb{background:var(--gold);color:var(--navy);border:0;border-radius:999px;padding:8px 14px;font:800 .9rem var(--body);cursor:pointer}
+.hb.alt{background:rgba(255,255,255,.15);color:#fff}
+.rb{display:flex;height:5px}.rb i{flex:1}
+main{max-width:980px;margin:0 auto;padding:18px 16px 60px}
+.intro{font-size:.95rem;color:var(--ink2);margin:0 0 14px}
+.sec{background:#fff;border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden;scroll-margin-top:90px}
+.sec.now{border-color:var(--gold);box-shadow:0 0 0 3px rgba(247,168,27,.35)}
+.sec.done{opacity:.55}
+.sh{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--soft);cursor:pointer}
+.t{font-weight:800;color:var(--royal);font-variant-numeric:tabular-nums;min-width:58px}
+.sh h2{font-size:1.05rem;margin:0;flex:1}
+.sh .d{font-size:.8rem;color:var(--ink2);white-space:nowrap}
+.sb{padding:10px 16px 14px}
+.say{font-family:var(--display);font-style:italic;font-size:1.05rem;color:var(--royal);border-left:4px solid var(--gold);padding:4px 0 4px 12px;margin:6px 0 10px}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.links a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:700;font-size:.9rem;padding:7px 12px;border-radius:10px;border:1px solid var(--line);color:var(--ink);background:#fff}
+.links a:hover{border-color:var(--azure)}
+.links a.talk{background:#eaf2fd;border-color:#b9d3f4}
+.links a.pres{background:#fff4dc;border-color:#f3d08a}
+.links a.web{background:#eef9f1;border-color:#bfe6cd}
+.links a .n{background:var(--royal);color:#fff;border-radius:6px;padding:0 6px;font-size:.78rem}
+ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
+.opt{border:1px dashed #c9a24a;background:#fffaf0}
+.opt .sh{background:#fff6e0}
+.tag{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:var(--gold);color:var(--navy);padding:2px 8px;border-radius:999px}
+.key{font-size:.85rem;color:var(--ink2);display:flex;gap:14px;flex-wrap:wrap;margin:4px 0 12px}
+.key span{display:inline-flex;align-items:center;gap:6px}.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.check{display:flex;gap:8px;align-items:flex-start;margin:4px 0}
+.check input{margin-top:4px;width:18px;height:18px;accent-color:var(--royal)}
+@media print{header{position:static}.hb,.clock{display:none}.sec{break-inside:avoid}.sec.done{opacity:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="row">
+    <h1>Run sheet · <em>Why me? to Why not me?</em></h1>
+    <span class="clock" id="clock" title="Time since you pressed Start">0:00</span>
+    <button class="hb" id="start">Start timer</button>
+    <button class="hb alt" id="reset">Reset</button>
+  </div>
+</header>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+<main>
+  <p class="intro">Keep this page on your laptop or tablet. Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons open a website or the toolkit. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
+  <div class="key"><span><i style="background:#b9d3f4"></i>Talk slide</span><span><i style="background:#f3d08a"></i>Presenter screen</span><span><i style="background:#bfe6cd"></i>Website / toolkit</span></div>
+  <div id="list"></div>
+</main>
+<script>
+/* Edit the run sheet here. t = start time (minutes), d = duration, talk = slide numbers. */
+var SECTIONS = [
+  { id: 'setup', t: -15, d: 15, title: 'Before people arrive', checks: [
+      'Laptop on power, Wi-Fi connected, projector showing',
+      'Open the presenter screen and sign in (presenter password)',
+      'Presenter screen: Reset for a new session → Clear all votes, then Clear the wall',
+      'Presenter screen: click Welcome & QR code and leave it on the projector while people arrive',
+      'Open the talk on slide 1 in a second window (press F for full screen when you switch to it)',
+      'Phone on silent; water nearby'],
+    links: [['pres', 'presenter.html', 'Presenter screen'], ['talk', 1, 'Talk: title slide']] },
+
+  { id: 'welcome', t: 0, d: 2, title: 'Welcome and join in', talk: [1],
+    say: 'Grab your phone, point the camera at the square code and tap the link. No app, no password, no name.',
+    notes: ['Leave the QR code up while people join. They tap their role: President-Elect, Membership Chair or something else.', 'Then switch to the talk title slide and welcome everyone: "For the next 20 minutes I want to be the mentor many of you may not have at your club right now."'],
+    links: [['pres', 'presenter.html', 'QR code (presenter screen)'], ['talk', 1, 'Title slide']] },
+
+  { id: 'honest', t: 2, d: 2, title: 'An honest start', talk: [2, 3],
+    say: 'When you said yes to being President, how did you really feel?',
+    notes: ['Slide 2: click "Open vote on phones" (or count hands by clicking each option).', 'Read the result kindly: "If you ticked nervous or talked into it, you\'re in the majority, and you\'re taking it seriously."', 'Slide 3: name the reality: clubs find it hard to find Presidents, and many have no mentor.'],
+    links: [['talk', 2, 'Poll'], ['talk', 3, 'Let\'s name it']] },
+
+  { id: 'story', t: 4, d: 1.5, title: 'Your story: a letter to a new President', talk: [4],
+    say: 'You don\'t have to be the best Rotarian in the room. You just have to care, ask good questions, and let other people shine.',
+    notes: ['In person, 60–90 seconds: when you were first asked; your honest first thought; what the year gave you; the line on screen.', 'Close: "You can do this, and this year you won\'t be doing it alone." Pause.'],
+    links: [['talk', 4, 'Letter slide']] },
+
+  { id: 'reframe', t: 5.5, d: 2, title: 'The reframe', talk: [5, 6],
+    say: 'This isn\'t a job. It\'s a leadership course, with a team to practise on.',
+    notes: ['Ask: "Which of these six skills would help you at work, at home or in your community?"', 'Slide 6: three jobs, not thirty: set direction, build the team, look after the people.'],
+    links: [['talk', 5, 'Leadership course'], ['talk', 6, 'Three jobs'], ['web', 'https://www.rotary9815.org.au/page/leadership-flow', 'Leadership Hub']] },
+
+  { id: 'plan', t: 7.5, d: 4, title: 'Building block 1: your one-page club plan', talk: [7, 8, 9, 10],
+    say: 'Three questions. Two or three goals. Not twelve.',
+    notes: ['Slide 8: where are we now; where do we want to be on 30 June; what will we do.', 'Slide 9: show the Leadership Hub: guided flow, Lead Your Club, Year Planner, succession. Click the button to show it live, or talk to the steps on the slide.', 'Slide 10: the Board meeting question. Mention the printed My Presidential Plan workbook.'],
+    links: [['talk', 7, 'Section 01'], ['talk', 8, 'Three questions'], ['talk', 9, 'Leadership Hub'], ['talk', 10, 'Board habit'], ['web', 'https://www.rotary9815.org.au/page/leadership-flow', 'Leadership Hub (live)'], ['web', 'resources/My-Presidential-Plan-workbook.pdf', 'Workbook PDF']] },
+
+  { id: 'members', t: 11.5, d: 3.5, title: 'Building block 2: membership starts with you', talk: [11, 12, 13],
+    say: 'Membership growth is the outcome. The club experience is the driver.',
+    notes: ['Welcome the Membership Chairs: "This is where you and your President become a team."', 'Slide 12: four things only the President can do.', 'Slide 13: Membership Hub and Club Assist (Victoria → Retention & engagement).', 'Link to the District Membership Growth Strategy: +15% over three years, with engagement and retention moving together.'],
+    links: [['talk', 11, 'Section 02'], ['talk', 12, 'Four things'], ['talk', 13, 'Membership Hub + Club Assist'], ['web', 'https://www.rotary9815.org.au/page/membership-flow', 'Membership Hub (live)'], ['web', 'https://clubassistrsp.z26.web.core.windows.net/?sub=Retention+%26+engagement&jur=Victoria', 'Club Assist: retention']] },
+
+  { id: 'vote', optional: true, t: 15, d: 5, title: 'Optional: membership scenario vote (adds 5 min; later times move by 5)',
+    say: 'Let\'s see whether Presidents and Membership Chairs see this the same way.',
+    notes: ['Presenter screen → Scenario votes → "The new member who went quiet" (or "The Membership Chair doing it alone").', 'Read the situation aloud. Give them 30 seconds to vote.', 'Point out the split: "Presidents-Elect chose…, Membership Chairs chose… Why?" Take two or three comments.', 'Click Reveal outcomes (phones show the outcomes and the split too). Then go back to the talk.'],
+    links: [['pres', 'presenter.html', 'Presenter screen'], ['talk', 14, 'Back to talk: Section 03']] },
+
+  { id: 'central', t: 15, d: 2, title: 'Make it real: goals in My Rotary', talk: [14, 15],
+    say: 'Ten minutes in My Rotary makes your plan official.',
+    notes: ['Sign in at my.rotary.org → Rotary Club Central → choose the right year → look at history first → membership and Foundation goals → Save each one.', 'Suggest Presidents and Membership Chairs set the membership goal together.'],
+    links: [['talk', 14, 'Section 03'], ['talk', 15, 'Club Central steps'], ['web', 'https://my.rotary.org/en/login', 'My Rotary (live)']] },
+
+  { id: 'help', t: 17, d: 1.5, title: 'You\'re not on your own', talk: [16],
+    say: 'Your AG, the district hubs, Club Assist and the toolkit: help any time.',
+    notes: ['Mention "Ask a Zone Specialist" in Club Assist.', 'The PE Toolkit is your mentor in your pocket, including the new "Your mentor" and "Membership" modules.'],
+    links: [['talk', 16, 'Where to find help'], ['web', 'https://rotarysouthpacific.org/Page/rotary-club-assist', 'Club Assist (live)'], ['web', 'START%20HERE.html', 'PE Toolkit']] },
+
+  { id: 'close', t: 18.5, d: 1.5, title: 'Commit and close', talk: [17, 18],
+    say: 'You said yes. That\'s the hardest part done.',
+    notes: ['Slide 17: first three moves. They scan the QR for the commitment card, or use the printed workbook.', 'Slide 18: close warmly and thank everyone.'],
+    links: [['talk', 17, 'Three moves + card'], ['talk', 18, 'Close'], ['web', 'commitment-card.html', 'Commitment card']] },
+
+  { id: 'wall', optional: true, t: 20, d: 6, title: 'Optional: membership barriers wall with AI themes',
+    say: 'What\'s the biggest barrier to growing or keeping members in your club?',
+    notes: ['Presenter screen → Membership barriers wall. Give people two minutes to post (anonymous; they can post several).', 'Click Find themes with AI. The themes appear on the big screen and on every phone, including how the roles differ.', 'Take one or two reactions: "Which of these surprised you?"'],
+    links: [['pres', 'presenter.html', 'Presenter screen']] },
+
+  { id: 'after', t: 26, d: 5, title: 'Afterwards', checks: [
+      'Presenter screen → Download results (votes by role, both walls, AI themes) and save the file for PELDS planning',
+      'Presenter screen → check the Today panel for how many AI requests were used',
+      'Note three things for April: scenarios that split by role, top barriers, and pathways nobody mentioned'],
+    links: [['pres', 'presenter.html', 'Presenter screen']] }
+];
+
+(function () {
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fmt(m) { if (m < 0) return '−' + Math.abs(m) + ' min'; var mm = Math.floor(m), ss = Math.round((m - mm) * 60); return mm + ':' + ('0' + ss).slice(-2); }
+  var store = {}; try { store = JSON.parse(localStorage.getItem('pe-runsheet') || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem('pe-runsheet', JSON.stringify(store)); } catch (e) {} }
+  var list = document.getElementById('list');
+  SECTIONS.forEach(function (s, i) {
+    var d = document.createElement('section'); d.className = 'sec' + (s.optional ? ' opt' : ''); d.id = s.id;
+    var links = (s.links || []).map(function (l) {
+      if (l[0] === 'talk') return '<a class="talk" href="talk.html#' + l[1] + '" target="pe-talk"><span class="n">' + l[1] + '</span>' + esc(l[2]) + '</a>';
+      if (l[0] === 'pres') return '<a class="pres" href="' + l[1] + '" target="pe-presenter">' + esc(l[2]) + '</a>';
+      return '<a class="web" href="' + l[1] + '" target="pe-web">' + esc(l[2]) + ' ↗</a>';
+    }).join('');
+    var body = (s.say ? '<div class="say">“' + esc(s.say) + '”</div>' : '') +
+      (s.notes ? '<ul>' + s.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>' : '') +
+      (s.checks ? s.checks.map(function (c, k) { var key = s.id + k; return '<label class="check"><input type="checkbox" data-k="' + key + '"' + (store['c' + key] ? ' checked' : '') + '><span>' + esc(c) + '</span></label>'; }).join('') : '') +
+      (links ? '<div class="links">' + links + '</div>' : '');
+    d.innerHTML = '<div class="sh"><span class="t">' + fmt(s.t) + '</span><h2>' + (s.optional ? '<span class="tag">Optional</span> ' : '') + esc(s.title) + '</h2><span class="d">' + (s.talk ? 'Slides ' + s.talk.join(', ') + ' · ' : '') + s.d + ' min</span></div><div class="sb">' + body + '</div>';
+    d.querySelector('.sh').onclick = function () { store.now = s.id; save(); mark(); };
+    list.appendChild(d);
+  });
+  list.addEventListener('change', function (e) { var k = e.target.dataset.k; if (k) { store['c' + k] = e.target.checked; save(); } });
+  function mark() {
+    var hit = false;
+    SECTIONS.forEach(function (s) { var el = document.getElementById(s.id); var now = s.id === store.now; if (now) hit = true; el.classList.toggle('now', now); el.classList.toggle('done', !!store.now && !hit); });
+  }
+  mark();
+  /* timer */
+  var clock = document.getElementById('clock');
+  function tick() { if (!store.t0) { clock.textContent = '0:00'; return; } var s = Math.floor((Date.now() - store.t0) / 1000); clock.textContent = Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
+  setInterval(tick, 1000); tick();
+  document.getElementById('start').onclick = function () { store.t0 = Date.now(); store.now = 'welcome'; save(); mark(); tick(); };
+  document.getElementById('reset').onclick = function () { store = {}; save(); document.querySelectorAll('input[type=checkbox]').forEach(function (c) { c.checked = false; }); mark(); tick(); };
+})();
+</script>
+</body>
+</html>
