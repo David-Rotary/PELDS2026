@@ -92,7 +92,9 @@ body:hover .hud,.hud.show{opacity:1}
    THE SLIDES — edit the words here (in Notepad or the GitHub editor).
    Each slide has: type, the words shown, notes (only you see them with N),
    mins (planned minutes, for the timer), and for video slides a file name
-   in the "videos" folder. If a video file is missing, the slide shows its
+   in the "videos" folder. Videos start by themselves when their slide
+   appears and stop when you move on. They loop silently unless the slide
+   says loop: false (play once) and/or sound: true (play with sound). If a video file is missing, the slide shows its
    step-by-step fallback instead, so the talk always works.
    ===================================================================== */
 var SITE = 'https://www.rotary9815.org.au';
@@ -116,7 +118,7 @@ var SLIDES = [
     lead: '<p>The people who used to walk beside a new President have moved on, moved away, or are tired.</p><p>So today, and through the toolkit all year, <b>let us be that mentor for you.</b></p>',
     notes: 'Acknowledge the reality without doom. Key line: "You are not on your own this year — the District has your back." Pause.' },
 
-  { type: 'video', mins: 1.25, file: 'videos/mentor-letter.mp4',
+  { type: 'video', mins: 1.25, file: 'videos/mentor-letter.mp4', loop: false, sound: true,
     kicker: 'A letter to a new President',
     title: 'What I wish someone had told me',
     fallback: '<div class="big-q">You don\'t have to be the best Rotarian in the room. You just have to care, ask good questions, and let other people shine.</div><div class="src">— a past President\'s advice (record your own version)</div>',
@@ -262,7 +264,7 @@ var SLIDES = [
     }
     if (s.type === 'video') {
       var steps = s.steps ? '<ol class="steps">' + s.steps.map(function (x) { return '<li><span>' + x + '</span></li>'; }).join('') + '</ol>' : '';
-      h = head(s) + '<div class="vwrap" data-v><video src="' + s.file + '" controls playsinline preload="metadata"></video>' +
+      h = head(s) + '<div class="vwrap" data-v><video src="' + s.file + '" controls playsinline preload="auto"></video>' +
         '<div class="vside">' + (steps ? '<div class="panel">' + steps + '</div>' : '') + '<div class="row">' + linkHTML(s.link) + linkHTML(s.link2, true) + '</div></div>' +
         '<div class="fallback">' + (s.fallback || '<div class="panel">' + steps + '</div><div class="row">' + linkHTML(s.link) + linkHTML(s.link2, true) + '</div>') + '</div></div>';
     }
@@ -326,7 +328,17 @@ var SLIDES = [
   }
   function go(i) {
     i = Math.max(0, Math.min(SLIDES.length - 1, i));
-    els.forEach(function (e, k) { e.classList.toggle('on', k === i); if (k !== i) { var v = e.querySelector('video'); if (v) v.pause(); } });
+    els.forEach(function (e, k) {
+      e.classList.toggle('on', k === i);
+      var v = e.querySelector('video'); if (!v) return;
+      if (k !== i) { v.pause(); return; }
+      /* this slide's video: start from the beginning, loop silently unless the slide says otherwise */
+      var sl = SLIDES[k];
+      v.loop = sl.loop !== false; v.muted = !sl.sound;
+      try { v.currentTime = 0; } catch (x) {}
+      var pr = v.play();
+      if (pr && pr.catch) pr.catch(function () { v.muted = true; v.play().catch(function () {}); });
+    });
     cur = i; if (!started && i > 0) started = Date.now();
     dots.querySelectorAll('i').forEach(function (d, k) { d.classList.toggle('on', k === i); });
     count.textContent = (i + 1) + ' / ' + SLIDES.length;
