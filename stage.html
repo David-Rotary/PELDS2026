@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projector screen · Pre-PELDS</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:"Hanken Grotesk",system-ui,sans-serif}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:none;background:#0B2A5C}
+  iframe.on{display:block}
+  #start{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#0B2A5C;color:#fff;text-align:center;padding:24px;z-index:5}
+  #start h1{font-family:Fraunces,Georgia,serif;font-weight:600;margin:0;font-size:2.2rem}
+  #start p{max-width:46ch;line-height:1.5;margin:0;opacity:.9}
+  #start button{font:inherit;font-size:1.2rem;font-weight:700;background:#F7A81B;color:#0B2A5C;border:0;border-radius:999px;padding:14px 30px;cursor:pointer}
+  #start.gone{display:none}
+  .bar{position:fixed;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#F7A81B,#00A2E0,#0067C8,#17458F);z-index:6}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<div id="start">
+  <h1>Projector screen</h1>
+  <p><b>1.</b> Drag this window onto the projector.<br><b>2.</b> Click the button below to fill the screen.<br><b>3.</b> Go back to your laptop and drive everything from the run sheet.</p>
+  <button id="go">Full screen on this display</button>
+  <p style="font-size:.85rem;opacity:.7">Nothing you click on the laptop (notes, timer, controls) will appear here.</p>
+</div>
+<iframe id="talk" src="talk.html?embed=1" allow="autoplay; fullscreen" title="Talk"></iframe>
+<iframe id="live" src="presenter.html?view=audience" title="Live screen"></iframe>
+<script>
+(function () {
+  var talk = document.getElementById('talk'), live = document.getElementById('live'), start = document.getElementById('start');
+  var bc = null; try { bc = new BroadcastChannel('pe-stage'); } catch (e) {}
+  var showing = 'talk';
+  function show(w) {
+    showing = w;
+    talk.classList.toggle('on', w === 'talk');
+    live.classList.toggle('on', w === 'live');
+    if (w === 'live') { try { live.contentWindow.location.reload(); } catch (e) {} } /* picks up a fresh sign-in */
+    if (bc) bc.postMessage({ stage: 'alive', showing: w });
+  }
+  document.getElementById('go').onclick = function () {
+    var r = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    if (r && r.catch) r.catch(function () {});
+    start.classList.add('gone'); show('talk');
+  };
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'f' || e.key === 'F') document.getElementById('go').click();
+    /* if a clicker is aimed at this window, still move the talk */
+    if (['ArrowRight', 'PageDown', ' '].indexOf(e.key) > -1 && bc) bc.postMessage({ talk: 'step', d: 1 });
+    if (['ArrowLeft', 'PageUp'].indexOf(e.key) > -1 && bc) bc.postMessage({ talk: 'step', d: -1 });
+  });
+  if (bc) bc.onmessage = function (e) {
+    var m = e.data || {};
+    if (m.show) { if (!start.classList.contains('gone')) start.classList.add('gone'); show(m.show); }
+    if (m.ping) bc.postMessage({ stage: 'alive', showing: start.classList.contains('gone') ? showing : 'waiting' });
+  };
+  if (bc) bc.postMessage({ stage: 'alive', showing: 'waiting' });
+  setInterval(function () { if (bc) bc.postMessage({ stage: 'alive', showing: start.classList.contains('gone') ? showing : 'waiting' }); }, 3000);
+})();
+</script>
+</body>
+</html>
