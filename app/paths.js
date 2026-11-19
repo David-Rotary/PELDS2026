@@ -27,6 +27,7 @@ window.PE_PATHS = {
       { when: 'January to March', steps: [
         ['Our club in numbers', 'Where your club really is, before you decide where it should go.', 'presidential-plan/snapshot'],
         ['Your two or three goals', 'Not twelve. Two or three you believe in.', 'presidential-plan/goals'],
+        ['Our District\'s membership goal', '15% growth in three years. See the five pathways and pick what fits your club.', 'membership-explorer.html#d9pw-house'],
         ['Membership, with your Membership Chair', 'Agree who does what. Membership is a team job.', 'membership-partnership/agreement'],
         ['Real dilemmas, safely', 'Choose what you\'d do, then see where it leads.', 'year-in-the-chair/intro'] ] },
       { when: 'April to June', steps: [
@@ -52,7 +53,8 @@ window.PE_PATHS = {
       { when: 'This month', steps: [
         ['Your year at a glance', 'What usually happens when, so nothing sneaks up on you.', 'month-by-month/cal'],
         ['Call one quiet member', 'Practise a stay conversation first (AI).', 'membership-partnership/stay'],
-        ['Coffee with your President-Elect', 'Start the "Together" conversations.', 'together/why'] ] },
+        ['Coffee with your President-Elect', 'Start the "Together" conversations.', 'together/why'],
+        ['Ten minutes on membership at your Board', 'Draw a conversation card from the District\'s Pathways Explorer.', 'membership-explorer.html#d9pw-deck'] ] },
       { when: 'Before your annual meeting', steps: [
         ['Spot your successor', 'Who could lead in the next three years? Look at newer members too.', 'next-president/spot'],
         ['Practise the ask (AI)', 'Jo is capable, busy and not sure.', 'next-president/askjo'],
@@ -78,12 +80,14 @@ window.PE_PATHS = {
     stages: [
       { when: 'Start here', steps: [
         ['The District strategy', '+15% in three years, with engagement and retention moving together.', 'membership-partnership/strategy'],
+        ['The Membership Pathways Explorer', 'The District plan in one picture: five pathways, ideas to borrow and experiments to try.', 'membership-explorer.html'],
         ['Who does what', 'The President and Membership Chair partnership.', 'membership-partnership/partnership'],
         ['Club experience health check', 'Rate it separately from your President, then compare.', 'membership-partnership/health'] ] },
       { when: 'Keep the members you have', steps: [
         ['The new member who went quiet', 'What works when someone drifts.', 'membership-partnership/quiet'],
         ['The first year: 90 days, then 3, 6 and 12 months', 'Onboarding that keeps people.', 'membership-partnership/firstyear'],
-        ['Practise a stay conversation (AI)', 'Call Graham, who has drifted.', 'membership-partnership/stay'] ] },
+        ['Practise a stay conversation (AI)', 'Call Graham, who has drifted.', 'membership-partnership/stay'],
+        ['Belonging before obligation', 'A new member\'s first year, and the signs someone is drifting.', 'membership-explorer.html#d9pw-belong'] ] },
       { when: 'Grow, and think bigger', steps: [
         ['More than one way in', 'Flexible ways to belong and serve.', 'membership-partnership/ways'],
         ['Where your community already gathers (AI)', 'Map your local community.', 'club-health/insight'],
@@ -106,7 +110,8 @@ window.PE_PATHS = {
       { when: 'Getting started', steps: [
         ['Back them: your mentor year', 'Simple things that make a big difference.', 'next-president/backthem'],
         ['What a mentor in your pocket covers', 'So you know what they\'re reading.', 'your-mentor/pocket'],
-        ['Questions they might ask you', 'Think about your answers, and your stories.', 'your-mentor/askmentor'] ] },
+        ['Questions they might ask you', 'Think about your answers, and your stories.', 'your-mentor/askmentor'],
+        ['Our District\'s membership goal', 'So you can help them connect their plan to the District\'s.', 'membership-explorer.html#d9pw-house'] ] },
       { when: 'Through the year', steps: [
         ['Monthly check-ins', 'Two or three questions for every month, July to June.', 'your-mentor/checkins'],
         ['Practise mentoring a wobbling President-Elect (AI)', 'Chris is overwhelmed after training. Listen first.', 'next-president/wobble'],
@@ -128,6 +133,7 @@ window.PE_PATHS = {
         ['What leading is really like', 'Three jobs, not thirty, and the support you\'d have.', 'launchpad.html?welcome=1'],
         ['What would they say on 30 June?', 'Imagine your year was a success. What happened?', 'welcome/legacy'],
         ['Real dilemmas', 'Try a few situations Presidents really face.', 'year-in-the-chair/intro'],
+        ['Why people give their time', 'Six reasons people volunteer. Which are yours?', 'membership-explorer.html#d9pw-motives'],
         ['Rotary-speak', 'AG, DGE, TRF… what they all mean.', 'rotary-speak/' ] ] },
       { when: 'Try it, no commitment', steps: [
         ['Sit in on a Board meeting or two', 'Ask your President. Watch, listen, ask questions afterwards.', ''],
