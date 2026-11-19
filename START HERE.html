@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>President-Elect Leadership Toolkit · District 9815</title>
+<title>Club Leaders' Toolkit · District 9815</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="app/toolkit.css">
 </head>
 <body>
 <header class="topbar"><div class="in">
-  <a class="brand" href="#/"><div class="mark">9815</div><div><b>President-Elect Toolkit</b><span>Rotary District 9815 · Learn · Question · Plan</span></div></a>
+  <a class="brand" href="#/"><div class="mark">9815</div><div><b>Club Leaders' Toolkit</b><span>Rotary District 9815 · Learn · Question · Plan</span></div></a>
   <nav class="nav">
     <a href="#/" data-nav="home">Home</a>
     <a href="#/plan" data-nav="plan">My Plan</a>
@@ -31,6 +31,7 @@
 <script src="app/config.js"></script>
 <script src="app/ai.js"></script>
 <script src="modules/_module-list.js"></script>
+<script src="app/paths.js"></script>
 <script>
 (function () {
   'use strict';
@@ -61,15 +62,11 @@
   function home() {
     setNav('home');
     var me = st.me, pct = overall();
-    view.innerHTML = warnings() +
-      '<section class="hero"><div><h1>' + (me.name ? 'Welcome, ' + esc(me.name.split(' ')[0]) + '.' : 'Your year in the chair starts here.') + '</h1>' +
-      '<p>Short, practical modules from District 9815 leaders. Work through real dilemmas, ask yourself the hard questions, and build your own Presidential Plan as you go. Everything works offline and stays on this computer.</p>' +
-      '<div class="row"><a class="btn gold" href="#/m/' + (PE.modules[0] ? PE.modules[0].id : '') + '/0">Start with module 1</a><a class="btn" href="#/plan">Open My Plan</a></div></div>' +
-      '<div class="stat"><div class="small">Your progress</div><div style="font-size:2.2rem;font-weight:800">' + pct + '%</div><div class="meter"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="small" style="margin-top:10px">' + answeredCount() + ' reflections written · ' + PE.modules.length + ' modules</div></div></section>' +
+    var P = window.PE_PATHS || {}, role = P[me.role] ? me.role : '';
+    view.innerHTML = warnings() + (role ? youHTML(role, pct) : Object.keys(P).length ? pickerHTML() : '') +
       '<div style="margin:22px 0 10px"><input class="search" id="q" placeholder="Search everything — e.g. grants, treasurer, membership, polio…" autocomplete="off"></div>' +
       '<div class="results card hidden" id="res" style="padding:0;margin-bottom:16px"></div>' +
-      '<h2 style="margin-top:18px">Modules</h2><div class="grid" id="mods"></div>' +
+      '<h2 style="margin-top:18px">' + (role ? 'Everything in the toolkit' : 'Modules') + '</h2><div class="grid" id="mods"></div>' +
       '<div class="card noprint" style="margin-top:26px"><h3>Presenting at PELDS or Pre-PELDS?</h3><p class="muted">Build your own module with <a href="Module%20Builder.html" target="_blank">Module Builder</a> — no coding. Then test it here:</p>' +
       '<div class="row"><button class="btn" id="tryMod" type="button">Try a module file</button><a class="btn" href="talk.html" target="_blank">Pre-PELDS talk</a><a class="btn" href="commitment-card.html" target="_blank">Commitment card</a></div></div>';
     var g = $('#mods');
@@ -82,6 +79,7 @@
       g.appendChild(a);
     });
     $('#tryMod').onclick = function () { $('#fileMod').click(); };
+    wirePaths(role);
     var q = $('#q'), res = $('#res');
     q.oninput = function () {
       var f = q.value.trim().toLowerCase(); res.innerHTML = '';
@@ -98,6 +96,76 @@
       if (!hits) res.innerHTML = '<div style="padding:12px" class="muted">Nothing found for that yet.</div>';
       res.classList.remove('hidden');
     };
+  }
+
+  /* ---------- PATHS: one guided path per kind of leader (app/paths.js) ---------- */
+  function stepLink(go) {
+    if (!go) return { href: '', ext: false, done: false };
+    if (/^https?:|\.html/.test(go)) return { href: go, ext: true, done: false };
+    var p = go.split('/'), m = mod(p[0]); if (!m) return { href: '', ext: false, done: false };
+    var i = p[1] ? m.items.map(function (x) { return x.id; }).indexOf(p[1]) : 0; if (i < 0) i = 0;
+    return { href: '#/m/' + m.id + '/' + i, ext: false, done: !!(m.items[i] && st.visited[PE.k(m, m.items[i])]) };
+  }
+  function ticks() { st.me.ticks = st.me.ticks || {}; return st.me.ticks; }
+  function stepDone(role, s) { var L = stepLink(s[2]); return L.done || !!ticks()[role + ':' + s[0]]; }
+  function pathCount(role) {
+    var n = 0, d = 0; (PE_PATHS[role].stages || []).forEach(function (g) { g.steps.forEach(function (s) { n++; if (stepDone(role, s)) d++; }); }); return { n: n, d: d };
+  }
+  function stagesHTML(role, mine) {
+    var R = PE_PATHS[role];
+    return '<div class="stages">' + (R.stages || []).map(function (g) {
+      return '<div class="stage-col"><div class="when">' + esc(g.when) + '</div>' + g.steps.map(function (s) {
+        var L = stepLink(s[2]), done = stepDone(role, s), key = esc(role + ':' + s[0]);
+        var title = L.href ? '<a href="' + esc(L.href) + '"' + (L.ext ? ' target="_blank" rel="noopener"' : '') + '>' + esc(s[0]) + (L.ext ? ' ↗' : '') + '</a>' : '<span>' + esc(s[0]) + '</span>';
+        return '<div class="pstep' + (done ? ' done' : '') + '">' + (mine ? '<input type="checkbox" data-tick="' + key + '"' + (done ? ' checked' : '') + ' title="Mark as done">' : '<i class="dotx">' + (done ? '✓' : '') + '</i>') +
+          '<div><b>' + title + '</b><div class="small muted">' + esc(s[1]) + '</div></div></div>';
+      }).join('') + '</div>';
+    }).join('') + '</div>';
+  }
+  function nextStep(role) {
+    var out = null; (PE_PATHS[role].stages || []).some(function (g) { return g.steps.some(function (s) { if (!stepDone(role, s) && stepLink(s[2]).href) { out = s; return true; } }); }); return out;
+  }
+  function pickerHTML() {
+    return '<section class="whoami card"><h1>Who\'s here?</h1><p>This toolkit is for everyone who leads a club, or might one day. Pick the one that fits you best, and the toolkit will speak to you. You can change it any time, and look at everyone else\'s path too.</p><div class="who">' +
+      Object.keys(window.PE_PATHS || {}).map(function (k) { var R = PE_PATHS[k]; return '<button type="button" class="whobtn" data-role="' + k + '" style="--rc:' + R.colour + '"><span class="ic">' + R.icon + '</span><b>' + esc(R.name) + '</b><span class="small muted">' + esc(R.pick) + '</span></button>'; }).join('') +
+      '</div></section>';
+  }
+  function youHTML(role, pct) {
+    var R = PE_PATHS[role], c = pathCount(role), nx = nextStep(role), L = nx ? stepLink(nx[2]) : null;
+    return '<section class="hero rolehero" style="--rc:' + R.colour + '"><div><div class="roletag">' + R.icon + ' ' + esc(R.name) + ' · <a href="#" id="chRole">change</a></div>' +
+      '<h1>' + esc(R.hero) + '</h1><p>' + esc(R.voice) + '</p>' +
+      '<div class="row">' + (nx ? '<a class="btn gold" href="' + esc(L.href) + '"' + (L.ext ? ' target="_blank" rel="noopener"' : '') + '>Next: ' + esc(nx[0]) + '</a>' : '<span class="pill">Path complete. Well done!</span>') + '<a class="btn" href="#/plan">Open My Plan</a></div></div>' +
+      '<div class="stat"><div class="small">Your path</div><div style="font-size:2.2rem;font-weight:800">' + c.d + ' of ' + c.n + '</div><div class="meter"><i style="width:' + (c.n ? Math.round(100 * c.d / c.n) : 0) + '%"></i></div>' +
+      '<div class="small" style="margin-top:10px">' + answeredCount() + ' reflections written · ' + pct + '% of the whole toolkit</div></div></section>' +
+      '<h2 style="margin-top:22px">Your path</h2>' + stagesHTML(role, true) +
+      (R.safety ? '<div class="safety card"><button type="button" class="btn" id="safeBtn">' + esc(R.safety.button) + '</button><div id="safeBody" class="hidden"><h3>' + esc(R.safety.title) + '</h3>' + PE.md(R.safety.body) +
+        '<div class="row">' + (R.safety.links || []).map(function (l) { var x = stepLink(l[0]); return x.href ? '<a class="btn sm" href="' + esc(x.href) + '"' + (x.ext ? ' target="_blank" rel="noopener"' : '') + '>' + esc(l[1]) + '</a>' : ''; }).join('') + '</div></div></div>' : '') +
+      '<div class="seethem card"><h3>See their path</h3><p class="muted">Knowing what the other person is going through makes working together easier.</p><div class="row">' +
+      (R.see || []).map(function (k) { var O = PE_PATHS[k]; return O ? '<a class="btn" href="#/path/' + k + '">' + O.icon + ' ' + esc(O.name) + '</a>' : ''; }).join('') +
+      '<a class="btn sm" href="#/path/all">Everyone\'s paths</a></div></div>';
+  }
+  function wirePaths(role) {
+    document.querySelectorAll('.whobtn').forEach(function (b) { b.onclick = function () { st.me.role = b.dataset.role; save(); home(); window.scrollTo(0, 0); }; });
+    var ch = $('#chRole'); if (ch) ch.onclick = function (e) { e.preventDefault(); delete st.me.role; save(); home(); };
+    var sb = $('#safeBtn'); if (sb) sb.onclick = function () { $('#safeBody').classList.toggle('hidden'); };
+    document.querySelectorAll('[data-tick]').forEach(function (c) { c.onchange = function () { ticks()[c.dataset.tick] = c.checked; save(); home(); }; });
+  }
+  function pathPage(role) {
+    setNav('');
+    var P = window.PE_PATHS || {}, mine = st.me.role;
+    var list = role === 'all' ? Object.keys(P) : (P[role] ? [role] : []);
+    if (!list.length) { view.innerHTML = '<p>Path not found. <a href="#/">Back home</a></p>'; return; }
+    view.innerHTML = warnings() + '<div class="row" style="justify-content:space-between;margin-bottom:10px"><a class="btn" href="#/">← ' + (mine ? 'Back to my path' : 'Home') + '</a>' +
+      (role !== 'all' ? '<a class="btn sm" href="#/path/all">Everyone\'s paths</a>' : '') + '</div>' +
+      list.map(function (k) {
+        var R = P[k];
+        return '<section class="card pathview" style="--rc:' + R.colour + '"><div class="roletag">' + R.icon + ' ' + esc(R.name) + (k === mine ? ' · your path' : '') + '</div>' +
+          '<h1 style="margin:.2em 0">' + esc(R.hero) + '</h1>' +
+          (k !== mine ? '<div class="going"><b>What they\'re going through:</b> ' + esc(R.others) + '</div>' : '') +
+          '<p class="muted">' + esc(R.voice) + '</p>' + stagesHTML(k, false) +
+          (k !== mine && mine && P[mine] ? '' : '') + '</section>';
+      }).join('');
+    window.scrollTo(0, 0);
   }
 
   /* ---------- MODULE ---------- */
@@ -280,10 +348,12 @@
     else if (p[0] === 'plan') plan();
     else if (p[0] === 'resources') library();
     else if (p[0] === 'help') help();
+    else if (p[0] === 'path') pathPage(decodeURIComponent(p[1] || 'all'));
     else home();
   }
   window.addEventListener('hashchange', route);
 
+  (function () { var r = /[?&]role=([a-z]+)/.exec(location.search); if (r && window.PE_PATHS && PE_PATHS[r[1]]) { st.me.role = r[1]; save(); } })();
   var waiting = 2;
   function ready() { if (--waiting) return; route(); }
   PE.loadFiles(window.PE_MODULE_FILES || [], 'modules/', function (errs) {
