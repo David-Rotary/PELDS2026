@@ -218,3 +218,12 @@ textarea.ans:focus,input:focus,select:focus,textarea:focus{outline:2px solid var
 .ahead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
 .awhat{font-size:1.05rem}
 .overdue{color:#D41367;font-weight:700}
+
+/* board mode: keep every highlight readable on the dark screen */
+.board .callout{background:rgba(255,255,255,.1);border-left:6px solid var(--gold);color:#fff}
+.board .callout b,.board .callout strong{color:var(--gold)}
+.board .slide a{color:#9fd3ff}
+.board .slide h3{color:#fff}
+.board .muted,.board .small{color:#c9d6ee}
+.board .pill{background:rgba(255,255,255,.15);color:#fff}
+.board details summary{cursor:pointer;color:var(--gold);font-weight:700}
