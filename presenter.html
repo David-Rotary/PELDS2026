@@ -169,9 +169,9 @@
   }
   function gotoLinks(P) {
     var L = P ? [['START%20HERE.html', 'Toolkit home'], [tk('next-president'), 'Growing your next President'], [tk('next-president', 'askjo'), 'AI demo: practise the ask'],
-        [tk('next-president', 'ageing'), 'Scenario: the shrinking club'], [tk('membership-partnership'), 'Membership module'], ['launchpad.html', 'Launchpad']]
+        [tk('next-president', 'ageing'), 'Scenario: the shrinking club'], [tk('membership-partnership'), 'Membership module'], ['membership-explorer.html', 'Membership Explorer'], ['launchpad.html', 'Launchpad']]
       : [['run-sheet.html', 'Run sheet', 'pe-runsheet'], ['talk.html', 'Talk slides', 'pe-talk'], ['START%20HERE.html', 'Toolkit home'],
-        [tk('your-mentor'), 'Your mentor for the year'], [tk('membership-partnership'), 'Membership module'], [tk('your-mentor', 'ask'), 'AI demo: ask a mentor'], ['launchpad.html', 'Launchpad']];
+        [tk('your-mentor'), 'Your mentor for the year'], [tk('membership-partnership'), 'Membership module'], [tk('your-mentor', 'ask'), 'AI demo: ask a mentor'], ['membership-explorer.html', 'Membership Explorer'], ['launchpad.html', 'Launchpad']];
     return L.filter(function (x) { return x[0]; }).map(function (x) { return '<a href="' + x[0] + '" target="' + (x[2] || 'pe-toolkit') + '">' + esc(x[1]) + ' ↗</a>'; }).join('');
   }
   function setAct(a) { act = a; themes = ''; return api('set', { activity: a }).then(function (r) { if (r.error) PE.toast('Could not update: ' + r.error); side(); stage(); }); }

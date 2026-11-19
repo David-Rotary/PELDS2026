@@ -32,6 +32,7 @@
 <script src="app/ai.js"></script>
 <script src="modules/_module-list.js"></script>
 <script src="app/paths.js"></script>
+<script src="app/district-goal.js"></script>
 <script>
 (function () {
   'use strict';
@@ -64,6 +65,7 @@
     var me = st.me, pct = overall();
     var P = window.PE_PATHS || {}, role = P[me.role] ? me.role : '';
     view.innerHTML = warnings() + (role ? youHTML(role, pct) : Object.keys(P).length ? pickerHTML() : '') +
+      '<div id="dgoal"></div>' +
       '<div style="margin:22px 0 10px"><input class="search" id="q" placeholder="Search everything — e.g. grants, treasurer, membership, polio…" autocomplete="off"></div>' +
       '<div class="results card hidden" id="res" style="padding:0;margin-bottom:16px"></div>' +
       '<h2 style="margin-top:18px">' + (role ? 'Everything in the toolkit' : 'Modules') + '</h2><div class="grid" id="mods"></div>' +
@@ -80,6 +82,7 @@
     });
     $('#tryMod').onclick = function () { $('#fileMod').click(); };
     wirePaths(role);
+    if (window.PE_GOAL) PE_GOAL.draw($('#dgoal'));
     var q = $('#q'), res = $('#res');
     q.oninput = function () {
       var f = q.value.trim().toLowerCase(); res.innerHTML = '';

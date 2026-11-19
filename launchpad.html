@@ -94,6 +94,7 @@ body:not(.welcome) .welcome-only{display:none}
     <button class="path" data-p="help" role="tab"><div class="ic">🛟</div><b>Help, any time</b><span>Who to call and where to look.</span></button>
   </div>
   <p class="tip">Nothing to sign up for. The interactive pages save your answers on your own device.</p>
+  <div id="dgoal"></div>
 
   <!-- ============ PRESIDENT-ELECT ============ -->
   <section class="pane" id="sec-pe">
@@ -172,6 +173,7 @@ body:not(.welcome) .welcome-only{display:none}
       <a class="item ext" href="https://clubassistrsp.z26.web.core.windows.net/?sub=Retention+%26+engagement&jur=Victoria" target="_blank" rel="noopener"><div class="ic">VIDEO</div><div><b>Club Assist: retention and engagement</b><span>Short videos and guides. Tap "Share by email" to send one to your Membership Chair.</span></div><span class="go">Open ↗</span></a>
       <a class="item web" href="START%20HERE.html#/m/membership-partnership/0" data-keep><div class="ic">TEAM</div><div><b>Membership: you and your Membership Chair</b><span>A club experience health check, four real dilemmas and your agreement.</span></div><span class="go">Open →</span></a>
       <a class="item ai" href="START%20HERE.html#/m/membership-partnership/8" data-keep><div class="ic">AI</div><div><b>Practise a stay conversation</b><span>Call Graham, a member who has drifted, and find out why.</span></div><span class="go">Practise →</span></a>
+      <a class="item web" href="membership-explorer.html" data-keep><div class="ic">🧭</div><div><b>Membership Pathways Explorer</b><span>The District's plan in one picture. Ideas to borrow, experiments to try, conversation cards for your Board.</span></div><span class="go">Open →</span></a>
       <a class="item pdf" href="resources/417-strengthening-your-membership-en.pdf" target="_blank"><div class="ic">PDF</div><div><b>Strengthening Your Membership (Rotary International)</b><span>Club health check, member satisfaction survey, exit survey and more.</span></div><span class="go">Open ↗</span></a>
     </div>
 
@@ -346,5 +348,7 @@ body:not(.welcome) .welcome-only{display:none}
   };
 })();
 </script>
+<script src="app/district-goal.js"></script>
+<script>if (window.PE_GOAL && !document.body.classList.contains('welcome')) PE_GOAL.draw(document.getElementById('dgoal'));</script>
 </body>
 </html>

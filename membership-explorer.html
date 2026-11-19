@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Membership Pathways Explorer · District 9815</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap');
+
+#d9pw{--navy:#17458F;--deep:#0B2A5C;--azure:#0067C8;--sky:#00A2E0;--gold:#F7A81B;--ink:#1d2433;--muted:#5a6478;--line:#e3e8f1;--paper:#f6f8fc;
+ --p1:#0067C8;--p2:#D41367;--p3:#901F93;--p4:#FF7600;--p5:#00A39E;
+ font-family:'Hanken Grotesk',Arial,sans-serif;color:var(--ink);background:#fff;font-size:16px;line-height:1.55;margin:0;}
+#d9pw *{box-sizing:border-box;}
+#d9pw h1,#d9pw h2,#d9pw h3,#d9pw h4{font-family:'Fraunces',Georgia,serif;margin:0;line-height:1.15;color:var(--deep);}
+#d9pw p{margin:0 0 10px;}
+#d9pw button{font-family:inherit;cursor:pointer;}
+#d9pw .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+#d9pw .script{font-family:'Dancing Script',cursive;}
+
+/* hero */
+#d9pw .crumb{font-size:13px;color:var(--muted);padding:12px 24px;max-width:1180px;margin:0 auto;}
+#d9pw .hero{background:linear-gradient(120deg,#0B2A5C 0%,#17458F 55%,#0067C8 100%);color:#fff;position:relative;overflow:hidden;}
+#d9pw .hero:before{content:"";position:absolute;right:-120px;top:-160px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,162,224,.45),rgba(0,162,224,0) 70%);}
+#d9pw .hero:after{content:"";position:absolute;left:-80px;bottom:-200px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(247,168,27,.22),rgba(247,168,27,0) 70%);}
+#d9pw .hero .wrap{position:relative;z-index:1;display:flex;gap:36px;align-items:center;padding-top:46px;padding-bottom:46px;flex-wrap:wrap;}
+#d9pw .hero-l{flex:1 1 520px;}
+#d9pw .hero-r{flex:0 1 360px;}
+#d9pw .eyebrow{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.3px;}
+#d9pw .hero h1{color:#fff;font-size:48px;margin:16px 0 12px;font-weight:800;}
+#d9pw .hero h1 .script{color:var(--gold);font-size:56px;font-weight:700;}
+#d9pw .hero p.lead{font-size:19px;color:#dbe7ff;max-width:620px;}
+#d9pw .goalcard{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:20px;backdrop-filter:blur(4px);}
+#d9pw .goalcard h4{color:var(--gold);font-family:'Hanken Grotesk',sans-serif;text-transform:uppercase;font-size:12px;letter-spacing:1.4px;margin-bottom:6px;}
+#d9pw .goalcard .big{font-family:'Fraunces',serif;font-size:22px;line-height:1.25;margin-bottom:14px;}
+#d9pw .goalcard .big b{color:var(--gold);}
+#d9pw .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#d9pw .stat{background:rgba(11,42,92,.45);border-radius:12px;padding:10px 12px;}
+#d9pw .stat b{display:block;font-family:'Fraunces',serif;font-size:24px;color:#fff;}
+#d9pw .stat span{font-size:12.5px;color:#cfe0ff;line-height:1.3;display:block;}
+#d9pw .rainbow{height:6px;background:linear-gradient(90deg,#0067C8 0 16.6%,#00A2E0 16.6% 33.3%,#00A39E 33.3% 50%,#F7A81B 50% 66.6%,#FF7600 66.6% 83.3%,#D41367 83.3%);}
+
+/* mode + nav */
+#d9pw .bar{background:#fff;border-bottom:1px solid var(--line);}
+#d9pw .bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px;}
+#d9pw .pills{display:flex;gap:8px;flex-wrap:wrap;}
+#d9pw .pill{border:1px solid var(--line);background:var(--paper);color:var(--navy);padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;transition:.2s;}
+#d9pw .pill:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+#d9pw .mode{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);}
+#d9pw .seg{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px;}
+#d9pw .seg button{border:0;background:transparent;padding:7px 14px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--muted);}
+#d9pw .seg button.on{background:var(--gold);color:var(--deep);box-shadow:0 2px 6px rgba(0,0,0,.12);}
+
+/* sections */
+#d9pw section{padding:56px 0;}
+#d9pw section.alt{background:var(--paper);}
+#d9pw .sh{margin-bottom:26px;max-width:780px;}
+#d9pw .sh .kick{font-size:12.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--azure);margin-bottom:6px;}
+#d9pw .sh h2{font-size:34px;margin-bottom:8px;}
+#d9pw .sh p{color:var(--muted);font-size:17px;}
+
+/* challenge picker */
+#d9pw .chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;}
+#d9pw .chip{text-align:left;border:2px solid var(--line);background:#fff;border-radius:16px;padding:16px;font-size:15.5px;font-weight:600;color:var(--ink);display:flex;gap:12px;align-items:flex-start;transition:.2s;}
+#d9pw .chip .em{font-size:26px;line-height:1;}
+#d9pw .chip:hover{border-color:var(--sky);transform:translateY(-2px);box-shadow:0 8px 20px rgba(23,69,143,.1);}
+#d9pw .chip.on{border-color:var(--navy);background:#eef4ff;}
+#d9pw .answer{margin-top:18px;border-radius:18px;background:#fff;border:1px solid var(--line);padding:22px;display:none;box-shadow:0 10px 30px rgba(23,69,143,.08);}
+#d9pw .answer.show{display:block;animation:d9pwIn .35s ease;}
+#d9pw .answer h3{font-size:24px;margin-bottom:6px;}
+#d9pw .answer ul{margin:10px 0 14px;padding-left:20px;}
+#d9pw .answer li{margin-bottom:6px;}
+#d9pw .jump{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:9px 15px;font-weight:700;font-size:14px;color:#fff;margin:4px 6px 0 0;}
+@keyframes d9pwIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* house */
+#d9pw .house{max-width:1060px;margin:0 auto;}
+#d9pw .roof{position:relative;height:150px;}
+#d9pw .roof svg{position:absolute;inset:0;width:100%;height:100%;}
+#d9pw .roof .rt{position:absolute;left:0;right:0;top:56px;text-align:center;color:#fff;padding:0 22%;}
+#d9pw .roof .rt small{display:block;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;}
+#d9pw .roof .rt b{font-family:'Fraunces',serif;font-size:20px;font-weight:700;line-height:1.2;}
+#d9pw .beam{background:var(--deep);color:#fff;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;}
+#d9pw .beam div{padding:12px 14px;background:#12357a;font-size:13.5px;}
+#d9pw .beam b{display:block;font-family:'Fraunces',serif;font-size:16px;color:var(--gold);}
+#d9pw .cols{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:12px 10px;background:#eef2f9;}
+#d9pw .col{border:0;border-radius:14px;padding:18px 12px 16px;color:#fff;text-align:left;min-height:190px;display:flex;flex-direction:column;transition:.25s;position:relative;overflow:hidden;}
+#d9pw .col:hover,#d9pw .col.on{transform:translateY(-5px);box-shadow:0 12px 24px rgba(0,0,0,.18);}
+#d9pw .col.on:after{content:"";position:absolute;left:50%;bottom:0;width:0;height:0;border:10px solid transparent;border-bottom-color:#fff;transform:translateX(-50%);}
+#d9pw .col .n{font-family:'Fraunces',serif;font-size:38px;font-weight:800;opacity:.4;line-height:1;}
+#d9pw .col h4{color:#fff;font-size:17px;margin:6px 0 8px;}
+#d9pw .col small{font-size:12.5px;opacity:.9;line-height:1.35;}
+#d9pw .col .go{margin-top:auto;font-size:12.5px;font-weight:700;padding-top:10px;}
+#d9pw .found{background:var(--deep);color:#cfe0ff;padding:12px 16px;font-size:13.5px;border-radius:0 0 14px 14px;text-align:center;}
+#d9pw .found b{color:var(--gold);}
+#d9pw .values{text-align:center;margin-top:10px;font-size:13.5px;color:var(--muted);}
+
+/* pillar panel */
+#d9pw .panel{margin-top:22px;border-radius:20px;background:#fff;border:1px solid var(--line);overflow:hidden;box-shadow:0 12px 34px rgba(23,69,143,.08);}
+#d9pw .ph{padding:22px 24px;color:#fff;display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;}
+#d9pw .ph h3{color:#fff;font-size:28px;}
+#d9pw .ph .ms{background:rgba(255,255,255,.18);border-radius:12px;padding:10px 14px;font-size:14px;max-width:380px;}
+#d9pw .ph .ms b{display:block;font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;opacity:.85;}
+#d9pw .tabs{display:flex;gap:4px;padding:0 16px;background:#f3f5fa;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+#d9pw .tabs button{border:0;background:transparent;padding:14px 14px;font-weight:700;font-size:14.5px;color:var(--muted);border-bottom:3px solid transparent;}
+#d9pw .tabs button.on{color:var(--deep);border-bottom-color:var(--c,var(--gold));}
+#d9pw .pb{padding:22px 24px;}
+#d9pw .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+#d9pw .card{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff;position:relative;}
+#d9pw .card h4{font-size:17px;margin-bottom:6px;}
+#d9pw .card .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:6px;margin-bottom:8px;}
+#d9pw .card ul{margin:6px 0 0;padding-left:18px;font-size:14.5px;}
+#d9pw .card li{margin-bottom:4px;}
+#d9pw .card p{font-size:14.5px;color:#3a4357;}
+#d9pw .add{margin-top:10px;border:1.5px dashed var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--navy);}
+#d9pw .add:hover{border-color:var(--navy);}
+#d9pw .add.done{background:#e8f6ee;border-style:solid;border-color:#7cc59a;color:#1d6b3e;}
+#d9pw .hint{font-size:13.5px;color:var(--muted);background:#fff8e8;border:1px solid #f6dfa8;border-radius:10px;padding:10px 12px;margin-bottom:16px;}
+#d9pw .qlist{counter-reset:q;list-style:none;padding:0;margin:0;}
+#d9pw .qlist li{counter-increment:q;padding:12px 14px 12px 50px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;position:relative;font-size:15.5px;}
+#d9pw .qlist li:before{content:counter(q);position:absolute;left:14px;top:11px;width:26px;height:26px;border-radius:50%;background:var(--c,var(--navy));color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+#d9pw .focus{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+#d9pw .focus .card b.code{font-family:'Fraunces',serif;font-size:22px;color:var(--c);margin-right:6px;}
+
+/* discovery strip */
+#d9pw .flow{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+#d9pw .step{background:#fff;border-radius:16px;padding:16px 12px;text-align:center;border:1px solid var(--line);position:relative;transition:.2s;}
+#d9pw .step:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.08);}
+#d9pw .step .ic{width:52px;height:52px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;}
+#d9pw .step h4{font-size:16px;letter-spacing:.5px;}
+#d9pw .step p{font-size:13px;color:var(--muted);margin:4px 0 0;}
+#d9pw .quote{margin-top:20px;background:var(--deep);color:#fff;border-radius:16px;padding:18px 22px;font-family:'Fraunces',serif;font-size:20px;}
+#d9pw .quote small{display:block;font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#b9cdf3;margin-top:6px;}
+
+/* ladder */
+#d9pw .ladwrap{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:24px;align-items:start;}
+#d9pw .ladder{display:flex;flex-direction:column-reverse;gap:8px;}
+#d9pw .rung{border:0;border-radius:12px;padding:13px 16px;text-align:left;color:#fff;font-weight:700;font-size:15px;display:flex;gap:10px;align-items:center;transition:.2s;}
+#d9pw .rung span{background:rgba(255,255,255,.25);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+#d9pw .rung:hover,#d9pw .rung.on{transform:translateX(8px);box-shadow:0 6px 16px rgba(0,0,0,.15);}
+#d9pw .rungdetail{background:#fff;border-radius:18px;border:1px solid var(--line);padding:22px;min-height:250px;}
+#d9pw .rungdetail h3{font-size:26px;margin-bottom:8px;}
+#d9pw .say{background:#f0f6ff;border-left:4px solid var(--azure);border-radius:8px;padding:12px 14px;font-style:italic;margin:12px 0;}
+#d9pw .say b{font-style:normal;display:block;font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--azure);margin-bottom:4px;}
+
+/* builder */
+#d9pw .builder{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+#d9pw .form label{display:block;font-size:13px;font-weight:700;color:var(--deep);margin:12px 0 4px;}
+#d9pw .form input,#d9pw .form select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;color:var(--ink);background:#fff;}
+#d9pw .form input:focus,#d9pw .form select:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 3px rgba(0,162,224,.15);}
+#d9pw .out{background:linear-gradient(140deg,#0B2A5C,#17458F);color:#fff;border-radius:18px;padding:22px;position:relative;}
+#d9pw .out .bubble{background:#fff;color:var(--ink);border-radius:16px 16px 16px 4px;padding:16px;font-size:16.5px;margin:10px 0 14px;min-height:96px;}
+#d9pw .out h4{color:var(--gold);font-family:'Hanken Grotesk',sans-serif;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;}
+#d9pw .btn{border:0;border-radius:999px;padding:10px 16px;font-weight:700;font-size:14px;background:var(--gold);color:var(--deep);}
+#d9pw .btn.ghost{background:transparent;border:1.5px solid rgba(255,255,255,.5);color:#fff;}
+#d9pw .btn.navy{background:var(--navy);color:#fff;}
+#d9pw .swap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;font-size:14px;}
+#d9pw .swap div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;}
+#d9pw .swap s{color:#b03a5b;}
+
+/* motives */
+#d9pw .motives{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px;}
+#d9pw .mot{border:2px solid var(--line);background:#fff;border-radius:16px;padding:14px 10px;text-align:center;font-weight:700;font-size:14.5px;color:var(--deep);transition:.2s;}
+#d9pw .mot .em{font-size:30px;display:block;margin-bottom:4px;}
+#d9pw .mot small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.3;}
+#d9pw .mot.on{border-color:var(--gold);background:#fff8e8;transform:translateY(-3px);}
+#d9pw .motout{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;}
+
+/* journey */
+#d9pw .journey{display:flex;gap:0;overflow-x:auto;padding-bottom:6px;}
+#d9pw .jstep{flex:1 0 150px;position:relative;padding:0 6px;}
+#d9pw .jstep button{width:100%;border:0;background:transparent;text-align:center;padding:0;}
+#d9pw .jdot{width:46px;height:46px;border-radius:50%;margin:0 auto 8px;background:#fff;border:4px solid var(--p2);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--p2);position:relative;z-index:1;transition:.2s;}
+#d9pw .jstep:before{content:"";position:absolute;top:21px;left:0;right:0;height:4px;background:#f3c3d7;}
+#d9pw .jstep:first-child:before{left:50%;}
+#d9pw .jstep:last-child:before{right:50%;}
+#d9pw .jstep.on .jdot{background:var(--p2);color:#fff;transform:scale(1.12);}
+#d9pw .jstep b{display:block;font-size:14px;color:var(--deep);}
+#d9pw .jstep small{font-size:12px;color:var(--muted);}
+#d9pw .jdetail{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;}
+#d9pw .owner{display:inline-block;background:#fde7f0;color:#9c0e4b;font-weight:700;font-size:12.5px;padding:3px 10px;border-radius:999px;margin-left:8px;vertical-align:middle;}
+#d9pw .signs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:16px;}
+#d9pw .sign{border:0;border-radius:14px;padding:14px;min-height:110px;text-align:left;background:#e9f7ef;color:#1d5a37;font-size:14.5px;transition:.25s;}
+#d9pw .sign b{display:block;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;}
+#d9pw .sign.flip{background:#fdecef;color:#8a1c3a;}
+#d9pw .toggle{display:inline-flex;gap:6px;}
+
+/* deck */
+#d9pw .deckwrap{display:grid;grid-template-columns:1fr 280px;gap:22px;align-items:center;}
+#d9pw .qcard{background:#fff;border-radius:22px;min-height:250px;padding:30px;box-shadow:0 18px 40px rgba(23,69,143,.15);border-top:10px solid var(--c,var(--gold));display:flex;flex-direction:column;justify-content:center;transition:.3s;}
+#d9pw .qcard .qp{font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--c,var(--navy));margin-bottom:10px;}
+#d9pw .qcard .qq{font-family:'Fraunces',serif;font-size:27px;color:var(--deep);line-height:1.25;}
+#d9pw .qcard .qh{margin-top:14px;color:var(--muted);font-size:14px;}
+#d9pw .deckctl{display:flex;flex-direction:column;gap:10px;}
+#d9pw .deckctl select{padding:10px;border-radius:10px;border:1.5px solid var(--line);font-family:inherit;font-size:14.5px;}
+
+/* plan */
+#d9pw .plan{background:linear-gradient(130deg,#0B2A5C,#17458F 60%,#0067C8);color:#fff;border-radius:22px;padding:26px;}
+#d9pw .plan h2{color:#fff;}
+#d9pw .plan ol{padding-left:20px;margin:14px 0;}
+#d9pw .plan li{background:rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;justify-content:space-between;gap:12px;align-items:center;}
+#d9pw .plan li button{background:transparent;border:0;color:#ffc9d6;font-size:18px;}
+#d9pw .plan .empty{color:#b9cdf3;font-style:italic;}
+#d9pw .plan input{width:100%;padding:11px 12px;border-radius:10px;border:0;font-family:inherit;font-size:15px;}
+#d9pw .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+#d9pw .toast{font-size:13.5px;color:var(--gold);font-weight:700;}
+
+/* library */
+#d9pw .lib{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
+#d9pw .lib .card h4{font-size:15.5px;}
+#d9pw .lib .card .who{font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--azure);}
+#d9pw .lib .card p{font-size:13.5px;margin:4px 0 0;}
+#d9pw footer{background:var(--deep);color:#cfe0ff;padding:30px 0;font-size:14px;}
+#d9pw footer b{color:#fff;}
+
+@media (max-width:900px){
+ #d9pw .hero h1{font-size:36px;} #d9pw .hero h1 .script{font-size:42px;}
+ #d9pw .cols{grid-template-columns:1fr 1fr;} #d9pw .col{min-height:150px;}
+ #d9pw .beam{grid-template-columns:1fr;}
+ #d9pw .flow{grid-template-columns:repeat(3,1fr);}
+ #d9pw .motives{grid-template-columns:repeat(3,1fr);}
+ #d9pw .ladwrap,#d9pw .builder,#d9pw .deckwrap{grid-template-columns:1fr;}
+ #d9pw .roof .rt{padding:0 10%;} #d9pw .roof .rt b{font-size:16px;}
+}
+@media (max-width:560px){
+ #d9pw .cols{grid-template-columns:1fr;} #d9pw .flow{grid-template-columns:1fr 1fr;} #d9pw .motives{grid-template-columns:1fr 1fr;}
+ #d9pw .sh h2{font-size:27px;} #d9pw .swap{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body style="margin:0">
+<div id="d9pw">
+
+<div class="crumb" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><span style="flex:1">District 9815 · Membership Growth Strategic Plan 2026–2029 · Pathways Explorer</span><a href="START%20HERE.html" data-keep style="color:var(--navy);font-weight:700;text-decoration:none">◀ Club Leaders' Toolkit</a><a href="launchpad.html" data-keep style="color:var(--navy);font-weight:700;text-decoration:none">Launchpad</a></div>
+
+<header class="hero">
+ <div class="wrap">
+  <div class="hero-l">
+   <span class="eyebrow">🧭 Ideas to explore, not rules to follow</span>
+   <h1>Grow your club, <span class="script">your way</span></h1>
+   <p class="lead">A playground of ideas for building a magnetic, diverse, sustainable club. Wander through it as a club team or on your own — pick up what fits your club and your community, and leave what doesn't.</p>
+  </div>
+  <div class="hero-r">
+   <div class="goalcard">
+    <h4>The District's shared goal</h4>
+    <div class="big">Grow District 9815 membership by <b>15%</b> over three years — with members who are engaged, diverse and glad they stayed.</div>
+    <div class="stats">
+     <div class="stat"><b>5%</b><span>net growth a year, across the District</span></div>
+     <div class="stat"><b>90%+</b><span>annual retention</span></div>
+     <div class="stat"><b>−25%</b><span>first-year resignations</span></div>
+     <div class="stat"><b>1</b><span>person each of us could invite</span></div>
+    </div>
+   </div>
+  </div>
+ </div>
+</header>
+<div class="rainbow"></div>
+
+<div class="bar">
+ <div class="wrap">
+  <div class="pills">
+   <button class="pill" data-go="d9pw-start">Start here</button>
+   <button class="pill" data-go="d9pw-house">The plan</button>
+   <button class="pill" data-go="d9pw-discover">Discover</button>
+   <button class="pill" data-go="d9pw-ladder">The ladder</button>
+   <button class="pill" data-go="d9pw-words">Say it well</button>
+   <button class="pill" data-go="d9pw-motives">Why people join</button>
+   <button class="pill" data-go="d9pw-belong">Belonging</button>
+   <button class="pill" data-go="d9pw-deck">Talk it over</button>
+   <button class="pill" data-go="d9pw-plan">Our next steps</button>
+  </div>
+  <div class="mode">Exploring as
+   <span class="seg"><button data-mode="club" class="on">👥 A club group</button><button data-mode="me">🙋 Just me</button></span>
+  </div>
+ </div>
+</div>
+
+<!-- START -->
+<section id="d9pw-start">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">Start here</div>
+   <h2>What's on your mind?</h2>
+   <p data-me="Pick the thing that's nagging at you most. You'll get a few ways in, and a shortcut to the parts of this page that might help." data-club="Pick the one your group keeps coming back to. You'll get a few ways in, and a shortcut to the parts of this page that might help.">Pick the one your group keeps coming back to. You'll get a few ways in, and a shortcut to the parts of this page that might help.</p>
+  </div>
+  <div class="chips" id="d9pw-chips"></div>
+  <div class="answer" id="d9pw-answer"></div>
+ </div>
+</section>
+
+<!-- HOUSE -->
+<section id="d9pw-house" class="alt">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">The Strategy House</div>
+   <h2>Five pathways, one shared purpose</h2>
+   <p>The District's plan in one picture. Tap a pathway to open it up: what it covers, small experiments that might spark an "aha", ideas other clubs have tried, and questions to chew on.</p>
+  </div>
+  <div class="house">
+   <div class="roof">
+    <svg viewBox="0 0 1000 150" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="d9pwRoof" x1="0" x2="1"><stop offset="0" stop-color="#0B2A5C"/><stop offset="1" stop-color="#0067C8"/></linearGradient></defs><polygon points="500,0 1000,150 0,150" fill="url(#d9pwRoof)"/></svg>
+    <div class="rt"><small>Our purpose</small><b>To build magnetic, diverse, sustainable Rotary and Rotaract clubs</b></div>
+   </div>
+   <div class="beam">
+    <div><b>🤝 Shared ownership</b>Every Rotarian champions membership growth</div>
+    <div><b>🔗 Connected collaboration</b>Clubs, District leaders, RCLs, alumni and community partners working as one</div>
+    <div><b>🌍 Inclusivity</b>Flexible models, welcoming cultures and diverse pathways, so Rotary is open to all</div>
+   </div>
+   <div class="cols" id="d9pw-cols"></div>
+   <div class="found"><b>Our support:</b> District leaders · District Membership Team · Rotary Community Leaders · Rotary South Pacific leaders</div>
+   <div class="values">Our values — Fellowship · Integrity · Diversity · Service · Leadership</div>
+  </div>
+  <div class="panel" id="d9pw-panel"></div>
+ </div>
+</section>
+
+<!-- DISCOVER -->
+<section id="d9pw-discover">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">How discovery works</div>
+   <h2>Start with curiosity, not a checklist</h2>
+   <p>People tend to act on answers they find for themselves. Rather than starting with another plan, start with a small, real experience that makes you stop and ask, "Why is that happening?" Every pathway above includes experiments built this way.</p>
+  </div>
+  <div class="flow" id="d9pw-flow"></div>
+  <div class="quote">"I hadn't thought about our club that way before."<small>That's the moment to aim for. Once your club has its own question, District people, other clubs, RCLs and Rotary resources become much more useful.</small></div>
+ </div>
+</section>
+
+<!-- LADDER -->
+<section id="d9pw-ladder" class="alt">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">From stranger to member</div>
+   <h2>Climb the engagement ladder</h2>
+   <p>Hardly anyone joins cold. People join because they already know a member, or have worked alongside the club. A handy rule of thumb: fit the ask to the rung. Strangers get invited to do one thing; participants get invited to do a little more.</p>
+  </div>
+  <div class="ladwrap">
+   <div class="ladder" id="d9pw-rungs"></div>
+   <div class="rungdetail" id="d9pw-rungdetail"></div>
+  </div>
+ </div>
+</section>
+
+<!-- WORDS -->
+<section id="d9pw-words">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">Say it well</div>
+   <h2>Build your one-minute invite</h2>
+   <p>Most people like the idea of Rotary but couldn't tell you what your club does. Fill in the blanks below and watch your invitation take shape — then copy it, tweak it, and make it sound like you.</p>
+  </div>
+  <div class="seg" style="margin-bottom:16px"><button class="on" data-bt="invite">💬 Invite one person</button><button data-bt="answer">⏱️ Our 30-second answer</button></div>
+  <div class="builder">
+   <div class="form" id="d9pw-form"></div>
+   <div class="out">
+    <h4 id="d9pw-outlabel">Your invitation</h4>
+    <div class="bubble" id="d9pw-bubble"></div>
+    <div class="row"><button class="btn" id="d9pw-copy">Copy text</button><button class="btn ghost" id="d9pw-addbuilt">+ Add to our next steps</button><span class="toast" id="d9pw-ctoast"></span></div>
+   </div>
+  </div>
+  <h3 style="font-size:20px;margin:28px 0 4px">Swap the insider words</h3>
+  <p style="color:var(--muted);font-size:15px">Words that feel normal inside the club can sound like a locked door from outside.</p>
+  <div class="swap">
+   <div><s>District</s> → our region's group of clubs</div>
+   <div><s>The Foundation</s> → the giving arm that funds our projects worldwide</div>
+   <div><s>Fellowship</s> → the people, and the friendships</div>
+   <div><s>Classification</s> → what field or job you work in</div>
+   <div><s>Service Above Self</s> → helping before asking</div>
+   <div><s>"Would you like to join?"</s> → "Want to come along on Saturday?"</div>
+  </div>
+ </div>
+</section>
+
+<!-- MOTIVES -->
+<section id="d9pw-motives" class="alt">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">Why people give their time</div>
+   <h2>Match the role to the reason</h2>
+   <p>Research on volunteering finds people give time for six different reasons, and they tend to stay when what they do feeds the reason they came. Tap one or more to see roles that might fit. You could try it on yourself, a new member, or someone you're thinking of inviting.</p>
+  </div>
+  <div class="motives" id="d9pw-mots"></div>
+  <div class="motout" id="d9pw-motout"></div>
+ </div>
+</section>
+
+<!-- BELONGING -->
+<section id="d9pw-belong">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">The first year</div>
+   <h2>Belonging before obligation</h2>
+   <p>A good share of the members clubs lose leave in their first two years, and they usually drift away quietly rather than walk out. Here's one way to pace a new member's first year. Tap each stage to see who might own it.</p>
+  </div>
+  <div class="journey" id="d9pw-journey"></div>
+  <div class="jdetail" id="d9pw-jdetail"></div>
+  <div style="margin-top:34px" class="row"><h3 style="font-size:22px;margin-right:auto">Thriving or drifting?</h3>
+   <span class="seg toggle"><button class="on" data-sg="good">✓ Settling in</button><button data-sg="bad">⚠ Slipping away</button></span></div>
+  <p style="color:var(--muted);font-size:15px;margin-top:6px">The signs usually show weeks before anyone resigns. One sign on its own doesn't mean much. A pattern does, especially when someone stops saying "we" and starts saying "you".</p>
+  <div class="signs" id="d9pw-signs"></div>
+ </div>
+</section>
+
+<!-- DECK -->
+<section id="d9pw-deck" class="alt">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">Talk it over</div>
+   <h2>Draw a conversation card</h2>
+   <p data-club="Great for the start of a board or committee meeting. Draw a card, give it ten minutes, and see where it goes. There are no right answers, only honest ones." data-me="Draw a card and give yourself five quiet minutes with it. Jot down whatever comes up. There are no right answers, only honest ones.">Great for the start of a board or committee meeting. Draw a card, give it ten minutes, and see where it goes. There are no right answers, only honest ones.</p>
+  </div>
+  <div class="deckwrap">
+   <div class="qcard" id="d9pw-qcard"></div>
+   <div class="deckctl">
+    <select id="d9pw-deckfilter"><option value="all">All pathways</option></select>
+    <button class="btn navy" id="d9pw-draw">🎴 Draw another card</button>
+    <button class="btn" id="d9pw-keepq">+ Add to our next steps</button>
+    <small style="color:var(--muted)" id="d9pw-deckcount"></small>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- PLAN -->
+<section id="d9pw-plan">
+ <div class="wrap">
+  <div class="plan">
+   <h2 id="d9pw-plantitle">Our next small steps</h2>
+   <p style="color:#cfe0ff">Collect ideas from anywhere on this page with the <b style="color:var(--gold)">+ Add</b> buttons, or type your own. Two or three small experiments beat a long list. Copy the list into your meeting notes or club plan when you're done.</p>
+   <ol id="d9pw-planlist"></ol>
+   <div class="row"><input id="d9pw-own" placeholder="Add your own idea…" style="flex:1 1 300px"><button class="btn" id="d9pw-ownadd">Add</button></div>
+   <div class="row" style="margin-top:14px"><button class="btn" id="d9pw-plancopy">Copy the list</button><button class="btn ghost" id="d9pw-planclear">Clear</button><span class="toast" id="d9pw-ptoast"></span></div>
+  </div>
+ </div>
+</section>
+
+<!-- LIBRARY -->
+<section class="alt">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick">Go deeper</div>
+   <h2>The District membership toolkit</h2>
+   <p>Each idea on this page is drawn from a short, practical guide. Ask your Membership Chair or the District Membership Team for any you'd like to read in full.</p>
+  </div>
+  <div class="lib" id="d9pw-lib"></div>
+ </div>
+</section>
+
+<footer><div class="wrap"><b>Rotary District 9815</b> · Membership Growth Strategic Plan 2026–2029. Take what fits your club and adapt it freely. Every club, community and member is different, and that's the point.</div></footer>
+</div>
+
+<script>
+(function(){
+var R=document.getElementById('d9pw'); if(!R) return;
+var $=function(s){return R.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(R.querySelectorAll(s))};
+var MODE='club';
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ---------- DATA ---------- */
+var P=[
+{n:1,c:'#0067C8',em:'🧲',t:'Grow Membership Through Intentional Attraction',short:'Many ways for people to discover, take part in and connect with Rotary',
+ measure:'Net District membership growth of 5% a year over three years',
+ focus:[
+  ['1.1','A membership plan that fits your club',['A simple annual plan sized to your club, your capacity and your community','Realistic targets, plus the participation pathways most likely to suit your area','A quick quarterly look at what’s working, then adjust as you learn']],
+  ['1.2','More than one way in',['District “Discover Rotary” campaigns twice a year, with ready-made promotional material','Project-driven membership: invite people into causes they already care about, no membership needed','Information evenings, Friends of Rotary, alumni, volunteering and social pathways']],
+  ['1.3','An invitation culture',['Members invite friends, colleagues and contacts to something that matches their interests','“Bring a friend to Rotary”: to a project or event, not just a meeting','Share the stories of what worked with other clubs and community groups']]],
+ discover:[
+  ['Be the Stranger','Visit a Rotary club where nobody knows you. Notice the welcome, the introductions, how quickly you work out what’s happening, and whether you’d want to go back.'],
+  ['Follow the Visitor','Ask a recent visitor to talk you through their experience, from first contact to walking out the door. Just listen. Try not to explain or defend.'],
+  ['See Us Through New Eyes','Hand a non-Rotarian your club website or Facebook page for two minutes. Then ask: what does this club actually do? Who is it for? How would you get involved?']],
+ ideas:[
+  ['The One Ask Sprint','A 90-day push with an end date, rather than an open-ended drive. Each member invites one person they know to one hands-on activity. Launch it in week 1, invite through weeks 2–6, host a welcoming gathering in week 7, follow up in weeks 8–12, and celebrate everyone who asked in week 13.','Chairs'],
+  ['A Friends of the Club list','A no-dues, no-obligation tier between “came once” and “member”. Put a clipboard or QR code at every visible activity, send a welcome note within three days, share one short update a month, and give the list one named owner.','Our Groups'],
+  ['Do the Google test','Search your club’s name on a phone, logged out, the way a stranger would. Is the meeting time right? Is there a post from this month? Could someone tell what’s on this Saturday? An invitation lands better when what people find online backs it up.','Public Image'],
+  ['Track the asks, not just the joins','The number of invitations made is the number your members can control. Celebrating every ask, whatever the outcome, keeps people asking.','Chairs']],
+ qs:['If a capable 38-year-old visited next week, what would we offer them in their first month?','When someone searches for our club this week, what will they find?','Which of our projects would a non-member love to help with for a morning?','Who is one person each of us already talks to who’d enjoy our next project?']},
+{n:2,c:'#D41367',em:'🫶',t:'Improve Member Retention',short:'Help new members feel connected, capable and seen',
+ measure:'Annual retention above 90%, and first-year resignations down by 25%',
+ focus:[
+  ['2.1','A warm, structured welcome',['A District onboarding framework your club can adapt','A mentor or named support contact for each new member','A structured induction within the first 90 days']],
+  ['2.2','First-year support',['Check-ins with a purpose at 3, 6 and 12 months','Early involvement in projects, relationships, learning and leadership','A quick response when someone’s experience isn’t matching their hopes']],
+  ['2.3','Listen and improve',['A short annual member survey covering satisfaction, engagement and early warning signs','A simple improvement plan built from the results','Talk openly about what gives members energy and what causes friction']]],
+ discover:[
+  ['Why Do You Stay?','Ask five members, one at a time: what makes Rotary worth staying for? Then compare what they say with what your leaders expected them to say.'],
+  ['The First-Year Conversation','Have a coffee with two or three newer members. What surprised you? When did you first feel you belonged? What nearly put you off?'],
+  ['The Disappearing Member','Talk with someone whose involvement has dropped off. Instead of asking them to come more, ask: has something changed for you? What would make Rotary worthwhile right now?']],
+ ideas:[
+  ['Sponsor + buddy, two roles','The sponsor is the personal relationship. The buddy is a named guide who sits with them, shows them the ropes in short sessions, and makes “no dumb questions” the rule. Agree who does what in the first week.','Board'],
+  ['The “is this what you hoped?” check-in','Instead of a passing “how’s it going”, ask a real question at 30 and 90 days: is this giving you what you hoped for? It can surface a mismatch while it’s still easy to fix.','Members'],
+  ['Talk about cost and life changes','In our region, cost and personal circumstances are the two reasons members most often give for thinking about leaving (48% each, Rotary 2024–25 survey). Some clubs are looking at flexible or tiered dues, or a leave-of-absence option.','Survey'],
+  ['Turn newcomers into welcomers','When someone reaches their first anniversary, ask them to help welcome the next new member. Few things make a person feel more like they belong.','Board']],
+ qs:['What does someone who joined us six months ago actually do each month?','When did we last ask a member who left why, and really listen to the answer?','Who in our club owns a new member’s first 90 days?','Is there a way to step back for a while without stepping away completely?']},
+{n:3,c:'#901F93',em:'🌈',t:'Increase Diversity, Inclusion & Flexible Participation',short:'Flexible models and welcoming cultures, so Rotary is open to everyone',
+ measure:'Greater diversity across clubs in age, gender and cultural background',
+ focus:[
+  ['3.1','Broaden who’s in the room',['More women, younger professionals and culturally diverse community members','Get to know your local community, and the barriers that might stop people joining in']],
+  ['3.2','Flexible membership & participation',['Satellite, corporate, associate and other membership models','New club structures where traditional models are struggling','Value meaningful service over meeting attendance','Welcome contributions people can make with the time they have, rather than rigid attendance expectations']],
+  ['3.3','A culture where everyone fits',['Learning and support on inclusion, belonging and welcome','A mix of meeting formats and ways to contribute','Member and community feedback to spot exclusion nobody meant']]],
+ discover:[
+  ['Look Around the Room','Compare who’s in your club with the people who live, work and lead in your community. Ask just one question: who aren’t we hearing from?'],
+  ['Walk in Their Shoes','Ask a young worker, a parent, someone from a different cultural background or a time-poor volunteer to look over your club’s usual expectations. What would make it hard to join in, and what would make it appealing?'],
+  ['Try Rotary Differently','For one activity, drop the usual meeting and membership expectations and simply invite people to take part. Watch who comes and how they get involved.']],
+ ideas:[
+  ['Talk to all six motives','Clubs often lead with “we do good” and “great friendships”. Those are real, but younger people are often also looking to learn, build skills and grow their networks. Say so out loud.','Board'],
+  ['Question one habit a year','Meeting time, how often you meet, the meal, the venue. Pick the one most likely to be quietly keeping out the people you’d love to have, and try something different for a term.','Board'],
+  ['Offer more than one shape of membership','A satellite group, a family membership, a corporate option, or a project-based circle. Different shapes suit different lives.','District'],
+  ['Make the costs and time clear','A newcomer guide with your actual dues and actual time commitment builds trust. Vague answers do the opposite.','Our Groups']],
+ qs:['Which of our “rules” are really our purpose, and which are just habit?','What’s the one format change we’re most nervous about, and is that nerves about the mission or about our own comfort?','Who in our community would we love to see here, and what might be stopping them?','How would someone with a young family take part in our club?']},
+{n:4,c:'#FF7600',em:'✨',t:'Strengthen Club Experience & Engagement',short:'Magnetic clubs people are proud to belong to and keen to bring friends to',
+ measure:'More clubs taking part in District and regional learning, and a better member experience',
+ focus:[
+  ['4.1','Experience + community reach',['Visible, meaningful community projects','Plan activities with two questions in mind: does it strengthen the Rotary experience, and does it reach the community?','Use those two lenses to decide what to stop, start and continue','Tell stories about impact, member experience and how others can get involved']],
+  ['4.2','Modern meetings & participation',['Flexible meeting and participation formats that help people connect','More networking, hands-on service, social time and learning','Check now and then that traditions still mean something to members and the community']],
+  ['4.3','Grow leaders',['Practical leadership pathways for current and emerging leaders','District and regional learning that supports club vitality','Mentoring, project roles and gradually bigger responsibilities']]],
+ discover:[
+  ['Experience Your Own Meeting','Ask one member to watch a normal meeting as if it were their first time. When did I lean in? When did I switch off? When did I feel included?'],
+  ['Map the Club','Plot your main activities on a simple grid: member experience on one axis, community reach on the other. Step back and ask where your energy is really going.'],
+  ['Stop One Thing','Ask members anonymously: if we stopped one thing that no longer adds much, what would it be? Talk about the answers before anyone jumps to defend them.']],
+ ideas:[
+  ['The experience × reach grid','Activities high on both are your magnets, so build on them. Low on both? Maybe it’s time to retire it. High on one only? See whether you can lift the other.','District'],
+  ['Lead with the difference you make','“We packed 4,000 breakfasts so no kid at the local school starts the day hungry” lands better than “we address food insecurity”. One concrete story beats a list.','Board'],
+  ['Post within 24 hours','One photo and one line about who it helped, after anything hands-on. A six-month-old post can make a lively club look quiet.','Public Image'],
+  ['Grow leaders by giving them real roles','Small, visible responsibilities that grow over time build confidence. And give public credit for a first real contribution.','Board']],
+ qs:['What’s the most vivid thing we did this year, and is it the first thing people see about us?','If we could say only one sentence to our community, what would it be?','Which part of our meeting would a first-timer find most confusing?','What would we stop doing tomorrow if nobody’s feelings were hurt?']},
+{n:5,c:'#00A39E',em:'🌱',t:'Build Stronger Connections with Rotary Programs & the Community',short:'Youth, alumni, the Family of Rotary and local partners',
+ measure:'An annual increase in alumni and community participation',
+ focus:[
+  ['5.1','Youth & alumni',['Stay in touch with people who’ve been through Rotary programs','Invite alumni to projects, socials, learning and club and District events','Make the path clear: youth participant → alumni → volunteer → member']],
+  ['5.2','The Family of Rotary',['Shared activities across Rotary, Rotaract, Interact, EarlyAct and Rotary Community Groups, where it suits everyone','Joint projects, mentoring, learning and social time that build relationships']],
+  ['5.3','Community partnerships',['Closer ties with local businesses, schools and community organisations','Partnerships that power projects and open new ways for people to take part','Corporate and organisational participation and membership']]],
+ discover:[
+  ['Ask the Community','Ask three community partners: what’s changing around here, and where could people like us be genuinely useful? Try not to start by describing your own projects.'],
+  ['Follow the Alumni','Contact a few people who’ve done RYLA, Youth Exchange, Rotaract, Interact or another program. Ask: what happened to your connection with Rotary afterwards?'],
+  ['Participate Before Joining','Invite non-members into one genuine project with no membership pitch. Afterwards, ask: what made you want to do something with us again, or not?']],
+ ideas:[
+  ['The Rotaract bridge','About six months before a Rotaractor ages out, find out who’s graduating, pair each one with a mentor, invite them to a joint project and then to a meeting. Have a flexible first-year option ready before they need it.','Our Groups'],
+  ['Win back with something new','Lapsed members usually left over a mismatch of time, cost or role. “We miss you” asks them back to the same thing. A new project or a lighter option gives them something different to say yes to.','Our Groups'],
+  ['The Ten You Should Know','List ten schools, businesses and groups members already have a connection with. A one-off team day or a term-long school partnership brings a whole group of new faces at once.','Our Groups'],
+  ['Feed partners into Friends of the Club','The partnership gets you in the room, and it’s the relationships formed there that grow membership. Add everyone who takes part to your Friends list.','Our Groups']],
+ qs:['Which Rotaractors or Interactors near us are about to age out, and has anyone asked them?','Who did we lose touch with in the last five years who might come back for the right project?','Which ten local organisations do our members already have a link with?','Where does our community need a hand that nobody else is giving?']}
+];
+
+var CH=[
+ ['🚪','Hardly anyone new walks through our door',[0],'A way in might be to make the door smaller: invite people to one thing, not to join. Members who know them do the asking.',['Run a 90-day One Ask Sprint with a celebration at the end','Try the "See Us Through New Eyes" experiment on your website','Start a Friends of the Club list so nobody who comes along hears nothing again'],['d9pw-ladder','The ladder'],['d9pw-words','Build an invite']],
+ ['🍂','New members join… then quietly drift away',[1],'Drift usually starts in the first 90 days, well before anyone says anything. Building belonging before asking for commitment can turn that around.',['Give every newcomer a buddy as well as a sponsor','Ask at 30 and 90 days: is this giving you what you hoped?','Match their first role to the reason they joined'],['d9pw-belong','First-year journey'],['d9pw-motives','Why people join']],
+ ['🪞','We all look (and think) a bit alike',[2],'Try starting with curiosity rather than a target: who lives and leads in your community, and who isn’t in the room?',['Do the "Look Around the Room" exercise together','Ask someone time-poor to read your club’s expectations and give honest feedback','Run one activity with no meeting or membership strings'],['d9pw-motives','Why people join']],
+ ['🕰️','Our meetings feel much like they did in 1995',[3],'Meetings are a habit, and your purpose is something else. You can hold firmly to the purpose and loosen the format, one experiment at a time.',['Have someone "experience your own meeting" as a first-timer','Map your activities on the experience × reach grid','Ask anonymously: what one thing could we stop?'],['d9pw-deck','Draw a card']],
+ ['🎓','We’ve lost touch with young people and alumni',[4],'These people have already said yes to Rotary once. Your job is to make the second yes easy.',['Phone your local Rotaract or Interact president: who’s ageing out this year?','Pull old club rosters and make five personal contacts a term','Pair graduating Rotaractors with a mentor and a joint project'],['d9pw-ladder','The ladder']],
+ ['❓','People don’t know what we actually do',[0,3],'Most people know the Rotary name. Far fewer know a club meets nearby, or what it does. Lead with one concrete local difference rather than the history of Rotary.',['Write your club’s 30-second answer together','Swap the insider words for plain ones','Post one photo and one line within 24 hours of every hands-on project'],['d9pw-words','Say it well']],
+ ['😮‍💨','We’re tired: not enough hands',[4,2],'You don’t have to do it all with members. Partners and friends bring capacity, and some of them may later become members.',['List the ten organisations your members already know','Invite a business for a team day on a big project','Welcome contributions people can make with the time they have, not just attendance'],['d9pw-start','Back to top']],
+ ['💸','Cost keeps coming up',[1,2],'In our region, cost is one of the top two reasons members give for thinking about leaving. It might be worth a direct conversation about what members get for their dues, and what flexibility could look like.',['Talk honestly about value for money at a board meeting','Explore flexible, tiered, family or leave-of-absence options','Publish your actual costs in a newcomer guide, so there are no surprises'],['d9pw-deck','Draw a card']]
+];
+
+var FLOW=[['👣','Experience','Do something simple and real','#0067C8'],['👀','Notice','What did I see or feel?','#00A2E0'],['🤔','Wonder','Could this be happening in our club?','#901F93'],['🔍','Explore','Ask people, look at evidence, find help','#D41367'],['🧪','Try','Make one small change','#FF7600'],['📣','Share','What happened? What did we learn?','#00A39E']];
+
+var RUNGS=[
+ ['Be known & useful','#0B2A5C','Visible community projects, partnerships and presence. Tell the story of the difference you make, with real faces and places.','None yet. You’re simply becoming a trusted, familiar part of the community.','Is the first thing people find about us a recent, real story?'],
+ ['Connect','#17458F','Members meet people through shared community work with councils, schools, businesses and other charities, not through a membership pitch.','“We should work together on this.”','Which local groups do we already rub shoulders with?'],
+ ['Participate once','#0067C8','One hands-on project or come-and-try day that anyone can join, no strings attached.','“Come and help us do this one thing.” Ask them to do something, not to join.','Do we have an activity coming up that’s easy to bring a friend to?'],
+ ['Belong loosely','#00A2E0','A Friends of the Club list, volunteer circle or cause-based group. They’re turning up and part of the club’s circle.','“We’d love you on the team for this cause.”','Does anyone own the list of people who’ve shown interest?'],
+ ['Contribute','#00A39E','They’ve found a role that suits them. The conversation is now about what they can bring.','“You’re already one of us. Want to make it official?”','Who’s been along three or more times and never been asked?'],
+ ['Invite others','#F7A81B','A confident member who understands the value because they lived it before they joined.','“Who do you know who’d love this?”','How do we celebrate members who invite?']
+];
+
+var MOT=[
+ ['💛','Values','To do something worthwhile',['Lead or help on a hands-on local project with a clear result','Be the person who tells the story of who was helped'],'What’s a cause in our community you really care about?'],
+ ['📚','Understanding','To learn and use skills',['Take on a skills-based role such as website, treasurer or project planning','Go to District or regional learning, and bring one idea back'],'Is there something you’d love to learn or get better at?'],
+ ['☕','Social','To belong with good people',['Join the welcome team or the social committee','Be a buddy for the next new member'],'Who would you enjoy working alongside?'],
+ ['💼','Career','To grow networks and experience',['Look after a business or school partnership','Lead a visible project and put it on your CV'],'What experience would help you at work or in your career?'],
+ ['🛟','Protective','To feel useful and connected',['A regular spot in a small, friendly project team','Sit with a regular group, so there are always familiar faces'],'What would make this a good part of your week?'],
+ ['🌟','Enhancement','To grow and feel needed',['A visible role with public thanks for what you do','Mentor a newer member or a Rotaractor'],'Where would you like to make your mark?']
+];
+
+var JOURNEY=[
+ ['Before','Before they join','Sponsor','Have a real conversation about what they want from Rotary. Be honest about time, cost and meetings. Introduce them to three or four members by name before their first visit.'],
+ ['Day 1','Induction','President / Sponsor','Make it personal, not paperwork. Let them say a few words about themselves, have the club welcome them, and introduce their buddy. Give them a simple welcome pack and hold back on the rule book.'],
+ ['Week 1','First week','Buddy','The buddy gets in touch within days, sits with them at the next meeting and makes "no dumb questions" the rule. Add them to club communications.'],
+ ['30 days','First month','Buddy / Membership Chair','One small task that really matters. An invitation to a social catch-up outside meetings. A first honest check-in: is this what you hoped for?'],
+ ['90 days','The key moment','Membership Chair','Look at how their experience compares with the reason they joined, and help them find a project or committee that fits. Have a second check-in.'],
+ ['3–6 mths','Finding a voice','President / Committee chairs','Give them a visible role, or something small to lead. Thank them publicly for their first real contribution.'],
+ ['1 year','One year in','The whole club','Mark the anniversary. Ask them to help welcome the next new member, which is one of the surest signs they belong.']
+];
+
+var SIGNS=[
+ ['Arrival','Arrives on time and stays on to chat','Arrives late, leaves straight away, and comes less often'],
+ ['Socially','Seeks people out and sits in different spots','Sits alone, or only next to their sponsor'],
+ ['Taking part','Volunteers and asks how to help','"Just here to observe" and never puts a hand up'],
+ ['Voice','Shares opinions and asks questions','Has gone quiet in discussions'],
+ ['Language','Says "we" and "our club"','Says "you" and "your club"'],
+ ['Energy','Enjoys it, and brings a guest','Polite but distant, with more excuses'],
+ ['Between meetings','Replies to messages and comes to socials','Slow to reply, or doesn’t reply at all'],
+ ['Effort vs reward','Feels their contribution is noticed','Feels they give far more than they get']
+];
+
+var LIB=[
+ ['Every member','You Are the Growth Plan','Inviting one person, welcoming a newcomer, and keeping them.'],
+ ['Every member','The One-Minute Invite','The whole guide on a single quick-reference card.'],
+ ['Membership Chair','The One Ask Sprint','A 90-day campaign that gets every member asking.'],
+ ['Board','Clearing the Way','Five things a Board can approve to make the toolkit run.'],
+ ['Board','From Stranger to Family','A phase-by-phase new member action plan.'],
+ ['Discussion','Why Aren’t We Growing?','The evidence on decline and the psychology of volunteering.'],
+ ['Discussion','Stop Recruiting. Start Connecting.','The relationship-first engagement ladder.'],
+ ['Discussion','What Does Your Club Actually Do?','Explaining your club to a stranger so they lean in.'],
+ ['Public Image','Prove the Invitation','Making sure what prospects find online backs up the invite.'],
+ ['Our Groups','Friends of the Club','A no-strings tier that keeps interested people in touch.'],
+ ['Our Groups','The Second Yes','Re-engaging alumni and bridging from Rotaract and Interact.'],
+ ['Our Groups','The Ten You Should Know','Turning schools and businesses into a source of volunteers.'],
+ ['For newcomers','What to Expect','Honest answers for anyone thinking of coming along.'],
+ ['Curiosity','Creating the “Aha” Moment','Small discovery activities for each strategic priority.']
+];
+
+/* ---------- PLAN ---------- */
+var PLAN=[]; try{PLAN=JSON.parse(localStorage.getItem('pe-explorer-plan')||'[]')||[];}catch(e){PLAN=[];}
+function savePlan(){try{localStorage.setItem('pe-explorer-plan',JSON.stringify(PLAN));}catch(e){}}
+function renderPlan(){
+ savePlan();
+ var ol=$('#d9pw-planlist');
+ if(!PLAN.length){ol.innerHTML='<li class="empty" style="background:transparent">Nothing here yet. Tap any + Add button on the page to start.</li>';return;}
+ ol.innerHTML=PLAN.map(function(p,i){return '<li><span>'+esc(p)+'</span><button data-rm="'+i+'" title="Remove">✕</button></li>'}).join('');
+}
+function addPlan(t,btn){ if(PLAN.indexOf(t)<0) PLAN.push(t); renderPlan(); if(btn){btn.classList.add('done');btn.textContent='✓ Added';} }
+R.addEventListener('click',function(e){var b=e.target.closest('[data-rm]'); if(b){PLAN.splice(+b.getAttribute('data-rm'),1);renderPlan();}});
+$('#d9pw-ownadd').onclick=function(){var v=$('#d9pw-own').value.trim(); if(v){addPlan(v);$('#d9pw-own').value='';}};
+$('#d9pw-own').addEventListener('keydown',function(e){if(e.key==='Enter')$('#d9pw-ownadd').click();});
+$('#d9pw-planclear').onclick=function(){PLAN=[];renderPlan();$$('.add.done').forEach(function(b){b.classList.remove('done');b.textContent=b.getAttribute('data-label');});};
+function copyText(t,toast){
+ var ok=function(){$(toast).textContent='Copied ✓';setTimeout(function(){$(toast).textContent='';},1800)};
+ try{navigator.clipboard.writeText(t).then(ok,function(){fallback()});}catch(err){fallback();}
+ function fallback(){var ta=document.createElement('textarea');ta.value=t;ta.style.position='absolute';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok();}catch(e){$(toast).textContent='Select and copy manually';}document.body.removeChild(ta);}
+}
+$('#d9pw-plancopy').onclick=function(){ if(!PLAN.length) return; copyText((MODE==='me'?'My':'Our')+' next small steps\n'+PLAN.map(function(p,i){return (i+1)+'. '+p}).join('\n'),'#d9pw-ptoast'); };
+R.addEventListener('click',function(e){var b=e.target.closest('.add'); if(b && !b.classList.contains('done')) addPlan(b.getAttribute('data-add'),b);});
+function addBtn(text){var l=MODE==='me'?'+ Add to my next steps':'+ Add to our next steps';return '<button class="add" data-add="'+esc(text)+'" data-label="'+l+'">'+l+'</button>';}
+
+/* ---------- NAV + MODE ---------- */
+$$('[data-go]').forEach(function(b){b.onclick=function(){var t=document.getElementById(b.getAttribute('data-go')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'});};});
+function setMode(m){MODE=m;
+ $$('[data-mode]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-mode')===m)});
+ $$('[data-club]').forEach(function(el){el.textContent=el.getAttribute(m==='me'?'data-me':'data-club')});
+ $('#d9pw-plantitle').textContent=m==='me'?'My next small steps':'Our next small steps';
+ $$('.add').forEach(function(b){var l=m==='me'?'+ Add to my next steps':'+ Add to our next steps';b.setAttribute('data-label',l);if(!b.classList.contains('done'))b.textContent=l;});
+ $('#d9pw-addbuilt').textContent=m==='me'?'+ Add to my next steps':'+ Add to our next steps';
+ $('#d9pw-keepq').textContent=m==='me'?'+ Add to my next steps':'+ Add to our next steps';
+ drawCard(true); if(CUR!=null) openPillar(CUR,CURTAB,true);
+}
+$$('[data-mode]').forEach(function(b){b.onclick=function(){setMode(b.getAttribute('data-mode'))}});
+
+/* ---------- CHALLENGES ---------- */
+$('#d9pw-chips').innerHTML=CH.map(function(c,i){return '<button class="chip" data-ch="'+i+'"><span class="em">'+c[0]+'</span><span>'+c[1]+'</span></button>'}).join('');
+$$('[data-ch]').forEach(function(b){b.onclick=function(){
+ $$('[data-ch]').forEach(function(x){x.classList.remove('on')}); b.classList.add('on');
+ var c=CH[+b.getAttribute('data-ch')], a=$('#d9pw-answer');
+ var jumps=c[2].map(function(pi){var p=P[pi];return '<button class="jump" style="background:'+p.c+'" data-open="'+pi+'">'+p.em+' Pathway '+p.n+': '+p.t.split(' ').slice(0,3).join(' ')+'…</button>'}).join('');
+ [c[5],c[6]].forEach(function(j){if(j) jumps+='<button class="jump" style="background:var(--navy)" data-goto="'+j[0]+'">→ '+j[1]+'</button>'});
+ a.innerHTML='<h3>'+c[0]+' '+c[1]+'</h3><p style="color:var(--muted)">'+c[3]+'</p><b>A few ways '+(MODE==='me'?'you':'your club')+' might start:</b><ul>'+c[4].map(function(x){return '<li>'+x+' '+addBtn(x)+'</li>'}).join('')+'</ul>'+jumps;
+ a.classList.remove('show'); void a.offsetWidth; a.classList.add('show');
+};});
+R.addEventListener('click',function(e){
+ var o=e.target.closest('[data-open]'); if(o){openPillar(+o.getAttribute('data-open'),'focus');document.getElementById('d9pw-house').scrollIntoView({behavior:'smooth'});}
+ var g=e.target.closest('[data-goto]'); if(g){var t=document.getElementById(g.getAttribute('data-goto')); if(t)t.scrollIntoView({behavior:'smooth'});}
+});
+
+/* ---------- HOUSE ---------- */
+$('#d9pw-cols').innerHTML=P.map(function(p,i){return '<button class="col" data-pi="'+i+'" style="background:linear-gradient(160deg,'+p.c+','+p.c+'cc)"><span class="n">'+p.n+'</span><h4>'+p.em+' '+p.t+'</h4><small>'+p.short+'</small><span class="go">Explore →</span></button>'}).join('');
+var CUR=null,CURTAB='focus';
+var TABS=[['focus','📌 What it covers'],['discover','🔦 Try a discovery'],['ideas','💡 Ideas to borrow'],['talk','💬 Talk it over']];
+function openPillar(i,tab,silent){
+ CUR=i;CURTAB=tab||'focus';var p=P[i];
+ $$('.col').forEach(function(c){c.classList.toggle('on',+c.getAttribute('data-pi')===i)});
+ var body='';
+ if(CURTAB==='focus') body='<div class="focus">'+p.focus.map(function(f){return '<div class="card"><h4><b class="code">'+f[0]+'</b>'+f[1]+'</h4><ul>'+f[2].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>'}).join('')+'</div>';
+ if(CURTAB==='discover') body='<div class="hint">🔦 Small experiments that take little preparation and no reading. '+(MODE==='me'?'Pick one you could try this month on your own.':'Pick one, share it out among a couple of members, and compare notes at the next meeting.')+' Try to notice before you fix.</div><div class="grid3">'+p.discover.map(function(d){return '<div class="card"><span class="tag" style="background:'+p.c+'22;color:'+p.c+'">Discovery</span><h4>'+d[0]+'</h4><p>'+d[1]+'</p>'+addBtn('Try "'+d[0]+'" ('+p.t+')')+'</div>'}).join('')+'</div>';
+ if(CURTAB==='ideas') body='<div class="hint">💡 Practical ideas from the District toolkit. They’re starting points, and every club will make them its own.</div><div class="grid3">'+p.ideas.map(function(d){return '<div class="card"><span class="tag" style="background:'+p.c+'22;color:'+p.c+'">'+d[2]+'</span><h4>'+d[0]+'</h4><p>'+d[1]+'</p>'+addBtn(d[0])+'</div>'}).join('')+'</div>';
+ if(CURTAB==='talk') body='<div class="hint">💬 '+(MODE==='me'?'Questions to sit with on your own. Jot down your first honest answer.':'Questions for your board or committee. Give each one ten minutes and resist the urge to solve it straight away.')+'</div><ol class="qlist" style="--c:'+p.c+'">'+p.qs.map(function(q){return '<li>'+q+'</li>'}).join('')+'</ol>';
+ $('#d9pw-panel').innerHTML='<div class="ph" style="background:linear-gradient(120deg,'+p.c+','+p.c+'bb)"><div><div style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;opacity:.85">Pathway '+p.n+'</div><h3>'+p.em+' '+p.t+'</h3></div><div class="ms"><b>How we’ll know it’s working</b>'+p.measure+'</div></div><div class="tabs" style="--c:'+p.c+'">'+TABS.map(function(t){return '<button data-tab="'+t[0]+'" class="'+(t[0]===CURTAB?'on':'')+'">'+t[1]+'</button>'}).join('')+'</div><div class="pb">'+body+'</div>';
+ $$('#d9pw-panel [data-tab]').forEach(function(b){b.onclick=function(){openPillar(CUR,b.getAttribute('data-tab'))}});
+}
+$$('[data-pi]').forEach(function(b){b.onclick=function(){openPillar(+b.getAttribute('data-pi'),'focus')}});
+
+/* ---------- FLOW ---------- */
+$('#d9pw-flow').innerHTML=FLOW.map(function(f){return '<div class="step"><div class="ic" style="background:'+f[3]+'">'+f[0]+'</div><h4>'+f[1]+'</h4><p>'+f[2]+'</p></div>'}).join('');
+
+/* ---------- LADDER ---------- */
+$('#d9pw-rungs').innerHTML=RUNGS.map(function(r,i){return '<button class="rung" data-rung="'+i+'" style="background:'+r[1]+(i===5?';color:#0B2A5C':'')+'"><span>'+(i+1)+'</span>'+r[0]+'</button>'}).join('');
+function showRung(i){var r=RUNGS[i];
+ $$('[data-rung]').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-rung')===i)});
+ $('#d9pw-rungdetail').innerHTML='<div style="font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:'+(i===5?'#b57600':r[1])+'">Rung '+(i+1)+' of 6</div><h3>'+r[0]+'</h3><p>'+r[2]+'</p><div class="say"><b>The invitation at this rung</b>'+r[3]+'</div><p style="color:var(--muted)"><b style="color:var(--deep)">Ask yourselves:</b> '+r[4]+'</p>'+(i<5?'<button class="btn navy" data-rung-next="'+(i+1)+'">Next rung ↑</button>':'<p style="font-weight:700;color:var(--deep)">🎉 By now, membership is a formality they reach for themselves.</p>');
+ var nx=$('[data-rung-next]'); if(nx) nx.onclick=function(){showRung(+nx.getAttribute('data-rung-next'))};
+}
+$$('[data-rung]').forEach(function(b){b.onclick=function(){showRung(+b.getAttribute('data-rung'))}});
+showRung(2);
+
+/* ---------- BUILDER ---------- */
+var BT='invite';
+var FORMS={
+ invite:[['name','Their name','Sam'],['cause','A cause they care about','kids getting a good start at school'],['activity','The activity','packing breakfast bags'],['when','When','this Saturday morning'],['style','How you’ll ask',['In person','By text','After they’ve come once']]],
+ answer:[['who','Who you are','Cranbourne locals'],['belief','What you can’t stand by and watch','kids going to school hungry'],['action','What you do about it','pack hot breakfasts for three local schools'],['story','One real, recent result','last term that was 4,000 breakfasts'],['invite','The invitation','Want to lend a hand one morning?']]
+};
+function buildForm(){
+ $('#d9pw-form').innerHTML=FORMS[BT].map(function(f){
+  if(Array.isArray(f[2])) return '<label>'+f[1]+'</label><select data-f="'+f[0]+'">'+f[2].map(function(o){return '<option>'+o+'</option>'}).join('')+'</select>';
+  return '<label>'+f[1]+'</label><input data-f="'+f[0]+'" placeholder="'+esc(f[2])+'">';}).join('')+
+  '<p style="font-size:13.5px;color:var(--muted);margin-top:12px">'+(BT==='invite'?'Tip: invite them to <b>one thing</b>, not to join. Make sure they leave knowing three names.':'Tip: read it aloud to someone who knows nothing about Rotary. Could they tell you what difference you make, and how they could be part of it?')+'</p>';
+ $('#d9pw-outlabel').textContent=BT==='invite'?'Your invitation':'Your 30-second answer';
+ $$('#d9pw-form [data-f]').forEach(function(el){el.addEventListener('input',buildOut);el.addEventListener('change',buildOut);});
+ buildOut();
+}
+function v(k){var el=$('#d9pw-form [data-f="'+k+'"]');if(!el)return'';var x=el.value.trim();if(x)return x;var f=FORMS[BT].filter(function(z){return z[0]===k})[0];return Array.isArray(f[2])?f[2][0]:f[2];}
+function buildOut(){var t;
+ if(BT==='invite'){var s=v('style');
+  if(s==='In person') t='“'+v('name')+', you care about '+v('cause')+'. We’re actually doing something about it '+v('when')+': '+v('activity')+'. Want to come along? No strings attached.”';
+  else if(s==='By text') t='Hey '+v('name')+'! A few of us are '+v('activity')+' '+v('when')+' for '+v('cause')+'. Thought of you. Keen to jump in for an hour? 🙂';
+  else t='“Really glad you came along, '+v('name')+'. We’re '+v('activity')+' '+v('when')+'. Keen to come again?”';
+ } else t='“We’re '+v('who')+' who can’t stand by while '+v('belief')+'. So we '+v('action')+'. Recently, '+v('story')+'. '+v('invite')+'”';
+ $('#d9pw-bubble').textContent=t;
+}
+$$('[data-bt]').forEach(function(b){b.onclick=function(){BT=b.getAttribute('data-bt');$$('[data-bt]').forEach(function(x){x.classList.toggle('on',x===b)});buildForm();}});
+$('#d9pw-copy').onclick=function(){copyText($('#d9pw-bubble').textContent,'#d9pw-ctoast')};
+$('#d9pw-addbuilt').onclick=function(){addPlan((BT==='invite'?'Use this invite: ':'Our 30-second answer: ')+$('#d9pw-bubble').textContent);$('#d9pw-ctoast').textContent='Added ✓';setTimeout(function(){$('#d9pw-ctoast').textContent=''},1800)};
+buildForm();
+
+/* ---------- MOTIVES ---------- */
+var MSEL=[];
+$('#d9pw-mots').innerHTML=MOT.map(function(m,i){return '<button class="mot" data-mot="'+i+'"><span class="em">'+m[0]+'</span>'+m[1]+'<small>'+m[2]+'</small></button>'}).join('');
+function renderMot(){
+ $$('[data-mot]').forEach(function(b){b.classList.toggle('on',MSEL.indexOf(+b.getAttribute('data-mot'))>-1)});
+ if(!MSEL.length){$('#d9pw-motout').innerHTML='<p style="margin:0;color:var(--muted)">👆 Tap a reason or two. Most people have more than one.</p>';return;}
+ $('#d9pw-motout').innerHTML='<div class="grid3">'+MSEL.map(function(i){var m=MOT[i];return '<div class="card"><h4>'+m[0]+' '+m[1]+'</h4><b style="font-size:13px;color:var(--muted)">Roles that might feed this</b><ul>'+m[3].map(function(r){return '<li>'+r+'</li>'}).join('')+'</ul><div class="say" style="margin-bottom:0"><b>A question to ask</b>'+m[4]+'</div></div>'}).join('')+'</div><p style="margin:14px 0 0;font-size:14px;color:var(--muted)">Clubs often talk mostly about Values and Social. Understanding, Career and Enhancement can matter a lot to people under 50.</p>';
+}
+$$('[data-mot]').forEach(function(b){b.onclick=function(){var i=+b.getAttribute('data-mot'),k=MSEL.indexOf(i);if(k>-1)MSEL.splice(k,1);else MSEL.push(i);renderMot();}});
+renderMot();
+
+/* ---------- JOURNEY ---------- */
+$('#d9pw-journey').innerHTML=JOURNEY.map(function(j,i){return '<div class="jstep" data-js="'+i+'"><button><div class="jdot">'+(i+1)+'</div><b>'+j[0]+'</b><small>'+j[1]+'</small></button></div>'}).join('');
+function showJ(i){var j=JOURNEY[i];$$('[data-js]').forEach(function(s){s.classList.toggle('on',+s.getAttribute('data-js')===i)});
+ $('#d9pw-jdetail').innerHTML='<h3 style="font-size:21px">'+j[1]+'<span class="owner">👤 '+j[2]+'</span></h3><p style="margin:8px 0 0">'+j[3]+'</p>'+addBtn('New member '+j[0]+': '+j[3].split('.')[0]);}
+$$('[data-js]').forEach(function(s){s.querySelector('button').onclick=function(){showJ(+s.getAttribute('data-js'))}});
+showJ(0);
+var SG='good';
+function renderSigns(){$('#d9pw-signs').innerHTML=SIGNS.map(function(s){return '<div class="sign'+(SG==='bad'?' flip':'')+'"><b>'+s[0]+'</b>'+(SG==='good'?'✓ '+s[1]:'⚠ '+s[2])+'</div>'}).join('');}
+$$('[data-sg]').forEach(function(b){b.onclick=function(){SG=b.getAttribute('data-sg');$$('[data-sg]').forEach(function(x){x.classList.toggle('on',x===b)});renderSigns();}});
+renderSigns();
+
+/* ---------- DECK ---------- */
+var DECK=[];P.forEach(function(p,i){p.qs.forEach(function(q){DECK.push([i,q])})});
+[['Are we trying to save the club, or trying to be useful to our community?','All pathways'],['If our club disappeared tomorrow, who in the community would notice first?','All pathways'],['What would make you proud to bring a friend along next week?','All pathways']].forEach(function(x){DECK.push([-1,x[0]])});
+$('#d9pw-deckfilter').innerHTML+=P.map(function(p,i){return '<option value="'+i+'">'+p.em+' Pathway '+p.n+'</option>'}).join('');
+var CARD=null;
+function drawCard(keep){
+ var f=$('#d9pw-deckfilter').value, pool=DECK.filter(function(d){return f==='all'||d[0]===+f});
+ if(!keep||!CARD){var n;do{n=pool[Math.floor(Math.random()*pool.length)]}while(pool.length>1&&n===CARD);CARD=n;}
+ var p=CARD[0]>-1?P[CARD[0]]:null, c=p?p.c:'#F7A81B';
+ var q=$('#d9pw-qcard');q.style.setProperty('--c',c);
+ q.innerHTML='<div class="qp">'+(p?p.em+' Pathway '+p.n+' · '+p.t:'🌟 The big picture')+'</div><div class="qq">'+CARD[1]+'</div><div class="qh">'+(MODE==='me'?'✍️ Jot down your first honest answer, then a second, better one.':'⏱️ Ten minutes. Hear from everyone before anyone suggests a fix.')+'</div>';
+ $('#d9pw-deckcount').textContent=pool.length+' cards in this pile';
+}
+$('#d9pw-draw').onclick=function(){drawCard(false)};
+$('#d9pw-deckfilter').onchange=function(){CARD=null;drawCard(false)};
+$('#d9pw-keepq').onclick=function(){if(CARD)addPlan('Discuss: '+CARD[1])};
+
+/* ---------- LIB ---------- */
+$('#d9pw-lib').innerHTML=LIB.map(function(l){return '<div class="card"><div class="who">'+l[0]+'</div><h4>'+l[1]+'</h4><p>'+l[2]+'</p></div>'}).join('');
+
+/* init */
+var pw=/[?&]pathway=([1-5])/.exec(location.search);
+openPillar(pw?+pw[1]-1:0,'focus',true);
+renderPlan();
+setMode(/[?&]mode=me/.test(location.search)?'me':'club');
+if(pw) setTimeout(function(){document.getElementById('d9pw-house').scrollIntoView();},50);
+/* carry the access code from a QR or emailed link back into the toolkit links */
+var cm=/[?&]code=([^&#]+)/.exec(location.search); if(cm) $$('a[data-keep]').forEach(function(a){a.href=a.getAttribute('href')+'?code='+cm[1];});
+})();
+</script>
+</body>
+</html>
