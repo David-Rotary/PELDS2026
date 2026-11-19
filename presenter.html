@@ -46,6 +46,8 @@
   .themes.summary p,.themes.summary li{break-inside:avoid}
   @media (max-width:900px){.themes.summary{column-count:1}}
   .ctl.gold{border-color:#F7A81B}
+  .rstats{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}.rstats span{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 14px;font-size:1.05rem}
+  #picks b{color:#F7A81B}
   .sess{display:flex;gap:8px;align-items:center;margin:10px 0 4px;font-size:.8rem;opacity:.9}
   .sess select{flex:1;font:inherit;font-size:.9rem;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:#1d2c4d;color:#fff}
   .goto{display:flex;flex-wrap:wrap;gap:6px}
@@ -140,6 +142,11 @@
     var order = scenarios.map(function (x, i) { return i; }).filter(function (i) { return P || scenarios[i].m.id !== 'next-president'; });
     if (P) order.sort(function (a, b) { return (scenarios[a].m.id === 'next-president' ? 0 : 1) - (scenarios[b].m.id === 'next-president' ? 0 : 1) || a - b; });
     order.forEach(function (i) { var x = scenarios[i]; h += '<button class="ctl ' + (act.type === 'poll' && act.id === x.id ? 'on' : '') + '" data-s="' + i + '">' + esc(x.it.title) + '<div class="sub">' + esc(x.m.title) + '</div></button>'; });
+    h += '<h3>From ideas to action</h3>' +
+      '<button class="ctl' + on(act.type === 'poll' && act.id === TRIED.id) + '" data-a="tried">Did you try it? (vote)<div class="sub">Open the next session with last session\'s promises</div></button>' +
+      '<button class="ctl' + on(act.type === 'reports') + '" data-a="reports">What clubs are trying<div class="sub">Report-backs from every club, anonymous</div></button>' +
+      '<button class="ctl' + on(act.type === 'roundup') + '" data-a="roundup">Monthly AI roundup<div class="sub">From the last 31 days of report-backs, for the newsletter</div></button>' +
+      (lastRoundup ? '<button class="ctl" data-a="saveround">Save the roundup<div class="sub">Downloads it as a text file</div></button>' : '');
     h += '<h3>Reset for a new session</h3><button class="ctl" data-a="clearv">Clear all votes…<div class="sub">Every scenario vote and the talk poll</div></button><button class="ctl" data-a="clearw">Clear the wall…<div class="sub">Removes every answer on both walls, and the themes</div></button>';
     h += '<h3>Results</h3><button class="ctl" data-a="download">Download results<div class="sub">Votes by role, walls and themes, as a spreadsheet</div></button>';
     h += '<h3>Today</h3><div class="mini" id="usage">…</div>' +
@@ -156,8 +163,10 @@
   var FIVE = { id: 'club-five-years', title: 'If nothing changes, in five years my club will be…', ask: 'Be honest. Tap one.',
     options: ['Growing', 'About the same size', 'Smaller, but still OK', 'Struggling to fill key roles', 'At risk of closing'] };
   var WALLS = { worries: 'What worries you most about being President?', barriers: 'What\'s the biggest barrier to growing or keeping members in your club?',
-    successor: 'What stops good members saying yes to being President?', ideas: 'What\'s one idea to grow or keep members that your club hasn\'t tried? The bolder the better.' };
-  var lastSummary = '';
+    successor: 'What stops good members saying yes to being President?', pledge: 'Picked to try in the next 30 days', ideas: 'What\'s one idea to grow or keep members that your club hasn\'t tried? The bolder the better.' };
+  var lastSummary = '', lastRoundup = '';
+  var TRIED = { id: 'did-you-try', title: 'Last time, you picked one thing to try. How did it go?', ask: 'Be honest. Tap one.', options: ['Done it', 'Started, still going', 'Not yet', 'I wasn\'t here last time'] };
+  var STAT = { done: '🎉 Done', partly: '🌱 Partly done', notyet: '⏳ Not yet', changed: '🔀 Changed plan' };
   /* sessions: each keeps its own votes and walls. Rooms starting with "presidents" get the Presidents meeting screens */
   var SESSIONS = [['prepelds', 'Pre-PELDS (7 Nov)'], ['gippsland', 'Pre-PELDS Gippsland'], ['presidents', 'Presidents meeting']];
   function isPres() { return /^presidents/i.test(room); }
@@ -174,7 +183,7 @@
         [tk('your-mentor'), 'Your mentor for the year'], [tk('membership-partnership'), 'Membership module'], [tk('your-mentor', 'ask'), 'AI demo: ask a mentor'], ['membership-explorer.html', 'Membership Explorer'], ['launchpad.html', 'Launchpad']];
     return L.filter(function (x) { return x[0]; }).map(function (x) { return '<a href="' + x[0] + '" target="' + (x[2] || 'pe-toolkit') + '">' + esc(x[1]) + ' ↗</a>'; }).join('');
   }
-  function setAct(a) { act = a; themes = ''; return api('set', { activity: a }).then(function (r) { if (r.error) PE.toast('Could not update: ' + r.error); side(); stage(); }); }
+  function setAct(a) { act = a; themes = ''; return api('set', { activity: a }).then(function (r) { if (r.error) PE.toast('Could not update: ' + r.error); side(); stage(); tick(); }); }
   function startPoll(x) {
     var it = x.it;
     setAct({ type: 'poll', id: x.id, title: it.title, setup: it.setup, options: (it.choices || []).map(function (c) { return c.text; }), open: true, reveal: false });
@@ -184,6 +193,10 @@
     if (a === 'fivepoll') setAct({ type: 'poll', id: FIVE.id, title: FIVE.title, ask: FIVE.ask, options: FIVE.options, open: true, reveal: false });
     if (a === 'ideas') setAct({ type: 'wall', id: 'ideas', title: WALLS.ideas, open: true });
     if (a === 'summary') summary();
+    if (a === 'tried') setAct({ type: 'poll', id: TRIED.id, title: TRIED.title, ask: TRIED.ask, options: TRIED.options, open: true, reveal: false });
+    if (a === 'reports') setAct({ type: 'reports', title: 'What clubs are trying' });
+    if (a === 'roundup') roundup();
+    if (a === 'saveround') saveText(lastRoundup, 'What-clubs-are-trying-' + new Date().toISOString().slice(0, 10) + '.txt');
     if (a === 'savesum') saveText(lastSummary, 'AI-summary-' + room + '-' + new Date().toISOString().slice(0, 10) + '.txt');
     if (a === 'successor') setAct({ type: 'wall', id: 'successor', title: 'What stops good members saying yes to being President?', open: true });
     if (a === 'idle') setAct({ type: 'idle', title: isPres() ? 'Welcome, Presidents!' : 'Welcome, Presidents-Elect!', message: 'You\'re in. Votes will appear here automatically. Keep this page open.' });
@@ -232,9 +245,12 @@
           return '<div class="bar ' + v + '"><div class="fill" style="width:0"></div><div class="t"><b>' + String.fromCharCode(65 + i) + '</b><span>' + esc(o) + '</span><span class="n">0</span></div>' +
             '<div class="split"></div><div class="o"><span class="verd">' + ({ strong: 'Strong choice', mixed: 'Partly there', weak: 'Risky choice' }[v] || '') + '</span>' + PE.md((act.outcomes || [])[i] || '').replace(/<\/?p>/g, ' ') + '</div></div>';
         }).join('') + '</div>';
-    } else if (act.type === 'summary') {
-      if (act.text) lastSummary = act.text;
-      s.innerHTML = '<div class="kind">AI summary · from your votes and answers</div><h1>' + esc(act.title || 'What you told us') + '</h1><div class="themes summary">' + PE.md(act.text || '') + '</div>';
+    } else if (act.type === 'reports') {
+      s.innerHTML = '<div class="kind">From every club · anonymous · <span id="rc">0</span> report-backs</div><h1>' + esc(act.title || 'What clubs are trying') + '</h1><div class="rstats" id="rstats"></div><div class="wall" id="rwall"></div>';
+    } else if (act.type === 'summary' || act.type === 'roundup') {
+      if (act.text && act.type === 'summary') lastSummary = act.text;
+      if (act.text && act.type === 'roundup') lastRoundup = act.text;
+      s.innerHTML = '<div class="kind">' + (act.type === 'roundup' ? 'Monthly roundup · from report-backs' : 'AI summary · from your votes and answers<span id="picks"></span>') + '</div><h1>' + esc(act.title || 'What you told us') + '</h1><div class="themes summary">' + PE.md(act.text || '') + '</div>';
       /* shrink the text until the whole summary fits the screen (the room can't scroll the projector) */
       var box = s.querySelector('.summary'), fs = 18;
       box.style.fontSize = fs + 'px';
@@ -267,6 +283,15 @@
         PE.toast('Summary on the big screen and everyone\'s phone');
       }).catch(function () { s.innerHTML = '<div class="kind">AI summary</div><div class="themes">Could not reach the AI coach.</div>'; });
   }
+  function roundup() {
+    var s = document.getElementById('stage'); if (!s) return;
+    s.innerHTML = '<div class="kind">Monthly roundup</div><h1>Reading the report-backs…</h1>'; s.appendChild(ai.thinking());
+    ai.post('/api/coach', { mode: 'roundup', admin: admin, payload: { days: 31 } }).then(function (r) {
+      if (!r || !r.text) { s.innerHTML = '<div class="kind">Monthly roundup</div><div class="themes">' + esc(r && r.error === 'bad_mode' ? 'The online service needs the 21 Nov update (paste the new worker.js into Cloudflare and Deploy).' : 'Could not get the roundup: ' + ((r && (r.message || r.error)) || 'no answer')) + '</div>'; return; }
+      lastRoundup = r.text;
+      setAct({ type: 'roundup', title: 'What clubs are trying: this month', text: r.text.slice(0, 12000) });
+    }).catch(function () { s.innerHTML = '<div class="kind">Monthly roundup</div><div class="themes">Could not reach the AI coach.</div>'; });
+  }
   function saveText(t, name) {
     var blob = new Blob([t], { type: 'text/plain;charset=utf-8' }), a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800);
@@ -275,12 +300,13 @@
   /* ---------- download all results as a CSV spreadsheet ---------- */
   var TALK = { 'talk-said-yes': { title: 'When you said yes to being President, you felt…', options: ['Excited — bring it on', 'Nervous, but willing', 'Talked into it', 'Still not sure why I said yes'] } };
   var ROLE = { pe: 'President-Elect', mc: 'Membership Chair', other: 'Other', '': 'Not given' };
+  var reps = [];
   function download() {
-    api('export').then(function (r) {
+    api('reports', { days: 365 }).then(function (x) { reps = (x && x.reports) || []; }).catch(function () { reps = []; }).then(function () { return api('export'); }).then(function (r) {
       if (!r || r.error) { PE.toast('Could not download: ' + ((r && r.error) || 'error')); return; }
       var q = function (v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
       var line = function (a) { return a.map(q).join(','); };
-      var info = function (id) { var x = scenarios.find(function (s) { return s.id === id; }); return x ? { title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) } : (TALK[id] || ({ 'next-pres-2028': QUICK, 'club-five-years': FIVE })[id] || { title: id, options: [] }); };
+      var info = function (id) { var x = scenarios.find(function (s) { return s.id === id; }); return x ? { title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) } : (TALK[id] || ({ 'next-pres-2028': QUICK, 'club-five-years': FIVE, 'did-you-try': TRIED })[id] || { title: id, options: [] }); };
       var out = [line(['District 9815 · ' + room + ' · downloaded ' + new Date().toLocaleString('en-AU')]), ''];
       /* 1. summary */
       out.push(line(['VOTE SUMMARY']), line(['Question', 'Option', 'Presidents-Elect', 'Membership Chairs', 'Other / not given', 'Total']));
@@ -296,6 +322,9 @@
       /* 3. themes on screen now */
       if (themes || act.themes) out.push('', line(['AI THEMES (' + (act.title || '') + ')']), line([themes || act.themes]));
       if (lastSummary) out.push('', line(['AI SUMMARY AND IDEAS']), line([lastSummary]));
+      if (lastRoundup) out.push('', line(['MONTHLY ROUNDUP']), line([lastRoundup]));
+      if (reps.length) { out.push('', line(['REPORT-BACKS (all clubs, last 12 months)']), line(['How it went', 'Idea', 'What happened', 'Role', 'Time']));
+        reps.forEach(function (x) { out.push(line([(STAT[x.status] || x.status).replace(/^\S+\s/, ''), x.idea, x.text, x.role, new Date(x.ts).toLocaleString('en-AU')])); }); }
       /* 4. every vote */
       out.push('', line(['EVERY VOTE']), line(['Question', 'Choice', 'Role', 'Time']));
       (r.votes || []).forEach(function (v) { var inf = info(v.poll); out.push(line([inf.title, String.fromCharCode(65 + v.choice) + '. ' + (inf.options[v.choice] || ''), ROLE[v.role] || v.role, new Date(v.ts).toLocaleString('en-AU')])); });
@@ -338,7 +367,20 @@
       var h = list.map(function (x) { return '<div class="note">' + esc(x.text) + (x.role === 'pe' || x.role === 'mc' ? '<span class="rb ' + x.role + '">' + (x.role === 'pe' ? 'PE' : 'Membership') + '</span>' : '') + '</div>'; }).join('');
       if (w._h !== h) { w._h = h; w.innerHTML = h; }
     });
-    Promise.resolve(p).catch(function () { }).then(function () { timer = setTimeout(tick, 2500); });
+    else if (act.type === 'summary') p = api('pledges').then(function (r) {
+      var k = document.getElementById('picks'); if (!k) return; var L = r.pledges || [];
+      var h = L.length ? ' · Picked to try: ' + L.slice(0, 5).map(function (x) { return esc(x.text) + ' <b>' + x.c + '</b>'; }).join(' · ') : ' · Pick one to try on your phone';
+      if (k._h !== h) { k._h = h; k.innerHTML = h; }
+    });
+    else if (act.type === 'reports') p = api('reports', { days: 365 }).then(function (r) {
+      var w = document.getElementById('rwall'); if (!w) return; var L = r.reports || [], c = {};
+      L.forEach(function (x) { c[x.status] = (c[x.status] || 0) + 1; });
+      document.getElementById('rc').textContent = L.length;
+      document.getElementById('rstats').innerHTML = Object.keys(STAT).map(function (k) { return '<span>' + STAT[k] + ' <b>' + (c[k] || 0) + '</b></span>'; }).join('');
+      var h = L.slice(0, 18).map(function (x) { return '<div class="note"><b>' + (STAT[x.status] || '') + '</b> · ' + esc(x.idea || '') + (x.text ? '<div style="margin-top:4px;font-weight:400">' + esc(x.text) + '</div>' : '') + '</div>'; }).join('') || '<p>No report-backs yet. They arrive when people tap "How did it go?" in their calendar reminder.</p>';
+      if (w._h !== h) { w._h = h; w.innerHTML = h; }
+    });
+    Promise.resolve(p).catch(function () { }).then(function () { timer = setTimeout(tick, act.type === 'reports' ? 8000 : 2500); });
   }
 
   /* ---------- start ---------- */

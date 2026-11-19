@@ -426,10 +426,10 @@
  <div class="wrap">
   <div class="plan">
    <h2 id="d9pw-plantitle">Our next small steps</h2>
-   <p style="color:#cfe0ff">Collect ideas from anywhere on this page with the <b style="color:var(--gold)">+ Add</b> buttons, or type your own. Two or three small experiments beat a long list. Copy the list into your meeting notes or club plan when you're done.</p>
+   <p style="color:#cfe0ff">Collect ideas from anywhere on this page with the <b style="color:var(--gold)">+ Add</b> buttons, or type your own. Two or three small experiments beat a long list. Then <b style="color:var(--gold)">✓ Make it an action</b> (a date, a calendar reminder, someone to tell) or turn the list into a <b style="color:var(--gold)">Board agenda item</b>.</p>
    <ol id="d9pw-planlist"></ol>
    <div class="row"><input id="d9pw-own" placeholder="Add your own idea…" style="flex:1 1 300px"><button class="btn" id="d9pw-ownadd">Add</button></div>
-   <div class="row" style="margin-top:14px"><button class="btn" id="d9pw-plancopy">Copy the list</button><button class="btn ghost" id="d9pw-planclear">Clear</button><span class="toast" id="d9pw-ptoast"></span></div>
+   <div class="row" style="margin-top:14px"><button class="btn" id="d9pw-plancopy">Copy the list</button><button class="btn" id="d9pw-board">📋 Board agenda item</button><button class="btn ghost" id="d9pw-planclear">Clear</button><span class="toast" id="d9pw-ptoast"></span></div>
   </div>
  </div>
 </section>
@@ -449,6 +449,9 @@
 <footer><div class="wrap"><b>Rotary District 9815</b> · Membership Growth Strategic Plan 2026–2029. Take what fits your club and adapt it freely. Every club, community and member is different, and that's the point.</div></footer>
 </div>
 
+<script src="app/config.js"></script>
+<script src="app/district-goal.js"></script>
+<script src="app/commit.js"></script>
 <script>
 (function(){
 var R=document.getElementById('d9pw'); if(!R) return;
@@ -616,10 +619,11 @@ function renderPlan(){
  savePlan();
  var ol=$('#d9pw-planlist');
  if(!PLAN.length){ol.innerHTML='<li class="empty" style="background:transparent">Nothing here yet. Tap any + Add button on the page to start.</li>';return;}
- ol.innerHTML=PLAN.map(function(p,i){return '<li><span>'+esc(p)+'</span><button data-rm="'+i+'" title="Remove">✕</button></li>'}).join('');
+ ol.innerHTML=PLAN.map(function(p,i){return '<li><span>'+esc(p)+'</span><span style="display:flex;gap:6px;align-items:center;flex:none">'+(window.PEAct?'<button class="btn" data-act="'+i+'" style="padding:5px 11px;font-size:13px;color:#0B2A5C">✓ Make it an action</button>':'')+'<button data-rm="'+i+'" title="Remove">✕</button></span></li>'}).join('');
 }
 function addPlan(t,btn){ if(PLAN.indexOf(t)<0) PLAN.push(t); renderPlan(); if(btn){btn.classList.add('done');btn.textContent='✓ Added';} }
-R.addEventListener('click',function(e){var b=e.target.closest('[data-rm]'); if(b){PLAN.splice(+b.getAttribute('data-rm'),1);renderPlan();}});
+R.addEventListener('click',function(e){var b=e.target.closest('[data-rm]'); if(b){PLAN.splice(+b.getAttribute('data-rm'),1);renderPlan();}
+ var a=e.target.closest('[data-act]'); if(a&&window.PEAct){PEAct.open({what:PLAN[+a.getAttribute('data-act')],context:'Membership Pathways Explorer',source:'explorer'});}});
 $('#d9pw-ownadd').onclick=function(){var v=$('#d9pw-own').value.trim(); if(v){addPlan(v);$('#d9pw-own').value='';}};
 $('#d9pw-own').addEventListener('keydown',function(e){if(e.key==='Enter')$('#d9pw-ownadd').click();});
 $('#d9pw-planclear').onclick=function(){PLAN=[];renderPlan();$$('.add.done').forEach(function(b){b.classList.remove('done');b.textContent=b.getAttribute('data-label');});};
@@ -628,6 +632,7 @@ function copyText(t,toast){
  try{navigator.clipboard.writeText(t).then(ok,function(){fallback()});}catch(err){fallback();}
  function fallback(){var ta=document.createElement('textarea');ta.value=t;ta.style.position='absolute';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok();}catch(e){$(toast).textContent='Select and copy manually';}document.body.removeChild(ta);}
 }
+$('#d9pw-board').onclick=function(){ if(!PLAN.length){$('#d9pw-ptoast').textContent='Add an idea first';setTimeout(function(){$('#d9pw-ptoast').textContent='';},1800);return;} if(window.PEAct) PEAct.agenda(PLAN.map(function(p){return {what:p};}),{title:PLAN.length>1?'Membership ideas to try':PLAN[0]}); };
 $('#d9pw-plancopy').onclick=function(){ if(!PLAN.length) return; copyText((MODE==='me'?'My':'Our')+' next small steps\n'+PLAN.map(function(p,i){return (i+1)+'. '+p}).join('\n'),'#d9pw-ptoast'); };
 R.addEventListener('click',function(e){var b=e.target.closest('.add'); if(b && !b.classList.contains('done')) addPlan(b.getAttribute('data-add'),b);});
 function addBtn(text){var l=MODE==='me'?'+ Add to my next steps':'+ Add to our next steps';return '<button class="add" data-add="'+esc(text)+'" data-label="'+l+'">'+l+'</button>';}

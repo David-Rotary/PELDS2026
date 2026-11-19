@@ -13,6 +13,7 @@
   <nav class="nav">
     <a href="#/" data-nav="home">Home</a>
     <a href="#/plan" data-nav="plan">My Plan</a>
+    <a href="#/actions" data-nav="actions">My actions <span class="acount" id="acount"></span></a>
     <a href="#/resources" data-nav="resources">Library</a>
     <button type="button" id="boardBtn">Board mode</button>
     <a href="#/help" data-nav="help">Help</a>
@@ -33,6 +34,7 @@
 <script src="modules/_module-list.js"></script>
 <script src="app/paths.js"></script>
 <script src="app/district-goal.js"></script>
+<script src="app/commit.js"></script>
 <script>
 (function () {
   'use strict';
@@ -65,7 +67,7 @@
     var me = st.me, pct = overall();
     var P = window.PE_PATHS || {}, role = P[me.role] ? me.role : '';
     view.innerHTML = warnings() + (role ? youHTML(role, pct) : Object.keys(P).length ? pickerHTML() : '') +
-      '<div id="dgoal"></div>' +
+      '<div id="actcard">' + actionsCard() + '</div><div id="dgoal"></div>' +
       '<div style="margin:22px 0 10px"><input class="search" id="q" placeholder="Search everything — e.g. grants, treasurer, membership, polio…" autocomplete="off"></div>' +
       '<div class="results card hidden" id="res" style="padding:0;margin-bottom:16px"></div>' +
       '<h2 style="margin-top:18px">' + (role ? 'Everything in the toolkit' : 'Modules') + '</h2><div class="grid" id="mods"></div>' +
@@ -171,6 +173,59 @@
     window.scrollTo(0, 0);
   }
 
+  /* ---------- MY ACTIONS: commit → remind → report back (app/commit.js) ---------- */
+  var STATUS = { open: ['⏳', 'To do'], done: ['🎉', 'Done'], partly: ['🌱', 'Partly done'], notyet: ['⏳', 'Not yet'], changed: ['🔀', 'Changed plan'] };
+  function countActions() {
+    var n = window.PEAct ? PEAct.list().filter(function (c) { return c.status === 'open' || c.status === 'notyet' || c.status === 'partly'; }).length : 0;
+    var b = document.getElementById('acount'); if (b) { b.textContent = n || ''; b.style.display = n ? '' : 'none'; }
+  }
+  window.addEventListener('pe-actions', countActions);
+  function actionsCard() {
+    if (!window.PEAct) return '';
+    var open = PEAct.list().filter(function (c) { return c.status === 'open' || c.status === 'notyet' || c.status === 'partly'; });
+    if (!open.length) return '';
+    open.sort(function (a, b) { return String(a.when).localeCompare(String(b.when)); });
+    var c = open[0], over = c.when && c.when < new Date().toISOString().slice(0, 10);
+    return '<div class="card actcard"><div><b>' + open.length + ' action' + (open.length > 1 ? 's' : '') + ' on the go.</b> ' + (over ? 'Overdue' : 'Next') + ': ' + esc(c.what) + ' <span class="muted">(' + esc(PEAct.fmtDate(c.when)) + ')</span></div><a class="btn sm gold" href="#/actions">My actions →</a></div>';
+  }
+  function actions() {
+    setNav('actions');
+    var L = window.PEAct ? PEAct.list() : [], today = new Date().toISOString().slice(0, 10);
+    var h = warnings() + '<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">My actions</h1><button class="btn gold" id="newAct" type="button">+ New action</button></div>' +
+      '<p class="muted">Ideas only change a club when someone does something. Every action here can go in your calendar, be shared with someone who\'ll check in, and go to your Board. When the date comes, tell the District how it went. It takes one minute and it\'s anonymous.</p></div>';
+    if (!L.length) h += '<div class="card"><p>No actions yet. On any page of the toolkit, press <b>✓ Make it an action</b>. Or pick an idea from the <a href="membership-explorer.html">Membership Pathways Explorer</a>.</p></div>';
+    else {
+      h += '<div class="row noprint" style="margin:12px 0"><button class="btn" id="agendaSel" type="button">📋 Board agenda item from the ticked ones</button><span class="small muted">Tick the actions you want your Board to decide on.</span></div><div class="alist">';
+      L.forEach(function (c) {
+        var S = STATUS[c.status] || STATUS.open, over = (c.status === 'open' || c.status === 'notyet') && c.when && c.when < today;
+        h += '<div class="card aitem' + (over ? ' over' : '') + (c.status === 'done' ? ' done' : '') + '"><label class="asel"><input type="checkbox" data-sel="' + esc(c.id) + '"></label><div class="abody">' +
+          '<div class="ahead"><span class="pill">' + S[0] + ' ' + S[1] + '</span><span class="small ' + (over ? 'overdue' : 'muted') + '">' + (over ? 'Overdue · ' : 'By ') + esc(PEAct.fmtDate(c.when)) + '</span>' + (c.who ? '<span class="small muted">with ' + esc(c.who) + '</span>' : '') + '</div>' +
+          '<b class="awhat">' + esc(c.what) + '</b>' + (c.context ? '<div class="small muted">From: ' + esc(c.context) + '</div>' : '') +
+          '<div class="row" style="margin-top:8px">' +
+          '<a class="btn sm pri" href="' + esc(PEAct.reportURL(c)) + '" target="_blank" rel="noopener">How did it go?</a>' +
+          '<button class="btn sm" data-ics="' + esc(c.id) + '" type="button">📅 Calendar</button>' +
+          '<button class="btn sm" data-tell="' + esc(c.id) + '" type="button">Tell someone</button>' +
+          '<button class="btn sm" data-board="' + esc(c.id) + '" type="button">📋 Board</button>' +
+          '<button class="btn sm" data-del="' + esc(c.id) + '" type="button" title="Remove">✕</button></div></div></div>';
+      });
+      h += '</div>';
+    }
+    view.innerHTML = h;
+    $('#newAct').onclick = function () { PEAct.open({ source: 'toolkit:actions', role: st.me.role || '' }); };
+    var by = function (id) { return PEAct.get(id); };
+    document.querySelectorAll('[data-ics]').forEach(function (b) { b.onclick = function () { PEAct.ics(by(b.dataset.ics)); }; });
+    document.querySelectorAll('[data-tell]').forEach(function (b) { b.onclick = function () { PEAct.after(by(b.dataset.tell)); }; });
+    document.querySelectorAll('[data-board]').forEach(function (b) { b.onclick = function () { PEAct.agenda([by(b.dataset.board)], { club: st.me.club }); }; });
+    document.querySelectorAll('[data-del]').forEach(function (b) { b.onclick = function () { if (confirm('Remove this action from your list?')) { PEAct.remove(b.dataset.del); actions(); } }; });
+    var ag = $('#agendaSel'); if (ag) ag.onclick = function () {
+      var sel = Array.prototype.map.call(document.querySelectorAll('[data-sel]:checked'), function (x) { return by(x.dataset.sel); });
+      if (!sel.length) { PE.toast('Tick one or more actions first'); return; }
+      PEAct.agenda(sel, { club: st.me.club });
+    };
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('pe-actions', function () { if ((location.hash || '').indexOf('#/actions') === 0) actions(); else if ((location.hash || '#/').length <= 2) { var a = document.getElementById('actcard'); if (a) a.innerHTML = actionsCard(); } });
+
   /* ---------- MODULE ---------- */
   function module(id, idx) {
     setNav('');
@@ -180,7 +235,7 @@
     if (it) { st.visited[PE.k(m, it)] = 1; save(); }
     view.style.setProperty('--accent', colour(m));
     view.innerHTML = warnings() + '<div class="mod"><aside class="card steps" id="steps"></aside><section><div class="card stage" id="stage"></div>' +
-      '<div class="pager"><a class="btn" id="prev">← Back</a><span class="row"><button class="btn sm noprint" id="board1" type="button">Show on big screen</button></span><a class="btn pri" id="next">Next →</a></div></section></div>';
+      '<div class="pager"><a class="btn" id="prev">← Back</a><span class="row"><button class="btn sm gold noprint" id="act1" type="button">✓ Make it an action</button><button class="btn sm noprint" id="board1" type="button">Show on big screen</button></span><a class="btn pri" id="next">Next →</a></div></section></div>';
     var s = $('#steps');
     s.innerHTML = '<div class="mt">' + esc(m.title) + '</div>' + (m.presenter ? '<div class="small muted" style="margin:-4px 4px 10px 18px">' + esc(m.presenter) + (m.contact ? '<br>' + esc(m.contact) : '') + '</div>' : '');
     m.items.forEach(function (x, i) {
@@ -197,6 +252,7 @@
     else if (nextMod) { next.href = '#/m/' + nextMod.id + '/0'; next.textContent = 'Next module: ' + nextMod.title + ' →'; }
     else { next.href = '#/plan'; next.textContent = 'Finish: open My Plan →'; }
     $('#board1').onclick = function () { board(m, idx); };
+    $('#act1').onclick = function () { PEAct.open({ what: '', context: m.title + ' · ' + (it ? it.title : ''), source: 'toolkit:' + m.id + '/' + (it ? it.id : ''), role: st.me.role || '' }); };
     window.scrollTo(0, 0);
   }
 
@@ -351,12 +407,14 @@
     else if (p[0] === 'plan') plan();
     else if (p[0] === 'resources') library();
     else if (p[0] === 'help') help();
+    else if (p[0] === 'actions') actions();
     else if (p[0] === 'path') pathPage(decodeURIComponent(p[1] || 'all'));
     else home();
   }
   window.addEventListener('hashchange', route);
 
   (function () { var r = /[?&]role=([a-z]+)/.exec(location.search); if (r && window.PE_PATHS && PE_PATHS[r[1]]) { st.me.role = r[1]; save(); } })();
+  countActions();
   var waiting = 2;
   function ready() { if (--waiting) return; route(); }
   PE.loadFiles(window.PE_MODULE_FILES || [], 'modules/', function (errs) {

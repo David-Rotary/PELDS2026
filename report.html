@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>How did it go? · Rotary District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B2A5C;--royal:#17458F;--azure:#0067C8;--gold:#F7A81B;--green:#009739;--ink:#1b2333;--ink2:#4a5468;--line:#dfe4ec;
+  --display:'Fraunces',Georgia,serif;--body:'Hanken Grotesk','Segoe UI',system-ui,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--body);color:var(--ink);background:#f4f6fa;line-height:1.5;font-size:17px}
+.hero{background:linear-gradient(135deg,#0B2A5C,#17458F 60%,#0067C8);color:#fff;padding:24px 16px 20px}
+.in{max-width:640px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.95rem}
+.mark{width:36px;height:36px;border-radius:50%;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-weight:800;font-size:.75rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,6vw,2.4rem);margin:12px 0 4px}
+h1 em{color:var(--gold);font-weight:500}
+.rb{display:flex;height:6px}.rb i{flex:1}
+main{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:0 0 14px}
+.idea{border-left:5px solid var(--gold)}
+.idea .k{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--azure)}
+.idea textarea{border:0;padding:4px 0;font-weight:700;font-size:1.05rem;min-height:2.6em;resize:vertical;width:100%;font-family:inherit;color:var(--ink);background:transparent}
+label.h{display:block;font-weight:800;color:var(--navy);margin:0 0 8px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{font:inherit;font-weight:700;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 10px;cursor:pointer;text-align:left;color:var(--ink)}
+.opt span{display:block;font-size:1.5rem}
+.opt.on{border-color:var(--royal);background:#eef4ff}
+textarea.big{width:100%;min-height:120px;font:inherit;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px}
+select,input[type=text]{font:inherit;border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
+.hint{font-size:.85rem;color:var(--ink2);margin-top:6px}
+.send{font:inherit;font-weight:800;font-size:1.1rem;width:100%;border:0;border-radius:999px;padding:14px;background:var(--royal);color:#fff;cursor:pointer}
+.send:disabled{opacity:.6}
+.err{color:#b4233a;font-weight:700;margin-top:8px;min-height:1.2em}
+.thanks{text-align:center}
+.thanks .big{font-size:3rem}
+.btn{display:inline-block;font-weight:800;border-radius:999px;padding:10px 16px;border:2px solid var(--royal);color:var(--royal);text-decoration:none;margin:4px}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.hidden{display:none}
+@media (max-width:420px){.opts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="hero"><div class="in">
+  <div class="brand"><div class="mark">9815</div><div>Rotary District 9815 · Club Leaders</div></div>
+  <h1>How did it <em>go?</em></h1>
+  <div>One minute. Anonymous. It helps other clubs learn what works.</div>
+</div></div>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+
+<main>
+<div id="form">
+  <div class="card idea"><div class="k">You said you'd</div><textarea id="idea" maxlength="300" placeholder="What did you set out to do?"></textarea></div>
+
+  <div class="card"><label class="h">How did it go?</label>
+    <div class="opts">
+      <button class="opt" data-s="done"><span>🎉</span>Done it</button>
+      <button class="opt" data-s="partly"><span>🌱</span>Partly done</button>
+      <button class="opt" data-s="notyet"><span>⏳</span>Not yet</button>
+      <button class="opt" data-s="changed"><span>🔀</span>Changed my plan</button>
+    </div>
+  </div>
+
+  <div class="card"><label class="h" for="txt" id="qlabel">What happened?</label>
+    <textarea class="big" id="txt" maxlength="800" placeholder="What did you do? What happened? What would you tell another club trying the same thing?"></textarea>
+    <div class="hint">Please don't include anyone's name or your club's name. Your answer is shared anonymously with District leaders, and may appear in a District roundup.</div>
+  </div>
+
+  <div class="card"><label class="h" for="role">I'm a…</label>
+    <select id="role"><option value="">Prefer not to say</option><option value="pe">President-Elect</option><option value="pres">President</option><option value="mc">Membership Chair</option><option value="mentor">Mentor / Past President</option><option value="future">Future leader</option><option value="other">Something else</option></select>
+    <div id="codebox" class="hidden" style="margin-top:12px"><label class="h" for="code">District access code</label><input type="text" id="code" autocomplete="off" placeholder="From your session QR code or email"><div class="hint">Only needed once on this device.</div></div>
+  </div>
+
+  <button class="send" id="send">Send</button>
+  <div class="err" id="err"></div>
+</div>
+
+<div id="thanks" class="card thanks hidden">
+  <div class="big">🙏</div>
+  <h2 style="font-family:var(--display);color:var(--royal);margin:.2em 0">Thank you</h2>
+  <p id="tmsg">Your story helps other clubs. What's your next small step?</p>
+  <div><a class="btn gold" id="again" href="START%20HERE.html#/actions">My actions</a><a class="btn" href="membership-explorer.html">Find another idea</a><a class="btn" href="launchpad.html">Launchpad</a></div>
+</div>
+</main>
+
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script src="app/commit.js"></script>
+<script>
+(function () {
+  var q = function (k) { var m = new RegExp('[?&]' + k + '=([^&#]*)').exec(location.search); return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : ''; };
+  var ai = PE.ai, status = '', id = q('id'), source = q('s');
+  document.getElementById('idea').value = q('i');
+  if (q('r')) document.getElementById('role').value = q('r');
+  if (!ai.code()) document.getElementById('codebox').classList.remove('hidden');
+  var LABEL = { done: 'What happened? What would you tell another club?', partly: 'What worked, and what got in the way?', notyet: 'What got in the way? What would help?', changed: 'What did you do instead, and why?' };
+  document.querySelectorAll('.opt').forEach(function (b) {
+    b.onclick = function () { status = b.dataset.s; document.querySelectorAll('.opt').forEach(function (x) { x.classList.toggle('on', x === b); }); document.getElementById('qlabel').textContent = LABEL[status]; };
+  });
+  var err = document.getElementById('err'), send = document.getElementById('send');
+  send.onclick = function () {
+    err.textContent = '';
+    if (!status) { err.textContent = 'Tap one: done, partly, not yet or changed.'; return; }
+    var code = ai.code() || document.getElementById('code').value.trim();
+    if (!ai.url) { err.textContent = 'This page needs the online version of the toolkit. Open the link from your calendar reminder on a phone or computer with internet.'; return; }
+    if (!code) { err.textContent = 'Please enter the District access code.'; document.getElementById('codebox').classList.remove('hidden'); return; }
+    send.disabled = true; send.textContent = 'Sending…';
+    ai.post('/api/live/report', { code: code, device: ai.device(), status: status, idea: document.getElementById('idea').value.trim(), text: document.getElementById('txt').value.trim(), role: document.getElementById('role').value, source: source })
+      .then(function (r) {
+        if (r && r.ok) {
+          try { if (code) localStorage.setItem('pe-code', code); } catch (e) { }
+          if (id && window.PEAct && PEAct.get(id)) PEAct.update(id, { status: status, reported: new Date().toISOString() });
+          document.getElementById('form').classList.add('hidden'); document.getElementById('thanks').classList.remove('hidden');
+          if (status === 'notyet') document.getElementById('tmsg').textContent = 'Thanks for being honest. That\'s useful too. Want to set a new date, or pick a smaller first step?';
+          window.scrollTo(0, 0);
+        } else {
+          send.disabled = false; send.textContent = 'Send';
+          err.textContent = r && r.error === 'bad_code' ? 'That access code didn\'t work. Check it and try again.' : r && r.error === 'too_many' ? 'You\'ve sent a lot today. Please try again tomorrow.' : 'Something went wrong. Please try again in a minute.';
+          if (r && r.error === 'bad_code') document.getElementById('codebox').classList.remove('hidden');
+        }
+      }).catch(function () { send.disabled = false; send.textContent = 'Send'; err.textContent = 'Could not reach the District service. Check your internet and try again.'; });
+  };
+})();
+</script>
+</body>
+</html>
