@@ -9,6 +9,7 @@
 <style>
   body{background:#0d1b36;color:#fff;min-height:100vh}
   .ps{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+  .ps.aud{grid-template-columns:1fr} .ps.aud .side{display:none}
   .side{background:#132544;padding:16px;overflow:auto;max-height:100vh;position:sticky;top:0}
   .side h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin:18px 0 8px}
   .side button.ctl{display:block;width:100%;text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;margin:6px 0;cursor:pointer;font-size:.9rem}
@@ -41,6 +42,10 @@
   .rl{padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.1)} .rl.pe{border:1px solid #F7A81B} .rl.mc{border:1px solid #00A2E0}
   .rb{display:block;margin-top:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#8a5a00} .rb.mc{color:#00658c}
   .note{break-inside:avoid;background:#fff8dc;color:#2b2b2b;border-radius:10px;padding:12px 14px;margin:0 0 14px;font-size:1.05rem;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+  .themes.summary{max-width:none;column-count:2;column-gap:36px;font-size:clamp(.85rem,1.05vw,1.05rem);line-height:1.4}
+  .themes.summary p,.themes.summary li{break-inside:avoid}
+  @media (max-width:900px){.themes.summary{column-count:1}}
+  .ctl.gold{border-color:#F7A81B}
   .themes{background:#fff;color:var(--ink);border-radius:16px;padding:18px 22px;margin-top:2vh;max-width:1100px}
   .login{max-width:420px;margin:12vh auto;background:#fff;color:var(--ink);border-radius:18px;padding:24px}
   .field input{color:var(--ink)}
@@ -72,6 +77,7 @@
 
   /* ---------- login ---------- */
   function login(msg) {
+    if (AUDIENCE) { app.innerHTML = '<div class="login"><h2>Projector view</h2><p>' + (msg ? esc(msg) : 'Sign in on the presenter screen on this computer first, then reload this window (F5), or click <b>Show live screen</b> again on the run sheet.') + '</p></div>'; return; }
     app.innerHTML = '<div class="login"><h2>Presenter screen</h2><p class="muted small">For PELDS presenters. Runs the live votes and the worries wall on the big screen.</p>' +
       (msg ? '<div class="warn">' + esc(msg) + '</div>' : '') +
       '<label class="field"><span>Presenter password</span><input id="a" type="password" value="' + esc(admin) + '"></label>' +
@@ -82,8 +88,10 @@
       ls('pe-admin', admin); ls('pe-room', room); connect();
     };
   }
+  var AUDIENCE = /[?&]view=audience/.test(location.search);
   function connect() {
     if (!ai.url) return login('The online service is not set up: add AI_URL in app/config.js.');
+    if (AUDIENCE && !admin) { app.innerHTML = '<div class="login"><h2>Projector view</h2><p>Sign in on the presenter screen on this computer first, then reload this window (F5), or click <b>Show live screen</b> again on the run sheet.</p></div>'; return; }
     api('whoami').then(function (r) {
       if (!r.ok) return login(r.error === 'bad_admin' ? 'That password was not accepted.' : 'Could not connect (' + (r.error || 'error') + ').');
       access = r.accessCode;
@@ -94,15 +102,23 @@
   /* ---------- main layout ---------- */
   var scenarios = [];
   function layout() {
-    app.innerHTML = '<div class="ps"><aside class="side" id="side"></aside><main class="stage" id="stage"></main></div>';
+    app.innerHTML = '<div class="ps' + (AUDIENCE ? ' aud' : '') + '"><aside class="side" id="side"></aside><main class="stage" id="stage"></main></div>';
     side(); stage(); tick();
+    if (AUDIENCE) follow();
   }
   function side() {
     var s = document.getElementById('side');
     var h = '<div class="row" style="justify-content:space-between"><b>Presenter</b><span class="badge">' + esc(room) + '</span></div>' +
       '<h3>Screens</h3><button class="ctl ' + (act.type === 'idle' ? 'on' : '') + '" data-a="idle">Welcome &amp; QR code<div class="sub">People scan to join</div></button>' +
       '<button class="ctl ' + (act.type === 'wall' && act.id !== 'barriers' ? 'on' : '') + '" data-a="wall">Worries wall<div class="sub">"What worries you most about being President?"</div></button>' +
-      '<button class="ctl ' + (act.type === 'wall' && act.id === 'barriers' ? 'on' : '') + '" data-a="barriers">Membership barriers wall<div class="sub">"Biggest barrier to growing or keeping members?"</div></button>';
+      '<button class="ctl ' + (act.type === 'wall' && act.id === 'barriers' ? 'on' : '') + '" data-a="barriers">Membership barriers wall<div class="sub">"Biggest barrier to growing or keeping members?"</div></button>' +
+      '<h3>Presidents meeting</h3>' +
+      '<button class="ctl ' + (act.type === 'poll' && act.id === QUICK.id ? 'on' : '') + '" data-a="nextpoll">Who\'s next? (vote)<div class="sub">"Do you know who your club\'s President will be in 2028–29?"</div></button>' +
+      '<button class="ctl ' + (act.type === 'poll' && act.id === FIVE.id ? 'on' : '') + '" data-a="fivepoll">Our club in five years (vote)<div class="sub">"If nothing changes, in five years my club will be…"</div></button>' +
+      '<button class="ctl ' + (act.type === 'wall' && act.id === 'successor' ? 'on' : '') + '" data-a="successor">Saying yes wall<div class="sub">"What stops good members saying yes to being President?"</div></button>' +
+      '<button class="ctl ' + (act.type === 'wall' && act.id === 'ideas' ? 'on' : '') + '" data-a="ideas">Membership ideas wall<div class="sub">"One idea your club hasn\'t tried. The bolder the better."</div></button>' +
+      '<button class="ctl gold' + (act.type === 'summary' ? ' on' : '') + '" data-a="summary">AI summary &amp; ideas<div class="sub">Reads every vote and wall in this room. Shows on the big screen and phones</div></button>' +
+      (lastSummary ? '<button class="ctl" data-a="savesum">Save the summary<div class="sub">Downloads it as a text file</div></button>' : '');
     if (act.type === 'poll') h += '<h3>This vote</h3>' +
       '<button class="ctl" data-a="toggle">' + (act.open ? 'Close voting' : 'Re-open voting') + '</button>' +
       '<button class="ctl" data-a="reveal">' + (act.reveal ? 'Hide outcomes' : 'Reveal outcomes') + '</button>';
@@ -118,13 +134,27 @@
     s.querySelectorAll('[data-s]').forEach(function (b) { b.onclick = function () { startPoll(scenarios[+b.dataset.s]); }; });
     api('usage').then(function (u) { var e = document.getElementById('usage'); if (e && !u.error) e.innerHTML = 'AI coach requests: <b>' + u.calls + '</b> of ' + u.dailyLimit + '<br>Devices using AI: <b>' + u.devices + '</b>'; });
   }
+  /* quick vote for the Presidents meeting (no right or wrong answers) */
+  var QUICK = { id: 'next-pres-2028', title: 'Do you know who your club\'s President will be in 2028–29?', ask: 'Tap the one closest to your club.',
+    options: ['Yes, they\'ve said yes', 'I have someone in mind, but haven\'t asked yet', 'Not yet, and I\'m worried', 'Probably someone doing another year'] };
+  var FIVE = { id: 'club-five-years', title: 'If nothing changes, in five years my club will be…', ask: 'Be honest. Tap one.',
+    options: ['Growing', 'About the same size', 'Smaller, but still OK', 'Struggling to fill key roles', 'At risk of closing'] };
+  var WALLS = { worries: 'What worries you most about being President?', barriers: 'What\'s the biggest barrier to growing or keeping members in your club?',
+    successor: 'What stops good members saying yes to being President?', ideas: 'What\'s one idea to grow or keep members that your club hasn\'t tried? The bolder the better.' };
+  var lastSummary = '';
   function setAct(a) { act = a; themes = ''; return api('set', { activity: a }).then(function (r) { if (r.error) PE.toast('Could not update: ' + r.error); side(); stage(); }); }
   function startPoll(x) {
     var it = x.it;
     setAct({ type: 'poll', id: x.id, title: it.title, setup: it.setup, options: (it.choices || []).map(function (c) { return c.text; }), open: true, reveal: false });
   }
   function action(a) {
-    if (a === 'idle') setAct({ type: 'idle', title: 'Welcome, Presidents-Elect!', message: 'You\'re in. Votes will appear here automatically. Keep this page open.' });
+    if (a === 'nextpoll') setAct({ type: 'poll', id: QUICK.id, title: QUICK.title, ask: QUICK.ask, options: QUICK.options, open: true, reveal: false });
+    if (a === 'fivepoll') setAct({ type: 'poll', id: FIVE.id, title: FIVE.title, ask: FIVE.ask, options: FIVE.options, open: true, reveal: false });
+    if (a === 'ideas') setAct({ type: 'wall', id: 'ideas', title: WALLS.ideas, open: true });
+    if (a === 'summary') summary();
+    if (a === 'savesum') saveText(lastSummary, 'AI-summary-' + room + '-' + new Date().toISOString().slice(0, 10) + '.txt');
+    if (a === 'successor') setAct({ type: 'wall', id: 'successor', title: 'What stops good members saying yes to being President?', open: true });
+    if (a === 'idle') setAct({ type: 'idle', title: room === 'prepelds' ? 'Welcome, Presidents-Elect!' : 'Welcome, Presidents!', message: 'You\'re in. Votes will appear here automatically. Keep this page open.' });
     if (a === 'wall') setAct({ type: 'wall', id: 'worries', title: 'What worries you most about being President?', open: true });
     if (a === 'barriers') setAct({ type: 'wall', id: 'barriers', title: 'What\'s the biggest barrier to growing or keeping members in your club?', open: true });
     if (a === 'download') download();
@@ -170,12 +200,46 @@
           return '<div class="bar ' + v + '"><div class="fill" style="width:0"></div><div class="t"><b>' + String.fromCharCode(65 + i) + '</b><span>' + esc(o) + '</span><span class="n">0</span></div>' +
             '<div class="split"></div><div class="o"><span class="verd">' + ({ strong: 'Strong choice', mixed: 'Partly there', weak: 'Risky choice' }[v] || '') + '</span>' + PE.md((act.outcomes || [])[i] || '').replace(/<\/?p>/g, ' ') + '</div></div>';
         }).join('') + '</div>';
+    } else if (act.type === 'summary') {
+      if (act.text) lastSummary = act.text;
+      s.innerHTML = '<div class="kind">AI summary · from your votes and answers</div><h1>' + esc(act.title || 'What you told us') + '</h1><div class="themes summary">' + PE.md(act.text || '') + '</div>';
+      /* shrink the text until the whole summary fits the screen (the room can't scroll the projector) */
+      var box = s.querySelector('.summary'), fs = 18;
+      box.style.fontSize = fs + 'px';
+      while (fs > 11 && box.getBoundingClientRect().bottom > window.innerHeight - 12) { fs -= 0.5; box.style.fontSize = fs + 'px'; }
     } else if (act.type === 'wall') {
       s.innerHTML = '<div class="kind">Anonymous · on your phone · <span id="wc">0</span> so far</div><h1>' + esc(act.title) + '</h1><div id="themes">' + (themes ? '' : '') + '</div><div class="wall" id="wall"></div>';
       if (!themes && act.themes) themes = act.themes;
       if (themes) { var t = document.getElementById('themes'); t.className = 'themes'; t.innerHTML = '<h2 style="margin-top:0">Themes</h2>' + PE.md(themes); }
     }
   }
+  /* ---------- AI summary & ideas: every vote and wall in this room ---------- */
+  function summary() {
+    var s = document.getElementById('stage'); if (!s) return;
+    s.innerHTML = '<div class="kind">AI summary</div><h1>Reading everything the room said…</h1>'; s.appendChild(ai.thinking());
+    var polls = [QUICK, FIVE].map(function (q) { return { id: q.id, title: q.title, options: q.options }; });
+    scenarios.forEach(function (x) { polls.push({ id: x.id, title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) }); });
+    if (room === 'prepelds') polls.push({ id: 'talk-said-yes', title: TALK['talk-said-yes'].title, options: TALK['talk-said-yes'].options });
+    Promise.all(polls.map(function (q) { return api('results', { poll: q.id }).then(function (r) { q.counts = r.counts || {}; return q; }).catch(function () { q.counts = {}; return q; }); }))
+      .then(function (list) {
+        list = list.filter(function (q) { return Object.keys(q.counts).length; });
+        return ai.post('/api/coach', { mode: 'summary', admin: admin, payload: { room: room, polls: list, walls: WALLS,
+          context: room === 'presidents' ? 'A District Presidents meeting: current club Presidents talking about succession and membership.' : '' } });
+      }).then(function (r) {
+        if (!r || !r.text) {
+          var why = r && r.error === 'bad_mode' ? 'The online service needs the 20 Nov update (paste the new worker.js into Cloudflare and Deploy). Until then, use Find themes with AI on each wall.' : 'Could not get the summary: ' + ((r && (r.message || r.error)) || 'no answer');
+          s.innerHTML = '<div class="kind">AI summary</div><div class="themes">' + esc(why) + '</div>'; return;
+        }
+        lastSummary = r.text;
+        setAct({ type: 'summary', title: 'What you told us, and ideas to try', text: r.text.slice(0, 12000) });
+        PE.toast('Summary on the big screen and everyone\'s phone');
+      }).catch(function () { s.innerHTML = '<div class="kind">AI summary</div><div class="themes">Could not reach the AI coach.</div>'; });
+  }
+  function saveText(t, name) {
+    var blob = new Blob([t], { type: 'text/plain;charset=utf-8' }), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+  }
+
   /* ---------- download all results as a CSV spreadsheet ---------- */
   var TALK = { 'talk-said-yes': { title: 'When you said yes to being President, you felt…', options: ['Excited — bring it on', 'Nervous, but willing', 'Talked into it', 'Still not sure why I said yes'] } };
   var ROLE = { pe: 'President-Elect', mc: 'Membership Chair', other: 'Other', '': 'Not given' };
@@ -184,7 +248,7 @@
       if (!r || r.error) { PE.toast('Could not download: ' + ((r && r.error) || 'error')); return; }
       var q = function (v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
       var line = function (a) { return a.map(q).join(','); };
-      var info = function (id) { var x = scenarios.find(function (s) { return s.id === id; }); return x ? { title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) } : (TALK[id] || { title: id, options: [] }); };
+      var info = function (id) { var x = scenarios.find(function (s) { return s.id === id; }); return x ? { title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) } : (TALK[id] || ({ 'next-pres-2028': QUICK, 'club-five-years': FIVE })[id] || { title: id, options: [] }); };
       var out = [line(['District 9815 · ' + room + ' · downloaded ' + new Date().toLocaleString('en-AU')]), ''];
       /* 1. summary */
       out.push(line(['VOTE SUMMARY']), line(['Question', 'Option', 'Presidents-Elect', 'Membership Chairs', 'Other / not given', 'Total']));
@@ -195,10 +259,11 @@
       });
       /* 2. walls */
       out.push('', line(['WALL ANSWERS']), line(['Question', 'Answer', 'Role', 'Time']));
-      var walls = { worries: 'What worries you most about being President?', barriers: 'What\'s the biggest barrier to growing or keeping members in your club?' };
+      var walls = WALLS;
       (r.worries || []).forEach(function (w) { out.push(line([walls[w.topic] || w.topic, w.text, ROLE[w.role] || w.role, new Date(w.ts).toLocaleString('en-AU')])); });
       /* 3. themes on screen now */
       if (themes || act.themes) out.push('', line(['AI THEMES (' + (act.title || '') + ')']), line([themes || act.themes]));
+      if (lastSummary) out.push('', line(['AI SUMMARY AND IDEAS']), line([lastSummary]));
       /* 4. every vote */
       out.push('', line(['EVERY VOTE']), line(['Question', 'Choice', 'Role', 'Time']));
       (r.votes || []).forEach(function (v) { var inf = info(v.poll); out.push(line([inf.title, String.fromCharCode(65 + v.choice) + '. ' + (inf.options[v.choice] || ''), ROLE[v.role] || v.role, new Date(v.ts).toLocaleString('en-AU')])); });
@@ -207,6 +272,16 @@
       document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800);
       PE.toast('Results downloaded — check your Downloads folder');
     }).catch(function () { PE.toast('Could not reach the online service'); });
+  }
+
+  /* projector view: follow whatever the presenter screen (on the laptop) has chosen */
+  function follow() {
+    setInterval(function () {
+      api('state').then(function (s) {
+        var a = s.activity || { type: 'idle' };
+        if (JSON.stringify(a) !== JSON.stringify(act)) { act = a; themes = a.themes || ''; stage(); tick(); }
+      }).catch(function () { });
+    }, 2000);
   }
 
   function tick() {
