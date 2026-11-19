@@ -441,8 +441,8 @@
   <div class="sh">
    <div class="kick">Go deeper</div>
    <h2>The District membership toolkit</h2>
-   <p>Each idea on this page is drawn from a short, practical guide. Find them on the District Membership Hub, or ask your Membership Chair or the District Membership Team.</p>
-   <a class="btn navy" id="d9pw-toolkit" href="#" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;text-decoration:none">Open the District membership toolkit ↗</a>
+   <p>Each idea on this page is drawn from a short, practical guide. Tap a card to open the guide, or find them all on the District Membership Hub.</p>
+   <a class="btn navy" id="d9pw-toolkit" href="#" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;text-decoration:none">Open the District Membership Hub ↗</a>
   </div>
   <div class="lib" id="d9pw-lib"></div>
  </div>
@@ -598,20 +598,20 @@ var SIGNS=[
 ];
 
 var LIB=[
- ['Every member','You Are the Growth Plan','Inviting one person, welcoming a newcomer, and keeping them.'],
- ['Every member','The One-Minute Invite','The whole guide on a single quick-reference card.'],
- ['Membership Chair','The One Ask Sprint','A 90-day campaign that gets every member asking.'],
- ['Board','Clearing the Way','Five things a Board can approve to make the toolkit run.'],
- ['Board','From Stranger to Family','A phase-by-phase new member action plan.'],
- ['Discussion','Why Aren’t We Growing?','The evidence on decline and the psychology of volunteering.'],
- ['Discussion','Stop Recruiting. Start Connecting.','The relationship-first engagement ladder.'],
- ['Discussion','What Does Your Club Actually Do?','Explaining your club to a stranger so they lean in.'],
- ['Public Image','Prove the Invitation','Making sure what prospects find online backs up the invite.'],
- ['Our Groups','Friends of the Club','A no-strings tier that keeps interested people in touch.'],
- ['Our Groups','The Second Yes','Re-engaging alumni and bridging from Rotaract and Interact.'],
- ['Our Groups','The Ten You Should Know','Turning schools and businesses into a source of volunteers.'],
- ['For newcomers','What to Expect','Honest answers for anyone thinking of coming along.'],
- ['Curiosity','Creating the “Aha” Moment','Small discovery activities for each strategic priority.']
+ ['Every member','You Are the Growth Plan','Inviting one person, welcoming a newcomer, and keeping them.','https://portal.clubrunner.ca/50387/Documents/en-au/dfc8b529-31d0-48d6-8427-82489c3b1300/1/'],
+ ['Every member','The One-Minute Invite','The whole guide on a single quick-reference card.','https://portal.clubrunner.ca/50387/Documents/en-au/17747d62-98fc-42cc-9b4b-7ba790088db5/1/'],
+ ['Membership Chair','The One Ask Sprint','A 90-day campaign that gets every member asking.','https://portal.clubrunner.ca/50387/Documents/en-au/a49726ca-7157-4e2b-b45d-cd869bf0e077/1/'],
+ ['Board','Clearing the Way','Five things a Board can approve to make the toolkit run.','https://portal.clubrunner.ca/50387/Documents/en-au/3a597594-a37f-4b66-b4b5-ddbea0df6873/1/'],
+ ['Board','From Stranger to Family','A phase-by-phase new member action plan.','https://portal.clubrunner.ca/50387/Documents/en-au/aa1644f0-f79a-425e-960b-0893f7b8149c/1/'],
+ ['Discussion','Why Aren’t We Growing?','The evidence on decline and the psychology of volunteering.','https://portal.clubrunner.ca/50387/Documents/en-au/db6581b1-43ce-42f3-8db1-5c583fc2627a/1/'],
+ ['Discussion','Stop Recruiting. Start Connecting.','The relationship-first engagement ladder.','https://portal.clubrunner.ca/50387/Documents/en-au/985f7ac3-bd66-469b-814e-988fa8039104/1/'],
+ ['Discussion','What Does Your Club Actually Do?','Explaining your club to a stranger so they lean in.','https://portal.clubrunner.ca/50387/Documents/en-au/0b346083-be99-49a6-aecd-312c6e5b1af3/1/'],
+ ['Public Image','Prove the Invitation','Making sure what prospects find online backs up the invite.','https://portal.clubrunner.ca/50387/Documents/en-au/48923a44-7680-4285-8102-1c0970f18ce8/1/'],
+ ['Our Groups','Friends of the Club','A no-strings tier that keeps interested people in touch.','https://portal.clubrunner.ca/50387/Documents/en-au/300ca628-4c3b-4d23-81be-163f7646eef0/1/'],
+ ['Our Groups','The Second Yes','Re-engaging alumni and bridging from Rotaract and Interact.','https://portal.clubrunner.ca/50387/Documents/en-au/8472e621-64cf-43e7-ae1d-dc948fed2caf/1/'],
+ ['Our Groups','The Ten You Should Know','Turning schools and businesses into a source of volunteers.','https://portal.clubrunner.ca/50387/Documents/en-au/6f0b39b7-871e-43f6-b6dd-d1645a3b958c/1/'],
+ ['For newcomers','What to Expect','Honest answers for anyone thinking of coming along.','https://portal.clubrunner.ca/50387/Documents/en-au/05b54bba-77f6-4e50-91f8-b2c235a1cfcc/1/'],
+ ['Curiosity','Creating the “Aha” Moment','Small discovery activities for each strategic priority.','https://portal.clubrunner.ca/50387/Documents/en-au/f1acaf11-bce0-4c52-8c6e-b4e8cf7999ce/1/']
 ];
 
 /* ---------- PLAN ---------- */
@@ -769,7 +769,7 @@ $('#d9pw-keepq').onclick=function(){if(CARD)addPlan('Discuss: '+CARD[1])};
 /* where the District membership toolkit lives: change this one address if it moves */
 var TOOLKIT_URL='https://www.rotary9815.org.au/page/membership-flow';
 $('#d9pw-toolkit').href=TOOLKIT_URL;
-$('#d9pw-lib').innerHTML=LIB.map(function(l){return '<a class="card" href="'+TOOLKIT_URL+'" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit"><div class="who">'+l[0]+'</div><h4>'+l[1]+'</h4><p>'+l[2]+'</p><p style="margin-top:6px;color:var(--azure);font-weight:700">Find it on the Membership Hub ↗</p></a>'}).join('');
+$('#d9pw-lib').innerHTML=LIB.map(function(l){return '<a class="card" href="'+(l[3]||TOOLKIT_URL)+'" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit"><div class="who">'+l[0]+'</div><h4>'+l[1]+'</h4><p>'+l[2]+'</p><p style="margin-top:6px;color:var(--azure);font-weight:700">'+(l[3]?'Open the guide (PDF) ↗':'Find it on the Membership Hub ↗')+'</p></a>'}).join('');
 
 /* init */
 var pw=/[?&]pathway=([1-5])/.exec(location.search);
