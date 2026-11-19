@@ -209,6 +209,7 @@
 #d9pw .lib .card h4{font-size:15.5px;}
 #d9pw .lib .card .who{font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--azure);}
 #d9pw .lib .card p{font-size:13.5px;margin:4px 0 0;}
+#d9pw .lib a.card:hover{border-color:var(--sky);box-shadow:0 8px 20px rgba(23,69,143,.1);}
 #d9pw footer{background:var(--deep);color:#cfe0ff;padding:30px 0;font-size:14px;}
 #d9pw footer b{color:#fff;}
 
@@ -440,7 +441,8 @@
   <div class="sh">
    <div class="kick">Go deeper</div>
    <h2>The District membership toolkit</h2>
-   <p>Each idea on this page is drawn from a short, practical guide. Ask your Membership Chair or the District Membership Team for any you'd like to read in full.</p>
+   <p>Each idea on this page is drawn from a short, practical guide. Find them on the District Membership Hub, or ask your Membership Chair or the District Membership Team.</p>
+   <a class="btn navy" id="d9pw-toolkit" href="#" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;text-decoration:none">Open the District membership toolkit ↗</a>
   </div>
   <div class="lib" id="d9pw-lib"></div>
  </div>
@@ -764,7 +766,10 @@ $('#d9pw-deckfilter').onchange=function(){CARD=null;drawCard(false)};
 $('#d9pw-keepq').onclick=function(){if(CARD)addPlan('Discuss: '+CARD[1])};
 
 /* ---------- LIB ---------- */
-$('#d9pw-lib').innerHTML=LIB.map(function(l){return '<div class="card"><div class="who">'+l[0]+'</div><h4>'+l[1]+'</h4><p>'+l[2]+'</p></div>'}).join('');
+/* where the District membership toolkit lives: change this one address if it moves */
+var TOOLKIT_URL='https://www.rotary9815.org.au/page/membership-flow';
+$('#d9pw-toolkit').href=TOOLKIT_URL;
+$('#d9pw-lib').innerHTML=LIB.map(function(l){return '<a class="card" href="'+TOOLKIT_URL+'" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit"><div class="who">'+l[0]+'</div><h4>'+l[1]+'</h4><p>'+l[2]+'</p><p style="margin-top:6px;color:var(--azure);font-weight:700">Find it on the Membership Hub ↗</p></a>'}).join('');
 
 /* init */
 var pw=/[?&]pathway=([1-5])/.exec(location.search);
