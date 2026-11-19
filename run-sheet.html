@@ -45,7 +45,17 @@ ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
 .key span{display:inline-flex;align-items:center;gap:6px}.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .check{display:flex;gap:8px;align-items:flex-start;margin:4px 0}
 .check input{margin-top:4px;width:18px;height:18px;accent-color:var(--royal)}
-@media print{header{position:static}.hb,.clock{display:none}.sec{break-inside:avoid}.sec.done{opacity:1}}
+/* projector remote */
+.remote{display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:980px;margin:10px auto 0;padding-top:10px;border-top:1px solid rgba(255,255,255,.18)}
+.rbtn{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:7px 12px;font:700 .88rem var(--body);cursor:pointer}
+.rbtn:hover{background:rgba(255,255,255,.24)} .rbtn.on{background:#fff;color:var(--navy)} .rbtn.big{font-size:1.05rem;padding:6px 16px}
+.rbtn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.pstat{font-size:.82rem;display:inline-flex;align-items:center;gap:6px;opacity:.95}
+.pstat i{width:10px;height:10px;border-radius:50%;background:#e05b5b;display:inline-block}.pstat.ok i{background:#3fd17a}
+.nowbox{max-width:980px;margin:8px auto 0;background:rgba(0,0,0,.18);border-radius:10px;padding:8px 12px;font-size:.88rem;display:none}
+.nowbox.show{display:block}.nowbox b{color:var(--gold)}.nowbox .nn{margin-top:4px;opacity:.92;max-height:6.5em;overflow:auto}
+.sp{flex:1}
+@media print{header{position:static}.hb,.clock,.remote,.nowbox{display:none}.sec{break-inside:avoid}.sec.done{opacity:1}}
 </style>
 </head>
 <body>
@@ -56,10 +66,23 @@ ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
     <button class="hb" id="start">Start timer</button>
     <button class="hb alt" id="reset">Reset</button>
   </div>
+  <div class="remote">
+    <button class="rbtn gold" id="pOpen" title="Opens a window to drag onto the projector">Open projector window</button>
+    <span class="pstat" id="pStat"><i></i><span>Projector not open</span></span>
+    <span class="sp"></span>
+    <button class="rbtn big" id="pPrev" title="Previous slide (← or Page Up)">◀</button>
+    <button class="rbtn big" id="pNext" title="Next slide (→, space or Page Down)">▶</button>
+    <button class="rbtn" id="pTalk">Show talk</button>
+    <button class="rbtn" id="pLive">Show live screen</button>
+    <button class="rbtn" id="pBlack">Blank</button>
+    <button class="rbtn" id="pPoll" style="display:none">Open vote on phones</button>
+  </div>
+  <div class="nowbox" id="nowbox"></div>
 </header>
 <div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
 <main>
-  <p class="intro">Keep this page on your laptop or tablet. Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons open a website or the toolkit. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
+  <p class="intro"><b>Two screens?</b> Click <b>Open projector window</b>, drag that window onto the projector and click its full-screen button. From then on the projector only ever shows the talk or the live results; this run sheet, your notes and the presenter controls stay on your laptop. Use ◀ ▶ (or your clicker, with this page in front) to move slides.</p>
+  <p class="intro">Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons open a website or the toolkit. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
   <div class="key"><span><i style="background:#b9d3f4"></i>Talk slide</span><span><i style="background:#f3d08a"></i>Presenter screen</span><span><i style="background:#bfe6cd"></i>Website / toolkit</span></div>
   <div id="list"></div>
 </main>
@@ -67,11 +90,11 @@ ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
 /* Edit the run sheet here. t = start time (minutes), d = duration, talk = slide numbers. */
 var SECTIONS = [
   { id: 'setup', t: -15, d: 15, title: 'Before people arrive', checks: [
-      'Laptop on power, Wi-Fi connected, projector showing',
-      'Open the presenter screen and sign in (presenter password)',
+      'Laptop on power, Wi-Fi connected, projector set to Extend (Windows key + P)',
+      'Run sheet: Open projector window → Allow → Fill the projector (green dot showing)',
+      'Gold button: open the presenter screen on the laptop and sign in (presenter password). Choose the session (e.g. Pre-PELDS Gippsland) so this group\'s votes stay separate. Put it beside the run sheet',
       'Presenter screen: Reset for a new session → Clear all votes, then Clear the wall',
-      'Presenter screen: click Welcome & QR code and leave it on the projector while people arrive',
-      'Open the talk on slide 1 in a second window (press F for full screen when you switch to it)',
+      'Presenter screen: click Welcome & QR code; run sheet: Show live screen while people arrive',
       'Phone on silent; water nearby'],
     links: [['pres', 'presenter.html', 'Presenter screen'], ['talk', 1, 'Talk: title slide']] },
 
@@ -125,13 +148,15 @@ var SECTIONS = [
     notes: ['Slide 17: first three moves. They scan the QR for the commitment card, or use the printed workbook.', 'Slide 18: close warmly and thank everyone.'],
     links: [['talk', 17, 'Three moves + card'], ['talk', 18, 'Close'], ['web', 'commitment-card.html', 'Commitment card']] },
 
-  { id: 'wall', optional: true, t: 20, d: 6, title: 'Optional: membership barriers wall with AI themes',
+  { id: 'wall', optional: true, t: 20, d: 8, title: 'Optional: membership wall and AI summary',
     say: 'What\'s the biggest barrier to growing or keeping members in your club?',
-    notes: ['Presenter screen → Membership barriers wall. Give people two minutes to post (anonymous; they can post several).', 'Click Find themes with AI. The themes appear on the big screen and on every phone, including how the roles differ.', 'Take one or two reactions: "Which of these surprised you?"'],
+    notes: ['Presenter screen → Membership barriers wall. Give people two minutes to post (anonymous; they can post several).', 'Click Find themes with AI. The themes appear on the big screen and on every phone, including how the roles differ.', 'Take one or two reactions: "Which of these surprised you?"',
+      'Want ideas as well as problems? Switch to Membership ideas wall: "One idea your club hasn\'t tried. The bolder the better." Two minutes.',
+      'Then click AI summary & ideas. It reads every vote and wall in this session and shows what the room said, five ideas outside the box with a first step, and one uncomfortable question, on the big screen and every phone. Save the summary afterwards.'],
     links: [['pres', 'presenter.html', 'Presenter screen']] },
 
-  { id: 'after', t: 26, d: 5, title: 'Afterwards', checks: [
-      'Presenter screen → Download results (votes by role, both walls, AI themes) and save the file for PELDS planning',
+  { id: 'after', t: 28, d: 5, title: 'Afterwards', checks: [
+      'Presenter screen → Download results (votes by role, walls, AI themes and summary) and save the file for PELDS planning',
       'Presenter screen → check the Today panel for how many AI requests were used',
       'Note three things for April: scenarios that split by role, top barriers, and pathways nobody mentioned'],
     links: [['pres', 'presenter.html', 'Presenter screen']] }
@@ -146,7 +171,7 @@ var SECTIONS = [
   SECTIONS.forEach(function (s, i) {
     var d = document.createElement('section'); d.className = 'sec' + (s.optional ? ' opt' : ''); d.id = s.id;
     var links = (s.links || []).map(function (l) {
-      if (l[0] === 'talk') return '<a class="talk" href="talk.html#' + l[1] + '" target="pe-talk"><span class="n">' + l[1] + '</span>' + esc(l[2]) + '</a>';
+      if (l[0] === 'talk') return '<a class="talk" data-n="' + l[1] + '" href="talk.html#' + l[1] + '" target="pe-talk"><span class="n">' + l[1] + '</span>' + esc(l[2]) + '</a>';
       if (l[0] === 'pres') return '<a class="pres" href="' + l[1] + '" target="pe-presenter">' + esc(l[2]) + '</a>';
       return '<a class="web" href="' + l[1] + '" target="pe-web">' + esc(l[2]) + ' ↗</a>';
     }).join('');
@@ -169,6 +194,72 @@ var SECTIONS = [
   function tick() { if (!store.t0) { clock.textContent = '0:00'; return; } var s = Math.floor((Date.now() - store.t0) / 1000); clock.textContent = Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
   setInterval(tick, 1000); tick();
   document.getElementById('start').onclick = function () { store.t0 = Date.now(); store.now = 'welcome'; save(); mark(); tick(); };
+  /* ---------- projector remote (BroadcastChannel; needs the pages on the same web address) ---------- */
+  var bc = null; try { bc = new BroadcastChannel('pe-stage'); } catch (e) {}
+  var stageSeen = 0, talkSeen = 0, showing = '', stageWin = null;
+  function stageUp() { return Date.now() - stageSeen < 7000; }
+  function talkUp() { return Date.now() - talkSeen < 600000 && (stageUp() || talkSeen); }
+  function send(m) { if (bc) bc.postMessage(m); }
+  var pStat = document.getElementById('pStat'), nowbox = document.getElementById('nowbox');
+  function status() {
+    var ok = stageUp();
+    pStat.classList.toggle('ok', ok);
+    pStat.lastChild.textContent = ok ? (showing === 'waiting' ? 'Projector open: click its full-screen button' : 'Projector showing: ' + ({ talk: 'talk', live: 'live screen', black: 'blank' }[showing] || '…')) : (bc ? 'Projector not open' : 'This browser cannot link windows');
+    ['pTalk', 'pLive', 'pBlack'].forEach(function (id, k) { document.getElementById(id).classList.toggle('on', ok && showing === ['talk', 'live', 'black'][k]); });
+  }
+  setInterval(status, 1500); status();
+  if (bc) bc.onmessage = function (e) {
+    var m = e.data || {};
+    if (m.stage === 'alive') { stageSeen = Date.now(); showing = m.showing; status(); }
+    if (m.talkAt) {
+      talkSeen = Date.now();
+      nowbox.classList.add('show');
+      nowbox.innerHTML = '<b>Slide ' + m.talkAt + ' / ' + m.total + '</b> · ' + esc(m.title).slice(0, 120) + (m.notes ? '<div class="nn">' + esc(m.notes).replace(/\n/g, '<br>') + '</div>' : '');
+      document.getElementById('pPoll').style.display = m.isPoll ? '' : 'none';
+    }
+  };
+  send({ ping: 1 }); send({ talk: 'ask' });
+  /* Browsers open new windows on the screen you're using. Chrome/Edge can open it on the
+     projector instead once you allow "window management" (asked once, the first time). */
+  function pickScreen(d) {
+    var others = d.screens.filter(function (x) { return x !== d.currentScreen; });
+    return others.filter(function (x) { return !x.isPrimary; })[0] || others[0] || null;
+  }
+  var pOpen = document.getElementById('pOpen');
+  pOpen.onclick = function () {
+    var feat = 'popup,width=1280,height=720';
+    function open(f) {
+      stageWin = window.open('stage.html', 'pe-stage', f);
+      if (stageWin) { stageWin.focus(); pOpen.textContent = 'Open projector window'; }
+      else pOpen.textContent = 'Click again to open on the projector';
+    }
+    if (!window.getScreenDetails) return open(feat);
+    window.getScreenDetails().then(function (d) {
+      var sc = pickScreen(d);
+      if (!sc) { PEnote('Windows can only see one screen. Check the projector is plugged in and set to Extend (Windows key + P).'); return open(feat); }
+      open('popup,left=' + sc.availLeft + ',top=' + sc.availTop + ',width=' + sc.availWidth + ',height=' + sc.availHeight);
+    }).catch(function () { PEnote('Chrome was not allowed to place windows, so it opened here: drag it to the projector (or press Windows key + Shift + →).'); open(feat); });
+  };
+  function PEnote(t) { nowbox.classList.add('show'); nowbox.innerHTML = '<b>Projector:</b> ' + esc(t); }
+  document.getElementById('pPrev').onclick = function () { send({ talk: 'step', d: -1 }); };
+  document.getElementById('pNext').onclick = function () { send({ talk: 'step', d: 1 }); };
+  document.getElementById('pTalk').onclick = function () { send({ show: 'talk' }); };
+  document.getElementById('pLive').onclick = function () { send({ show: 'live' }); };
+  document.getElementById('pBlack').onclick = function () { send({ show: 'black' }); };
+  document.getElementById('pPoll').onclick = function () { send({ talk: 'openPoll' }); };
+  /* blue buttons: move the projector's talk instead of opening a new window */
+  list.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a'); if (!a) return;
+    if (a.classList.contains('talk') && (stageUp() || talkSeen)) { e.preventDefault(); send({ show: 'talk' }); send({ talk: 'go', n: +a.dataset.n }); }
+    else if (a.classList.contains('pres') && stageUp()) { send({ show: 'live' }); } /* controls open here on the laptop, results go to the projector */
+  });
+  document.addEventListener('keydown', function (e) {
+    if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (['ArrowRight', 'PageDown', ' '].indexOf(e.key) > -1) { e.preventDefault(); send({ talk: 'step', d: 1 }); }
+    if (['ArrowLeft', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); send({ talk: 'step', d: -1 }); }
+    if (e.key === 'b' || e.key === 'B') send({ show: showing === 'black' ? 'talk' : 'black' });
+  });
+
   document.getElementById('reset').onclick = function () { store = {}; save(); document.querySelectorAll('input[type=checkbox]').forEach(function (c) { c.checked = false; }); mark(); tick(); };
 })();
 </script>

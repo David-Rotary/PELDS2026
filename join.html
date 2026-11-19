@@ -46,15 +46,15 @@
   var ai = PE.ai, p = document.getElementById('p'), esc = PE.esc, room = ai.room();
   var code = ai.code(), dev = ai.device(), last = '', act = null, myVote = null, timer;
   var role = ''; try { role = localStorage.getItem('pe-role') || ''; } catch (e) {}
-  if (room === 'presidents') document.getElementById('hdr').textContent = 'District 9815 · Presidents';
-  else if (room !== 'prepelds') document.getElementById('hdr').textContent = 'District 9815';
+  if (/^presidents/i.test(room)) document.getElementById('hdr').textContent = 'District 9815 · Presidents';
+  else if (room !== 'prepelds') document.getElementById('hdr').textContent = 'District 9815 · Pre-PELDS';
   var ROLE_NAME = { pe: 'President-Elect', mc: 'Membership Chair', other: 'Something else' };
   document.getElementById('tk').href = 'START%20HERE.html' + (code ? '?code=' + encodeURIComponent(code) : '');
 
   function show(html) { if (html !== last) { last = html; p.innerHTML = html; wire(); } }
   function render() {
     if (!ai.url) return show('<h1>Almost there</h1><p>This page needs the online version of the toolkit. Ask the presenter for the link or QR code.</p>');
-    if (!role && room !== 'prepelds') role = 'other'; /* other sessions (e.g. the Presidents meeting) skip the PE / Membership Chair question */
+    if (!role && /^presidents/i.test(room)) role = 'other'; /* other sessions (e.g. the Presidents meeting) skip the PE / Membership Chair question */
     if (!role) return show('<h1>Welcome!</h1><p class="lead">One quick tap so we can compare how different roles see things. Your name is never recorded.</p>' +
       '<button class="vbtn pickrole" data-r="pe"><b>👤</b>I\'m a President-Elect</button>' +
       '<button class="vbtn pickrole" data-r="mc"><b>🤝</b>I\'m a Membership Chair</button>' +
@@ -121,7 +121,7 @@
   }
   function drawRole() {
     var r = document.getElementById('roleline'); if (!r) return;
-    r.innerHTML = role && room === 'prepelds' ? 'You\'re voting as: <b>' + ROLE_NAME[role] + '</b> · <a href="#" id="chrole" style="color:#fff">change</a>' : '';
+    r.innerHTML = role && !/^presidents/i.test(room) ? 'You\'re voting as: <b>' + ROLE_NAME[role] + '</b> · <a href="#" id="chrole" style="color:#fff">change</a>' : '';
     var c = document.getElementById('chrole'); if (c) c.onclick = function (e) { e.preventDefault(); role = ''; try { localStorage.removeItem('pe-role'); } catch (x) {} last = ''; render(); drawRole(); };
   }
   drawRole();

@@ -46,6 +46,11 @@
   .themes.summary p,.themes.summary li{break-inside:avoid}
   @media (max-width:900px){.themes.summary{column-count:1}}
   .ctl.gold{border-color:#F7A81B}
+  .sess{display:flex;gap:8px;align-items:center;margin:10px 0 4px;font-size:.8rem;opacity:.9}
+  .sess select{flex:1;font:inherit;font-size:.9rem;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:#1d2c4d;color:#fff}
+  .goto{display:flex;flex-wrap:wrap;gap:6px}
+  .goto a{color:#fff;text-decoration:none;font-size:.82rem;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:5px 9px}
+  .goto a:hover{background:rgba(255,255,255,.18)}
   .themes{background:#fff;color:var(--ink);border-radius:16px;padding:18px 22px;margin-top:2vh;max-width:1100px}
   .login{max-width:420px;margin:12vh auto;background:#fff;color:var(--ink);border-radius:18px;padding:24px}
   .field input{color:var(--ink)}
@@ -81,7 +86,7 @@
     app.innerHTML = '<div class="login"><h2>Presenter screen</h2><p class="muted small">For PELDS presenters. Runs the live votes and the worries wall on the big screen.</p>' +
       (msg ? '<div class="warn">' + esc(msg) + '</div>' : '') +
       '<label class="field"><span>Presenter password</span><input id="a" type="password" value="' + esc(admin) + '"></label>' +
-      '<label class="field"><span>Session name</span><input id="r" value="' + esc(room) + '"></label><p class="small muted">Leave as <b>prepelds</b> unless two sessions run at once.</p>' +
+      '<label class="field"><span>Session name</span><input id="r" value="' + esc(room) + '"></label><p class="small muted">Use <b>gippsland</b> for the Gippsland Pre-PELDS, or <b>presidents</b> for the Presidents meeting. Each session keeps its own votes and walls. You can switch later from the sidebar.</p>' +
       '<button class="btn pri" id="go">Start</button></div>';
     document.getElementById('go').onclick = function () {
       admin = document.getElementById('a').value.trim(); room = document.getElementById('r').value.trim() || 'prepelds';
@@ -89,6 +94,7 @@
     };
   }
   var AUDIENCE = /[?&]view=audience/.test(location.search);
+  if (!AUDIENCE) try { window.name = 'pe-presenter'; } catch (e) {}
   function connect() {
     if (!ai.url) return login('The online service is not set up: add AI_URL in app/config.js.');
     if (AUDIENCE && !admin) { app.innerHTML = '<div class="login"><h2>Projector view</h2><p>Sign in on the presenter screen on this computer first, then reload this window (F5), or click <b>Show live screen</b> again on the run sheet.</p></div>'; return; }
@@ -108,28 +114,38 @@
   }
   function side() {
     var s = document.getElementById('side');
+    var P = isPres();
+    var on = function (c) { return c ? ' on' : ''; };
     var h = '<div class="row" style="justify-content:space-between"><b>Presenter</b><span class="badge">' + esc(room) + '</span></div>' +
-      '<h3>Screens</h3><button class="ctl ' + (act.type === 'idle' ? 'on' : '') + '" data-a="idle">Welcome &amp; QR code<div class="sub">People scan to join</div></button>' +
-      '<button class="ctl ' + (act.type === 'wall' && act.id !== 'barriers' ? 'on' : '') + '" data-a="wall">Worries wall<div class="sub">"What worries you most about being President?"</div></button>' +
-      '<button class="ctl ' + (act.type === 'wall' && act.id === 'barriers' ? 'on' : '') + '" data-a="barriers">Membership barriers wall<div class="sub">"Biggest barrier to growing or keeping members?"</div></button>' +
-      '<h3>Presidents meeting</h3>' +
-      '<button class="ctl ' + (act.type === 'poll' && act.id === QUICK.id ? 'on' : '') + '" data-a="nextpoll">Who\'s next? (vote)<div class="sub">"Do you know who your club\'s President will be in 2028–29?"</div></button>' +
-      '<button class="ctl ' + (act.type === 'poll' && act.id === FIVE.id ? 'on' : '') + '" data-a="fivepoll">Our club in five years (vote)<div class="sub">"If nothing changes, in five years my club will be…"</div></button>' +
-      '<button class="ctl ' + (act.type === 'wall' && act.id === 'successor' ? 'on' : '') + '" data-a="successor">Saying yes wall<div class="sub">"What stops good members saying yes to being President?"</div></button>' +
-      '<button class="ctl ' + (act.type === 'wall' && act.id === 'ideas' ? 'on' : '') + '" data-a="ideas">Membership ideas wall<div class="sub">"One idea your club hasn\'t tried. The bolder the better."</div></button>' +
-      '<button class="ctl gold' + (act.type === 'summary' ? ' on' : '') + '" data-a="summary">AI summary &amp; ideas<div class="sub">Reads every vote and wall in this room. Shows on the big screen and phones</div></button>' +
+      '<label class="sess"><span>Session</span><select id="sess">' + SESSIONS.concat(SESSIONS.some(function (x) { return x[0] === room; }) ? [] : [[room, room]]).map(function (x) {
+        return '<option value="' + esc(x[0]) + '"' + (x[0] === room ? ' selected' : '') + '>' + esc(x[1]) + '</option>'; }).join('') + '</select></label>' +
+      '<h3>Go to (opens in its own tab)</h3><div class="goto">' + gotoLinks(P) + '</div>' +
+      '<h3>Screens</h3><button class="ctl' + on(act.type === 'idle') + '" data-a="idle">Welcome &amp; QR code<div class="sub">People scan to join</div></button>';
+    if (!P) h +=
+      '<button class="ctl' + on(act.type === 'wall' && act.id === 'worries') + '" data-a="wall">Worries wall<div class="sub">"What worries you most about being President?"</div></button>' +
+      '<button class="ctl' + on(act.type === 'wall' && act.id === 'barriers') + '" data-a="barriers">Membership barriers wall<div class="sub">"Biggest barrier to growing or keeping members?"</div></button>';
+    else h +=
+      '<button class="ctl' + on(act.type === 'poll' && act.id === QUICK.id) + '" data-a="nextpoll">Who\'s next? (vote)<div class="sub">"Do you know who your club\'s President will be in 2028–29?"</div></button>' +
+      '<button class="ctl' + on(act.type === 'poll' && act.id === FIVE.id) + '" data-a="fivepoll">Our club in five years (vote)<div class="sub">"If nothing changes, in five years my club will be…"</div></button>' +
+      '<button class="ctl' + on(act.type === 'wall' && act.id === 'successor') + '" data-a="successor">Saying yes wall<div class="sub">"What stops good members saying yes to being President?"</div></button>';
+    h += '<button class="ctl' + on(act.type === 'wall' && act.id === 'ideas') + '" data-a="ideas">Membership ideas wall<div class="sub">"One idea your club hasn\'t tried. The bolder the better."</div></button>' +
+      '<button class="ctl gold' + on(act.type === 'summary') + '" data-a="summary">AI summary &amp; ideas<div class="sub">Reads every vote and wall in this session. Shows on the big screen and phones</div></button>' +
       (lastSummary ? '<button class="ctl" data-a="savesum">Save the summary<div class="sub">Downloads it as a text file</div></button>' : '');
     if (act.type === 'poll') h += '<h3>This vote</h3>' +
       '<button class="ctl" data-a="toggle">' + (act.open ? 'Close voting' : 'Re-open voting') + '</button>' +
       '<button class="ctl" data-a="reveal">' + (act.reveal ? 'Hide outcomes' : 'Reveal outcomes') + '</button>';
     if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI<div class="sub">Also appears on everyone\'s phone</div></button>';
     h += '<h3>Scenario votes</h3>';
-    scenarios.forEach(function (x, i) { h += '<button class="ctl ' + (act.type === 'poll' && act.id === x.id ? 'on' : '') + '" data-s="' + i + '">' + esc(x.it.title) + '<div class="sub">' + esc(x.m.title) + '</div></button>'; });
+    /* Presidents sessions: their module's scenarios first. Pre-PELDS sessions: leave out the Presidents-only module */
+    var order = scenarios.map(function (x, i) { return i; }).filter(function (i) { return P || scenarios[i].m.id !== 'next-president'; });
+    if (P) order.sort(function (a, b) { return (scenarios[a].m.id === 'next-president' ? 0 : 1) - (scenarios[b].m.id === 'next-president' ? 0 : 1) || a - b; });
+    order.forEach(function (i) { var x = scenarios[i]; h += '<button class="ctl ' + (act.type === 'poll' && act.id === x.id ? 'on' : '') + '" data-s="' + i + '">' + esc(x.it.title) + '<div class="sub">' + esc(x.m.title) + '</div></button>'; });
     h += '<h3>Reset for a new session</h3><button class="ctl" data-a="clearv">Clear all votes…<div class="sub">Every scenario vote and the talk poll</div></button><button class="ctl" data-a="clearw">Clear the wall…<div class="sub">Removes every answer on both walls, and the themes</div></button>';
     h += '<h3>Results</h3><button class="ctl" data-a="download">Download results<div class="sub">Votes by role, walls and themes, as a spreadsheet</div></button>';
     h += '<h3>Today</h3><div class="mini" id="usage">…</div>' +
       '<h3>Screen</h3><button class="ctl" data-a="fs">Full screen</button><button class="ctl" data-a="logout">Sign out</button>';
     s.innerHTML = h;
+    document.getElementById('sess').onchange = function () { room = this.value; ls('pe-room', room); act = { type: 'idle' }; themes = ''; lastSummary = ''; clearTimeout(timer); connect(); };
     s.querySelectorAll('[data-a]').forEach(function (b) { b.onclick = function () { action(b.dataset.a); }; });
     s.querySelectorAll('[data-s]').forEach(function (b) { b.onclick = function () { startPoll(scenarios[+b.dataset.s]); }; });
     api('usage').then(function (u) { var e = document.getElementById('usage'); if (e && !u.error) e.innerHTML = 'AI coach requests: <b>' + u.calls + '</b> of ' + u.dailyLimit + '<br>Devices using AI: <b>' + u.devices + '</b>'; });
@@ -142,6 +158,22 @@
   var WALLS = { worries: 'What worries you most about being President?', barriers: 'What\'s the biggest barrier to growing or keeping members in your club?',
     successor: 'What stops good members saying yes to being President?', ideas: 'What\'s one idea to grow or keep members that your club hasn\'t tried? The bolder the better.' };
   var lastSummary = '';
+  /* sessions: each keeps its own votes and walls. Rooms starting with "presidents" get the Presidents meeting screens */
+  var SESSIONS = [['prepelds', 'Pre-PELDS (7 Nov)'], ['gippsland', 'Pre-PELDS Gippsland'], ['presidents', 'Presidents meeting']];
+  function isPres() { return /^presidents/i.test(room); }
+  /* deep links into the toolkit: #/m/<module>/<page> */
+  function tk(mid, iid) {
+    var m = (PE.modules || []).filter(function (x) { return x.id === mid; })[0]; if (!m) return '';
+    var i = iid ? m.items.map(function (x) { return x.id; }).indexOf(iid) : 0;
+    return 'START%20HERE.html#/m/' + mid + '/' + Math.max(0, i);
+  }
+  function gotoLinks(P) {
+    var L = P ? [['START%20HERE.html', 'Toolkit home'], [tk('next-president'), 'Growing your next President'], [tk('next-president', 'askjo'), 'AI demo: practise the ask'],
+        [tk('next-president', 'ageing'), 'Scenario: the shrinking club'], [tk('membership-partnership'), 'Membership module']]
+      : [['run-sheet.html', 'Run sheet', 'pe-runsheet'], ['talk.html', 'Talk slides', 'pe-talk'], ['START%20HERE.html', 'Toolkit home'],
+        [tk('your-mentor'), 'Your mentor for the year'], [tk('membership-partnership'), 'Membership module'], [tk('your-mentor', 'ask'), 'AI demo: ask a mentor'], ['take-home.html', 'Take-home page']];
+    return L.filter(function (x) { return x[0]; }).map(function (x) { return '<a href="' + x[0] + '" target="' + (x[2] || 'pe-toolkit') + '">' + esc(x[1]) + ' ↗</a>'; }).join('');
+  }
   function setAct(a) { act = a; themes = ''; return api('set', { activity: a }).then(function (r) { if (r.error) PE.toast('Could not update: ' + r.error); side(); stage(); }); }
   function startPoll(x) {
     var it = x.it;
@@ -154,7 +186,7 @@
     if (a === 'summary') summary();
     if (a === 'savesum') saveText(lastSummary, 'AI-summary-' + room + '-' + new Date().toISOString().slice(0, 10) + '.txt');
     if (a === 'successor') setAct({ type: 'wall', id: 'successor', title: 'What stops good members saying yes to being President?', open: true });
-    if (a === 'idle') setAct({ type: 'idle', title: room === 'prepelds' ? 'Welcome, Presidents-Elect!' : 'Welcome, Presidents!', message: 'You\'re in. Votes will appear here automatically. Keep this page open.' });
+    if (a === 'idle') setAct({ type: 'idle', title: isPres() ? 'Welcome, Presidents!' : 'Welcome, Presidents-Elect!', message: 'You\'re in. Votes will appear here automatically. Keep this page open.' });
     if (a === 'wall') setAct({ type: 'wall', id: 'worries', title: 'What worries you most about being President?', open: true });
     if (a === 'barriers') setAct({ type: 'wall', id: 'barriers', title: 'What\'s the biggest barrier to growing or keeping members in your club?', open: true });
     if (a === 'download') download();
@@ -219,12 +251,12 @@
     s.innerHTML = '<div class="kind">AI summary</div><h1>Reading everything the room said…</h1>'; s.appendChild(ai.thinking());
     var polls = [QUICK, FIVE].map(function (q) { return { id: q.id, title: q.title, options: q.options }; });
     scenarios.forEach(function (x) { polls.push({ id: x.id, title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) }); });
-    if (room === 'prepelds') polls.push({ id: 'talk-said-yes', title: TALK['talk-said-yes'].title, options: TALK['talk-said-yes'].options });
+    if (!isPres()) polls.push({ id: 'talk-said-yes', title: TALK['talk-said-yes'].title, options: TALK['talk-said-yes'].options });
     Promise.all(polls.map(function (q) { return api('results', { poll: q.id }).then(function (r) { q.counts = r.counts || {}; return q; }).catch(function () { q.counts = {}; return q; }); }))
       .then(function (list) {
         list = list.filter(function (q) { return Object.keys(q.counts).length; });
         return ai.post('/api/coach', { mode: 'summary', admin: admin, payload: { room: room, polls: list, walls: WALLS,
-          context: room === 'presidents' ? 'A District Presidents meeting: current club Presidents talking about succession and membership.' : '' } });
+          context: isPres() ? 'A District Presidents meeting: current club Presidents talking about succession and membership.' : 'A Pre-PELDS training session (' + room + '): incoming club Presidents-Elect and club Membership Chairs preparing for their year. Ideas should help them start their year well, as well as grow and keep members.' } });
       }).then(function (r) {
         if (!r || !r.text) {
           var why = r && r.error === 'bad_mode' ? 'The online service needs the 20 Nov update (paste the new worker.js into Cloudflare and Deploy). Until then, use Find themes with AI on each wall.' : 'Could not get the summary: ' + ((r && (r.message || r.error)) || 'no answer');
