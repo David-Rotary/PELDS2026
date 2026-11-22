@@ -209,9 +209,33 @@
 #d9pw .lib .card h4{font-size:15.5px;}
 #d9pw .lib .card .who{font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--azure);}
 #d9pw .lib .card p{font-size:13.5px;margin:4px 0 0;}
-#d9pw .lib a.card:hover{border-color:var(--sky);box-shadow:0 8px 20px rgba(23,69,143,.1);}
 #d9pw footer{background:var(--deep);color:#cfe0ff;padding:30px 0;font-size:14px;}
 #d9pw footer b{color:#fff;}
+
+/* ai */
+#d9pw .aiwrap{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start;}
+#d9pw .ctx{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;}
+#d9pw .ctx h4{font-size:17px;margin-bottom:2px;}
+#d9pw .ctx .form label{margin-top:10px;}
+#d9pw .topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px;}
+#d9pw .topic{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px;font-weight:700;font-size:14.5px;color:var(--deep);display:flex;gap:10px;align-items:flex-start;transition:.2s;}
+#d9pw .topic .em{font-size:22px;line-height:1;}
+#d9pw .topic small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px;}
+#d9pw .topic:hover{border-color:var(--sky);transform:translateY(-2px);}
+#d9pw .topic.on{border-color:var(--p3);background:#f7eefa;}
+#d9pw .prompt{background:linear-gradient(140deg,#2a0f3d,#5a1a6e 55%,#901F93);color:#fff;border-radius:18px;padding:20px;}
+#d9pw .prompt h4{color:var(--gold);font-family:'Hanken Grotesk',sans-serif;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;}
+#d9pw .prompt h3{color:#fff;font-size:22px;margin:4px 0 4px;}
+#d9pw .prompt .why{color:#e8d3f0;font-size:14px;margin-bottom:10px;}
+#d9pw .ptext{background:#fff;color:var(--ink);border-radius:12px;padding:16px;font-size:14.5px;white-space:pre-wrap;line-height:1.55;max-height:420px;overflow:auto;margin-bottom:14px;}
+#d9pw .ptext mark{background:#fff2cc;color:inherit;padding:0 2px;border-radius:3px;}
+#d9pw .follow{margin-top:14px;background:rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;font-size:14px;}
+#d9pw .follow b{color:var(--gold);display:block;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;}
+#d9pw .follow ul{margin:0;padding-left:18px;}
+#d9pw .safe{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:18px;}
+#d9pw .safe div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;}
+#d9pw .safe b{display:block;color:var(--deep);margin-bottom:2px;}
+@media (max-width:900px){#d9pw .aiwrap{grid-template-columns:1fr;}}
 
 @media (max-width:900px){
  #d9pw .hero h1{font-size:36px;} #d9pw .hero h1 .script{font-size:42px;}
@@ -231,7 +255,7 @@
 <body style="margin:0">
 <div id="d9pw">
 
-<div class="crumb" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><span style="flex:1">District 9815 · Membership Growth Strategic Plan 2026–2029 · Pathways Explorer</span><a href="START%20HERE.html" data-keep style="color:var(--navy);font-weight:700;text-decoration:none">◀ Club Leaders' Toolkit</a><a href="launchpad.html" data-keep style="color:var(--navy);font-weight:700;text-decoration:none">Launchpad</a></div>
+<div class="crumb">District 9815 · Membership Growth Strategic Plan 2026–2029 · Pathways Explorer</div>
 
 <header class="hero">
  <div class="wrap">
@@ -267,6 +291,7 @@
    <button class="pill" data-go="d9pw-motives">Why people join</button>
    <button class="pill" data-go="d9pw-belong">Belonging</button>
    <button class="pill" data-go="d9pw-deck">Talk it over</button>
+   <button class="pill" data-go="d9pw-ai" style="background:#901F93;color:#fff;border-color:#901F93">🤖 Ask your AI</button>
    <button class="pill" data-go="d9pw-plan">Our next steps</button>
   </div>
   <div class="mode">Exploring as
@@ -422,15 +447,51 @@
  </div>
 </section>
 
+<!-- AI -->
+<section id="d9pw-ai">
+ <div class="wrap">
+  <div class="sh">
+   <div class="kick" style="color:#901F93">New · Ask your AI</div>
+   <h2>Put an AI research assistant to work</h2>
+   <p>ChatGPT, Copilot, Gemini, Claude: whichever one you use, it can be a handy thinking partner. Tell it a little about your club, pick a question, and copy a ready-made prompt. Each prompt asks the AI to check what it needs to know first, offer options rather than instructions, and tell you what to double-check.</p>
+  </div>
+  <div class="aiwrap">
+   <div class="ctx">
+    <h4>1 · About your club</h4>
+    <p style="font-size:13.5px;color:var(--muted);margin:0">Fill in what you know. Anything left blank is skipped. Nothing you type here leaves this page.</p>
+    <div class="form" id="d9pw-ctx"></div>
+   </div>
+   <div>
+    <h4 style="font-size:17px;margin-bottom:10px">2 · Pick a question</h4>
+    <div class="topics" id="d9pw-topics"></div>
+    <div class="prompt">
+     <h4>3 · Copy, paste, explore</h4>
+     <h3 id="d9pw-ptitle"></h3>
+     <div class="why" id="d9pw-pwhy"></div>
+     <div class="ptext" id="d9pw-ptext"></div>
+     <div class="row"><button class="btn" id="d9pw-pcopy">Copy prompt</button><button class="btn ghost" id="d9pw-padd">+ Add to our next steps</button><span class="toast" id="d9pw-patoast"></span></div>
+     <div class="follow"><b>Then keep the conversation going</b><ul id="d9pw-pfollow"></ul></div>
+    </div>
+   </div>
+  </div>
+  <div class="safe">
+   <div><b>🔍 Treat answers as leads, not facts</b>AI tools can invent local groups, programs or statistics that sound convincing. Check anything before you act on it or quote it.</div>
+   <div><b>🔒 Keep people's details out</b>Don't paste members' names, contact details, health or personal circumstances into an AI tool. Describe the situation instead.</div>
+   <div><b>🗣️ Bring it back to people</b>The best use of an AI answer is a better conversation at your next meeting, or a better question to ask someone in your community.</div>
+   <div><b>🔁 Push back</b>If an answer feels generic, say so: "That could be anywhere. Make it specific to our town." The second answer is usually much better.</div>
+  </div>
+ </div>
+</section>
+
 <!-- PLAN -->
 <section id="d9pw-plan">
  <div class="wrap">
   <div class="plan">
    <h2 id="d9pw-plantitle">Our next small steps</h2>
-   <p style="color:#cfe0ff">Collect ideas from anywhere on this page with the <b style="color:var(--gold)">+ Add</b> buttons, or type your own. Two or three small experiments beat a long list. Then <b style="color:var(--gold)">✓ Make it an action</b> (a date, a calendar reminder, someone to tell) or turn the list into a <b style="color:var(--gold)">Board agenda item</b>.</p>
+   <p style="color:#cfe0ff">Collect ideas from anywhere on this page with the <b style="color:var(--gold)">+ Add</b> buttons, or type your own. Two or three small experiments beat a long list. Copy the list into your meeting notes or club plan when you're done.</p>
    <ol id="d9pw-planlist"></ol>
    <div class="row"><input id="d9pw-own" placeholder="Add your own idea…" style="flex:1 1 300px"><button class="btn" id="d9pw-ownadd">Add</button></div>
-   <div class="row" style="margin-top:14px"><button class="btn" id="d9pw-plancopy">Copy the list</button><button class="btn" id="d9pw-board">📋 Board agenda item</button><button class="btn ghost" id="d9pw-planclear">Clear</button><span class="toast" id="d9pw-ptoast"></span></div>
+   <div class="row" style="margin-top:14px"><button class="btn" id="d9pw-plancopy">Copy the list</button><button class="btn ghost" id="d9pw-planclear">Clear</button><span class="toast" id="d9pw-ptoast"></span></div>
   </div>
  </div>
 </section>
@@ -441,8 +502,7 @@
   <div class="sh">
    <div class="kick">Go deeper</div>
    <h2>The District membership toolkit</h2>
-   <p>Each idea on this page is drawn from a short, practical guide. Tap a card to open the guide, or find them all on the District Membership Hub.</p>
-   <a class="btn navy" id="d9pw-toolkit" href="#" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;text-decoration:none">Open the District Membership Hub ↗</a>
+   <p>Each idea on this page is drawn from a short, practical guide. Ask your Membership Chair or the District Membership Team for any you'd like to read in full.</p>
   </div>
   <div class="lib" id="d9pw-lib"></div>
  </div>
@@ -451,9 +511,6 @@
 <footer><div class="wrap"><b>Rotary District 9815</b> · Membership Growth Strategic Plan 2026–2029. Take what fits your club and adapt it freely. Every club, community and member is different, and that's the point.</div></footer>
 </div>
 
-<script src="app/config.js"></script>
-<script src="app/district-goal.js"></script>
-<script src="app/commit.js"></script>
 <script>
 (function(){
 var R=document.getElementById('d9pw'); if(!R) return;
@@ -598,34 +655,33 @@ var SIGNS=[
 ];
 
 var LIB=[
- ['Every member','You Are the Growth Plan','Inviting one person, welcoming a newcomer, and keeping them.','https://portal.clubrunner.ca/50387/Documents/en-au/dfc8b529-31d0-48d6-8427-82489c3b1300/1/'],
- ['Every member','The One-Minute Invite','The whole guide on a single quick-reference card.','https://portal.clubrunner.ca/50387/Documents/en-au/17747d62-98fc-42cc-9b4b-7ba790088db5/1/'],
- ['Membership Chair','The One Ask Sprint','A 90-day campaign that gets every member asking.','https://portal.clubrunner.ca/50387/Documents/en-au/a49726ca-7157-4e2b-b45d-cd869bf0e077/1/'],
- ['Board','Clearing the Way','Five things a Board can approve to make the toolkit run.','https://portal.clubrunner.ca/50387/Documents/en-au/3a597594-a37f-4b66-b4b5-ddbea0df6873/1/'],
- ['Board','From Stranger to Family','A phase-by-phase new member action plan.','https://portal.clubrunner.ca/50387/Documents/en-au/aa1644f0-f79a-425e-960b-0893f7b8149c/1/'],
- ['Discussion','Why Aren’t We Growing?','The evidence on decline and the psychology of volunteering.','https://portal.clubrunner.ca/50387/Documents/en-au/db6581b1-43ce-42f3-8db1-5c583fc2627a/1/'],
- ['Discussion','Stop Recruiting. Start Connecting.','The relationship-first engagement ladder.','https://portal.clubrunner.ca/50387/Documents/en-au/985f7ac3-bd66-469b-814e-988fa8039104/1/'],
- ['Discussion','What Does Your Club Actually Do?','Explaining your club to a stranger so they lean in.','https://portal.clubrunner.ca/50387/Documents/en-au/0b346083-be99-49a6-aecd-312c6e5b1af3/1/'],
- ['Public Image','Prove the Invitation','Making sure what prospects find online backs up the invite.','https://portal.clubrunner.ca/50387/Documents/en-au/48923a44-7680-4285-8102-1c0970f18ce8/1/'],
- ['Our Groups','Friends of the Club','A no-strings tier that keeps interested people in touch.','https://portal.clubrunner.ca/50387/Documents/en-au/300ca628-4c3b-4d23-81be-163f7646eef0/1/'],
- ['Our Groups','The Second Yes','Re-engaging alumni and bridging from Rotaract and Interact.','https://portal.clubrunner.ca/50387/Documents/en-au/8472e621-64cf-43e7-ae1d-dc948fed2caf/1/'],
- ['Our Groups','The Ten You Should Know','Turning schools and businesses into a source of volunteers.','https://portal.clubrunner.ca/50387/Documents/en-au/6f0b39b7-871e-43f6-b6dd-d1645a3b958c/1/'],
- ['For newcomers','What to Expect','Honest answers for anyone thinking of coming along.','https://portal.clubrunner.ca/50387/Documents/en-au/05b54bba-77f6-4e50-91f8-b2c235a1cfcc/1/'],
- ['Curiosity','Creating the “Aha” Moment','Small discovery activities for each strategic priority.','https://portal.clubrunner.ca/50387/Documents/en-au/f1acaf11-bce0-4c52-8c6e-b4e8cf7999ce/1/']
+ ['Every member','You Are the Growth Plan','Inviting one person, welcoming a newcomer, and keeping them.'],
+ ['Every member','The One-Minute Invite','The whole guide on a single quick-reference card.'],
+ ['Membership Chair','The One Ask Sprint','A 90-day campaign that gets every member asking.'],
+ ['Board','Clearing the Way','Five things a Board can approve to make the toolkit run.'],
+ ['Board','From Stranger to Family','A phase-by-phase new member action plan.'],
+ ['Discussion','Why Aren’t We Growing?','The evidence on decline and the psychology of volunteering.'],
+ ['Discussion','Stop Recruiting. Start Connecting.','The relationship-first engagement ladder.'],
+ ['Discussion','What Does Your Club Actually Do?','Explaining your club to a stranger so they lean in.'],
+ ['Public Image','Prove the Invitation','Making sure what prospects find online backs up the invite.'],
+ ['Our Groups','Friends of the Club','A no-strings tier that keeps interested people in touch.'],
+ ['Our Groups','The Second Yes','Re-engaging alumni and bridging from Rotaract and Interact.'],
+ ['Our Groups','The Ten You Should Know','Turning schools and businesses into a source of volunteers.'],
+ ['For newcomers','What to Expect','Honest answers for anyone thinking of coming along.'],
+ ['New','Ask your AI','Ready-made prompts for researching your community, leadership and fresh ideas.'],
+ ['Curiosity','Creating the “Aha” Moment','Small discovery activities for each strategic priority.']
 ];
 
 /* ---------- PLAN ---------- */
-var PLAN=[]; try{PLAN=JSON.parse(localStorage.getItem('pe-explorer-plan')||'[]')||[];}catch(e){PLAN=[];}
-function savePlan(){try{localStorage.setItem('pe-explorer-plan',JSON.stringify(PLAN));}catch(e){}}
+var PLAN=[];
 function renderPlan(){
- savePlan();
+ if(typeof AICUR!=='undefined'&&AICUR==='plan') renderAI();
  var ol=$('#d9pw-planlist');
  if(!PLAN.length){ol.innerHTML='<li class="empty" style="background:transparent">Nothing here yet. Tap any + Add button on the page to start.</li>';return;}
- ol.innerHTML=PLAN.map(function(p,i){return '<li><span>'+esc(p)+'</span><span style="display:flex;gap:6px;align-items:center;flex:none">'+(window.PEAct?'<button class="btn" data-act="'+i+'" style="padding:5px 11px;font-size:13px;color:#0B2A5C">✓ Make it an action</button>':'')+'<button data-rm="'+i+'" title="Remove">✕</button></span></li>'}).join('');
+ ol.innerHTML=PLAN.map(function(p,i){return '<li><span>'+esc(p)+'</span><button data-rm="'+i+'" title="Remove">✕</button></li>'}).join('');
 }
 function addPlan(t,btn){ if(PLAN.indexOf(t)<0) PLAN.push(t); renderPlan(); if(btn){btn.classList.add('done');btn.textContent='✓ Added';} }
-R.addEventListener('click',function(e){var b=e.target.closest('[data-rm]'); if(b){PLAN.splice(+b.getAttribute('data-rm'),1);renderPlan();}
- var a=e.target.closest('[data-act]'); if(a&&window.PEAct){PEAct.open({what:PLAN[+a.getAttribute('data-act')],context:'Membership Pathways Explorer',source:'explorer'});}});
+R.addEventListener('click',function(e){var b=e.target.closest('[data-rm]'); if(b){PLAN.splice(+b.getAttribute('data-rm'),1);renderPlan();}});
 $('#d9pw-ownadd').onclick=function(){var v=$('#d9pw-own').value.trim(); if(v){addPlan(v);$('#d9pw-own').value='';}};
 $('#d9pw-own').addEventListener('keydown',function(e){if(e.key==='Enter')$('#d9pw-ownadd').click();});
 $('#d9pw-planclear').onclick=function(){PLAN=[];renderPlan();$$('.add.done').forEach(function(b){b.classList.remove('done');b.textContent=b.getAttribute('data-label');});};
@@ -634,7 +690,6 @@ function copyText(t,toast){
  try{navigator.clipboard.writeText(t).then(ok,function(){fallback()});}catch(err){fallback();}
  function fallback(){var ta=document.createElement('textarea');ta.value=t;ta.style.position='absolute';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok();}catch(e){$(toast).textContent='Select and copy manually';}document.body.removeChild(ta);}
 }
-$('#d9pw-board').onclick=function(){ if(!PLAN.length){$('#d9pw-ptoast').textContent='Add an idea first';setTimeout(function(){$('#d9pw-ptoast').textContent='';},1800);return;} if(window.PEAct) PEAct.agenda(PLAN.map(function(p){return {what:p};}),{title:PLAN.length>1?'Membership ideas to try':PLAN[0]}); };
 $('#d9pw-plancopy').onclick=function(){ if(!PLAN.length) return; copyText((MODE==='me'?'My':'Our')+' next small steps\n'+PLAN.map(function(p,i){return (i+1)+'. '+p}).join('\n'),'#d9pw-ptoast'); };
 R.addEventListener('click',function(e){var b=e.target.closest('.add'); if(b && !b.classList.contains('done')) addPlan(b.getAttribute('data-add'),b);});
 function addBtn(text){var l=MODE==='me'?'+ Add to my next steps':'+ Add to our next steps';return '<button class="add" data-add="'+esc(text)+'" data-label="'+l+'">'+l+'</button>';}
@@ -648,7 +703,7 @@ function setMode(m){MODE=m;
  $$('.add').forEach(function(b){var l=m==='me'?'+ Add to my next steps':'+ Add to our next steps';b.setAttribute('data-label',l);if(!b.classList.contains('done'))b.textContent=l;});
  $('#d9pw-addbuilt').textContent=m==='me'?'+ Add to my next steps':'+ Add to our next steps';
  $('#d9pw-keepq').textContent=m==='me'?'+ Add to my next steps':'+ Add to our next steps';
- drawCard(true); if(CUR!=null) openPillar(CUR,CURTAB,true);
+ drawCard(true); if(CUR!=null) openPillar(CUR,CURTAB,true); if(typeof renderAI==='function'&&AIT) renderAI();
 }
 $$('[data-mode]').forEach(function(b){b.onclick=function(){setMode(b.getAttribute('data-mode'))}});
 
@@ -670,7 +725,7 @@ R.addEventListener('click',function(e){
 /* ---------- HOUSE ---------- */
 $('#d9pw-cols').innerHTML=P.map(function(p,i){return '<button class="col" data-pi="'+i+'" style="background:linear-gradient(160deg,'+p.c+','+p.c+'cc)"><span class="n">'+p.n+'</span><h4>'+p.em+' '+p.t+'</h4><small>'+p.short+'</small><span class="go">Explore →</span></button>'}).join('');
 var CUR=null,CURTAB='focus';
-var TABS=[['focus','📌 What it covers'],['discover','🔦 Try a discovery'],['ideas','💡 Ideas to borrow'],['talk','💬 Talk it over']];
+var TABS=[['focus','📌 What it covers'],['discover','🔦 Try a discovery'],['ideas','💡 Ideas to borrow'],['talk','💬 Talk it over'],['ai','🤖 Ask AI']];
 function openPillar(i,tab,silent){
  CUR=i;CURTAB=tab||'focus';var p=P[i];
  $$('.col').forEach(function(c){c.classList.toggle('on',+c.getAttribute('data-pi')===i)});
@@ -679,6 +734,7 @@ function openPillar(i,tab,silent){
  if(CURTAB==='discover') body='<div class="hint">🔦 Small experiments that take little preparation and no reading. '+(MODE==='me'?'Pick one you could try this month on your own.':'Pick one, share it out among a couple of members, and compare notes at the next meeting.')+' Try to notice before you fix.</div><div class="grid3">'+p.discover.map(function(d){return '<div class="card"><span class="tag" style="background:'+p.c+'22;color:'+p.c+'">Discovery</span><h4>'+d[0]+'</h4><p>'+d[1]+'</p>'+addBtn('Try "'+d[0]+'" ('+p.t+')')+'</div>'}).join('')+'</div>';
  if(CURTAB==='ideas') body='<div class="hint">💡 Practical ideas from the District toolkit. They’re starting points, and every club will make them its own.</div><div class="grid3">'+p.ideas.map(function(d){return '<div class="card"><span class="tag" style="background:'+p.c+'22;color:'+p.c+'">'+d[2]+'</span><h4>'+d[0]+'</h4><p>'+d[1]+'</p>'+addBtn(d[0])+'</div>'}).join('')+'</div>';
  if(CURTAB==='talk') body='<div class="hint">💬 '+(MODE==='me'?'Questions to sit with on your own. Jot down your first honest answer.':'Questions for your board or committee. Give each one ten minutes and resist the urge to solve it straight away.')+'</div><ol class="qlist" style="--c:'+p.c+'">'+p.qs.map(function(q){return '<li>'+q+'</li>'}).join('')+'</ol>';
+ if(CURTAB==='ai') body='<div class="hint">🤖 Ready-made prompts for your AI tool (ChatGPT, Copilot, Gemini, Claude) that fit this pathway. Each one opens in the prompt builder with your club\u2019s details filled in.</div><div class="grid3">'+AIT.filter(function(t){return t.p.indexOf(i)>-1}).map(function(t){return '<div class="card"><span class="tag" style="background:#901F9322;color:#901F93">Ask AI</span><h4>'+t.em+' '+t.t+'</h4><p>'+t.why+'</p><button class="btn" style="background:#901F93;color:#fff;margin-top:6px" data-openai="'+t.id+'">Open this prompt →</button></div>'}).join('')+'</div>';
  $('#d9pw-panel').innerHTML='<div class="ph" style="background:linear-gradient(120deg,'+p.c+','+p.c+'bb)"><div><div style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;opacity:.85">Pathway '+p.n+'</div><h3>'+p.em+' '+p.t+'</h3></div><div class="ms"><b>How we’ll know it’s working</b>'+p.measure+'</div></div><div class="tabs" style="--c:'+p.c+'">'+TABS.map(function(t){return '<button data-tab="'+t[0]+'" class="'+(t[0]===CURTAB?'on':'')+'">'+t[1]+'</button>'}).join('')+'</div><div class="pb">'+body+'</div>';
  $$('#d9pw-panel [data-tab]').forEach(function(b){b.onclick=function(){openPillar(CUR,b.getAttribute('data-tab'))}});
 }
@@ -766,19 +822,83 @@ $('#d9pw-deckfilter').onchange=function(){CARD=null;drawCard(false)};
 $('#d9pw-keepq').onclick=function(){if(CARD)addPlan('Discuss: '+CARD[1])};
 
 /* ---------- LIB ---------- */
-/* where the District membership toolkit lives: change this one address if it moves */
-var TOOLKIT_URL='https://www.rotary9815.org.au/page/membership-flow';
-$('#d9pw-toolkit').href=TOOLKIT_URL;
-$('#d9pw-lib').innerHTML=LIB.map(function(l){return '<a class="card" href="'+(l[3]||TOOLKIT_URL)+'" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit"><div class="who">'+l[0]+'</div><h4>'+l[1]+'</h4><p>'+l[2]+'</p><p style="margin-top:6px;color:var(--azure);font-weight:700">'+(l[3]?'Open the guide (PDF) ↗':'Find it on the Membership Hub ↗')+'</p></a>'}).join('');
+$('#d9pw-lib').innerHTML=LIB.map(function(l){return '<div class="card"><div class="who">'+l[0]+'</div><h4>'+l[1]+'</h4><p>'+l[2]+'</p></div>'}).join('');
+
+/* ---------- ASK YOUR AI ---------- */
+var CTXF=[['club','Club name','Rotary Club of Berwick'],['town','Town or suburb','Berwick, Victoria'],['size','Number of members','about 30'],['ages','Rough age mix','mostly 55+, a few in their 40s'],['format','How you meet','weekly dinner meeting on Tuesdays'],['project','A project you’re proud of','our community Christmas carols'],['hope','What you’d most like to change','attract people in their 30s and 40s']];
+$('#d9pw-ctx').innerHTML=CTXF.map(function(f){return '<label>'+f[1]+'</label><input data-cx="'+f[0]+'" placeholder="e.g. '+esc(f[2])+'">'}).join('');
+function cx(k){var el=$('#d9pw-ctx [data-cx="'+k+'"]');return el?el.value.trim():'';}
+function intro(){
+ var club=cx('club')||'a Rotary club', town=cx('town'); if(/^rotary/i.test(club)) club='the '+club;
+ var who=(MODE==='me'?'I’m a member of ':'We’re a small group of members from ')+club+(town?' in '+town+(/australia/i.test(town)?'':', Australia'):' in Australia')+'.';
+ var bits=[];
+ if(cx('size'))bits.push('We have '+cx('size')+' members');
+ if(cx('ages'))bits.push((bits.length?'who are ':'Our members are ')+cx('ages'));
+ var l=bits.length?' '+bits.join(', ')+'.':'';
+ if(cx('format'))l+=' We meet: '+cx('format')+'.';
+ if(cx('project'))l+=' A project we’re proud of is '+cx('project')+'.';
+ if(cx('hope'))l+=' What we’d most like to change: '+cx('hope')+'.';
+ return who+l;
+}
+function tail(){return '\n\nHow '+(MODE==='me'?'I’d':'we’d')+' like you to answer:\n- Before you start, ask up to three questions that would help you tailor this to our club and area. Wait for the answers.\n- Give options and ideas to explore, not one right answer or a set of rules.\n- Keep it practical for volunteers with limited time, and use plain Australian English.\n- Finish with a short list of anything that should be double-checked locally, and where to check it.';}
+var AIT=[
+ {id:'find',em:'🗺️',t:'Where could our next members come from?',sub:'Map your community',p:[0,2],why:'Helps you see your community with fresh eyes: who’s moving in, who’s already volunteering, and where you might meet them.',
+  b:function(){return intro()+'\n\nWe’d like to understand our community better before we invite anyone. Please help us think about where future members and volunteers might come from.\n\n1. Describe the groups of people likely to live or work in our area (for example new housing estates, young families, retirees, migrant communities, local businesses, students). Tell us which of these you’re confident about and which are guesses.\n2. Suggest 6–8 groups of people who might enjoy volunteering with a club like ours. For each, explain what might attract them, where we could naturally meet them, and one low-commitment activity we could invite them to.\n3. Suggest local places, events or organisations where those people already gather.'+tail();},
+  f:['Which of these groups is our club currently missing completely?','Write a short, friendly invitation aimed at [group] for our next project.','What might put [group] off joining a club like ours, and how could we lower that barrier?']},
+ {id:'lead',em:'🚀',t:'Rotary as a leadership lab for younger people',sub:'What 25–40s are looking for',p:[3,2,4],why:'Explores how your club could offer real leadership experience to younger professionals, and how to talk about it.',
+  b:function(){return intro()+'\n\nWe think a Rotary club could be a great place for people aged roughly 25–40 to build leadership skills, but we may not be offering or describing it in a way that appeals to them.\n\n1. What are people in this age group usually looking for from volunteering or community involvement (skills, career value, networks, purpose, flexibility)? Note where research supports this.\n2. Suggest practical ways a club like ours could offer real leadership experience: project roles, mentoring, chairing something small, partnerships, programs like RYLA or Rotaract.\n3. How could a younger person describe what they gained from our club on a CV or in a job interview?\n4. Which of our likely habits or expectations might discourage this age group?'+tail();},
+  f:['Design a 6-month "lead a project" pathway for a new member in their 30s.','How could we partner with a local employer so staff build leadership skills with us?','Write a short social media post aimed at young professionals about leading a community project.']},
+ {id:'learn',em:'🔭',t:'What can we learn from other organisations?',sub:'Borrow what’s working',p:[3,1,0],why:'Looks at how growing community groups attract and keep people, and what a Rotary club might adapt.',
+  b:function(){return intro()+'\n\nMany community organisations are losing members, but some are growing or have turned things around. We’d like to learn from them.\n\n1. Give examples of community and volunteer organisations (in Australia or overseas) that are attracting new people, especially younger or more diverse people. Examples might include parkrun, Men’s Sheds, Landcare, the SES or CFA, the Country Women’s Association, or newer informal and online groups, but include others you think are relevant.\n2. For each, explain what they seem to do differently: how people first get involved, how much commitment is expected, how they welcome newcomers, and how they talk about themselves.\n3. Suggest 5 ideas a Rotary club could realistically borrow or adapt, and what the first small step might be for each.\n\nPlease be clear about which details are well documented and which are general impressions.'+tail();},
+  f:['Pick the idea best suited to a club our size and turn it into a one-term experiment.','What would a "parkrun-style" low-commitment Rotary activity look like in our town?','Which of these ideas would our longer-serving members find hardest, and how could we bring them along?']},
+ {id:'stranger',em:'👀',t:'Read us like a stranger',sub:'Check your website or Facebook',p:[0,3],why:'A two-minute version of the "See Us Through New Eyes" experiment. Paste in your own public text and get an outsider’s reaction.',
+  b:function(){return intro()+'\n\nPlease read the text below from our club’s website or social media as if you were someone in our town who knows nothing about Rotary.\n\n1. In two or three sentences, what do you think this club actually does, and who is it for?\n2. Would you feel welcome to come along? What would make you more or less likely to?\n3. List any insider words or jargon that might confuse or put off a newcomer, and suggest plain alternatives.\n4. Suggest a rewritten opening of 2–3 sentences that leads with a concrete local difference and ends with a simple invitation.\n\n[Paste your homepage text or two or three recent posts here. Leave out any members’ personal details.]'+tail();},
+  f:['Now write it for a young parent who has 2 hours a month to spare.','Give me three headline options for our homepage, each under 12 words.','What photo would best back up this new wording?']},
+ {id:'rehearse',em:'🎭',t:'Rehearse the invite',sub:'Role-play with the AI',p:[0],why:'Practise inviting someone in a safe, low-stakes way. Great for nervous askers, and surprisingly fun.',
+  b:function(){return intro()+'\n\nI’d like to practise inviting someone I know to one of our club’s activities, without it sounding like a sales pitch.\n\nPlease role-play a realistic person: a busy 35-year-old who lives locally, is friendly but a bit sceptical, and has never really thought about Rotary. I’ll start the conversation. Respond the way a real person would, including polite hesitation or questions about time and cost.\n\nAfter about five exchanges, step out of the role-play and give me friendly feedback: what worked, what sounded like jargon or pressure, and one better way to phrase my invitation.\n\nThe activity I’m inviting them to is: '+(cx('project')||'[describe a hands-on activity coming up]')+'.\n\nUse plain Australian English. Ask me if you need any details before we start.';},
+  f:['Let’s try again, but this time play someone who says "I’m just too busy".','Now play a recently retired neighbour.','Give me three one-line openers I could use at a barbecue.']},
+ {id:'retain',em:'🫶',t:'A welcoming first 90 days',sub:'Keep the people who join',p:[1],why:'Builds a simple, club-sized plan for welcoming and keeping new members through their first year.',
+  b:function(){return intro()+'\n\nWe want new members to feel they belong before we ask much of them. Research suggests many members who leave do so in their first two years, often by quietly drifting away.\n\n1. Suggest a simple, realistic plan for a new member’s first 90 days, and then up to their first anniversary, for a volunteer-run club of our size. Include who in the club might own each step.\n2. Suggest good questions to ask at a 30-day and 90-day check-in, so we can tell whether membership is giving them what they hoped for.\n3. What early warning signs suggest someone is drifting away, and what are gentle ways to respond?\n4. How could we match a new member’s first role to the reason they joined?'+tail();},
+  f:['Turn this into a one-page checklist for a new member’s buddy.','Write a warm welcome message we could send in their first week.','Suggest a simple way to mark someone’s first anniversary.']},
+ {id:'diverse',em:'🌈',t:'Who aren’t we hearing from?',sub:'Barriers and flexible options',p:[2],why:'Helps you think through who’s missing from your club and what might be making it hard for them to take part.',
+  b:function(){return intro()+'\n\nWe’d like our club to better reflect the community we serve, in age, gender and cultural background.\n\n1. Based on what you know of communities like ours, which groups are likely to be under-represented in a club like ours?\n2. For each, what practical barriers might make taking part difficult (time, cost, meeting times, culture, language, childcare, how we describe ourselves)?\n3. Suggest flexible ways of taking part or membership models that might help, such as satellite clubs, family, corporate or project-based involvement, or contributing time rather than attending meetings. Explain the trade-offs of each.\n4. Suggest one small experiment we could try this term.'+tail();},
+  f:['Which local cultural or community associations could we approach, and how would we start that conversation respectfully?','How would we explain a new flexible option to our long-serving members?','What questions should we ask people from these groups directly, rather than guessing?']},
+ {id:'meeting',em:'🕰️',t:'Rethink one meeting',sub:'Small experiments in format',p:[3],why:'Gets you fresh ideas to make meetings more engaging, flexible and welcoming, without throwing everything out.',
+  b:function(){return intro()+'\n\nHere’s what a typical meeting looks like for us: [describe the running order, timing, venue, cost and anything that’s a tradition].\n\n1. Imagine attending this as a first-time guest aged around 40. When would they likely feel engaged, confused or left out?\n2. Suggest 5 small experiments we could try for one meeting each, such as different formats, times, venues or ways to involve people, and what each might teach us.\n3. Which of our routines might be worth keeping because they matter to members, and which might be habits worth questioning?\n4. How could we ask members for honest feedback without anyone feeling their tradition is under attack?'+tail();},
+  f:['Design a "hands-on" meeting where we do a mini project instead of a speaker.','Suggest how we could run one meeting a month that works for people with young kids.','Write an anonymous 3-question poll about our meetings.']},
+ {id:'partners',em:'🤝',t:'Partners, alumni and the Family of Rotary',sub:'Find people who’ve already said yes',p:[4],why:'Helps you find schools, businesses, alumni and Rotaract or Interact connections that could bring people and energy.',
+  b:function(){return intro()+'\n\nWe’d like to build stronger links with local organisations and with people who have already been involved in Rotary programs (Rotaract, Interact, RYLA, Youth Exchange, former members).\n\n1. Suggest types of local schools, businesses, community groups and councils that commonly partner with service clubs, and the kinds of joint projects that work well.\n2. Give us an approach for a first conversation with each type, focused on what they need rather than on Rotary.\n3. Suggest ways to reconnect with former members and alumni of Rotary programs, including what to say and what to offer them that’s different from last time.\n4. How could a corporate volunteer day or school partnership lead to individuals getting more involved over time?'+tail();},
+  f:['Draft a short email to a local business suggesting a team volunteer day.','Write a friendly message to a former member we’d love to reconnect with.','Help us plan a joint project with a local Rotaract or Interact club.']},
+ {id:'survey',em:'📋',t:'Design a short member survey',sub:'Ask, then listen',p:[1,3],why:'Creates a short, friendly survey to understand what your members value and what’s getting in the way.',
+  b:function(){return intro()+'\n\nWe’d like to run a short, anonymous survey of our members to understand what they value, what energises them and what causes friction. Rotary’s own research suggests that in our region, cost and personal circumstances are common reasons members consider leaving, while local service and friendship are the main reasons they stay.\n\n1. Draft a survey of no more than 10 questions that takes about 5 minutes to complete. Mix rating questions with two or three open questions.\n2. Include questions about value for money, time, flexibility, sense of belonging and what keeps people involved.\n3. Suggest how we could share the results with members and turn them into one or two improvements, without it becoming a complaints session.'+tail();},
+  f:['Make a version for people who left the club in the last three years.','Suggest the best free tool for running this survey.','Write a short message inviting members to fill it in.']},
+ {id:'plan',em:'🗓️',t:'Turn our ideas into a 90-day plan',sub:'Uses your next-steps list',p:[0,1,2,3,4],why:'Takes the ideas you’ve collected on this page and shapes them into a realistic plan with owners and dates.',
+  b:function(){var list=PLAN.length?PLAN.map(function(x,i){return (i+1)+'. '+x}).join('\n'):'[Add ideas to the "next small steps" list on this page, or type 2–4 ideas here]';
+  return intro()+'\n\nHere are some ideas we’ve collected for growing and strengthening our club:\n'+list+'\n\nPlease help us turn these into a realistic 90-day plan for volunteers with limited time.\n\n1. Suggest which 2–3 ideas to start with, and why.\n2. For each, give a simple week-by-week outline, what a good first step looks like, and the kind of person who might own it.\n3. Suggest how we’ll know whether each one is working, using simple measures like invitations made, guests hosted and new or returning members.\n4. Flag anything that might need the Board’s approval or a small budget.'+tail();},
+  f:['Turn this into a one-page summary for our Board meeting.','What could we celebrate at the end of the 90 days?','What’s the most likely reason this plan stalls, and how do we avoid it?']}
+];
+var AICUR='find';
+$('#d9pw-topics').innerHTML=AIT.map(function(t){return '<button class="topic" data-ait="'+t.id+'"><span class="em">'+t.em+'</span><span>'+t.t+'<small>'+t.sub+'</small></span></button>'}).join('');
+function aiGet(id){return AIT.filter(function(t){return t.id===id})[0];}
+function renderAI(){var t=aiGet(AICUR);
+ $$('[data-ait]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-ait')===AICUR)});
+ $('#d9pw-ptitle').textContent=t.em+' '+t.t; $('#d9pw-pwhy').textContent=t.why;
+ $('#d9pw-ptext').textContent=t.b();
+ $('#d9pw-pfollow').innerHTML=t.f.map(function(x){return '<li>'+esc(x)+'</li>'}).join('');
+ $('#d9pw-padd').textContent=MODE==='me'?'+ Add to my next steps':'+ Add to our next steps';
+}
+$$('[data-ait]').forEach(function(b){b.onclick=function(){AICUR=b.getAttribute('data-ait');renderAI();}});
+$$('#d9pw-ctx [data-cx]').forEach(function(el){el.addEventListener('input',renderAI);});
+$('#d9pw-pcopy').onclick=function(){copyText($('#d9pw-ptext').textContent,'#d9pw-patoast')};
+$('#d9pw-padd').onclick=function(){addPlan('Ask AI: '+aiGet(AICUR).t);$('#d9pw-patoast').textContent='Added ✓';setTimeout(function(){$('#d9pw-patoast').textContent=''},1800)};
+function openAI(id){AICUR=id;renderAI();document.getElementById('d9pw-ai').scrollIntoView({behavior:'smooth',block:'start'});}
+R.addEventListener('click',function(e){var b=e.target.closest('[data-openai]');if(b)openAI(b.getAttribute('data-openai'));});
+renderAI();
 
 /* init */
-var pw=/[?&]pathway=([1-5])/.exec(location.search);
-openPillar(pw?+pw[1]-1:0,'focus',true);
+openPillar(0,'focus',true);
 renderPlan();
-setMode(/[?&]mode=me/.test(location.search)?'me':'club');
-if(pw) setTimeout(function(){document.getElementById('d9pw-house').scrollIntoView();},50);
-/* carry the access code from a QR or emailed link back into the toolkit links */
-var cm=/[?&]code=([^&#]+)/.exec(location.search); if(cm) $$('a[data-keep]').forEach(function(a){a.href=a.getAttribute('href')+'?code='+cm[1];});
+setMode('club');
 })();
 </script>
 </body>
