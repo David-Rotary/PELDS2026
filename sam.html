@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Meet Sam · Membership · District 9815</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, conversational, a story told to fellow Rotarians — not a lecture.
+   IDEA: a journey map. Sam travels the toolkit's own One Ask loop; resources are "tools for this moment".
+   PICTURE: the five-stop loop with Sam's marker, drawn large on every moment slide and as the progress bar.
+   COLOUR & TYPE: Rotary royal blue + gold, one pathway colour per moment; Fraunces titles, Hanken Grotesk body.
+   LAYOUT: fixed 16:9 stage scaled for Zoom screen-share; under 760px it becomes a scrolling page for the website. */
+:root{color-scheme:light;
+  --royal:#17458F;--deep:#0B2A5C;--azure:#0067C8;--sky:#00A2E0;--gold:#F7A81B;--goldsoft:#FEF1D6;
+  --ink:#16243D;--muted:#56637A;--line:#DCE3EE;--wash:#F3F6FB;--paper:#fff;
+  --m1:#0067C8;--m2:#D41367;--m3:#901F93;--m4:#E86A00;--m5:#00A39E;
+  --serif:'Fraunces',Georgia,serif;--sans:'Hanken Grotesk',Arial,sans-serif}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%}
+body{background:var(--deep);color:var(--ink);font:17px/1.5 var(--sans);overflow:hidden}
+a{color:var(--azure)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 56px 0;display:grid;place-items:center;overflow:hidden}
+#stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center center;transform:translate(-50%,-50%)}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:6px;overflow:hidden;display:none;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.slide.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.pad{position:absolute;inset:0;padding:64px 80px 56px}
+h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.05;margin:0;text-wrap:balance;color:var(--deep)}
+h1{font-size:92px}
+h2{font-size:56px}
+h3{font-size:26px;font-weight:600}
+.kicker{font-weight:700;color:var(--azure);font-size:20px;margin-bottom:14px}
+.lead{font-size:26px;line-height:1.4;color:var(--muted);max-width:30em;margin:18px 0 0}
+p{margin:0 0 12px}
+.big{font-family:var(--serif);font-weight:800;font-size:150px;line-height:1;color:var(--royal)}
+.foot{position:absolute;left:80px;right:80px;bottom:26px;display:flex;justify-content:space-between;color:var(--muted);font-size:15px}
+
+/* split slides for the five moments */
+.split{display:grid;grid-template-columns:560px 1fr;height:100%}
+.side{color:#fff;padding:56px 56px 40px;display:flex;flex-direction:column;position:relative}
+.side .mnum{font-size:20px;font-weight:700;opacity:.85}
+.side .mword{font-family:var(--serif);font-weight:800;font-size:96px;line-height:1;margin:6px 0 10px}
+.side .mline{font-size:24px;line-height:1.35;opacity:.95}
+.side .loopwrap{margin-top:auto;height:400px}
+.side .loopwrap svg{width:100%;height:100%}
+.main{padding:50px 64px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden}
+
+/* resource chips */
+.res-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:auto}
+.main>.res-label{margin-top:auto}
+body.flow .main>.res-label{margin-top:8px}
+.res{display:flex;flex-direction:column;gap:2px;padding:12px 18px 12px 16px;border:2px solid var(--line);border-radius:12px;background:#fff;text-decoration:none;color:var(--ink);min-width:220px;max-width:340px;transition:border-color .15s,transform .15s}
+.res:hover{border-color:var(--azure);transform:translateY(-2px)}
+.res b{font-size:18px;color:var(--deep)}
+.res span{font-size:14px;color:var(--muted)}
+#rolePanels .res{max-width:none}
+.res-label{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:-4px}
+
+/* chat capture */
+.chat{background:var(--goldsoft);border:2px solid var(--gold);border-radius:16px;padding:18px 22px}
+.chat .q{font-size:24px;font-weight:700;color:var(--deep);display:flex;gap:12px;align-items:flex-start}
+.chat .q i{flex:none;font-style:normal;background:var(--gold);color:var(--deep);border-radius:8px;padding:2px 10px;font-size:15px;white-space:nowrap;margin-top:4px}
+.cap{display:flex;gap:10px;margin-top:12px}
+.cap input{flex:1;font:inherit;font-size:18px;padding:10px 14px;border:2px solid #e8cf98;border-radius:10px;background:#fff}
+.cap button,.btn{font-weight:700;font-size:17px;padding:10px 18px;border-radius:10px;border:0;background:var(--royal);color:#fff;min-height:44px}
+.btn.ghost{background:#fff;color:var(--royal);border:2px solid var(--royal)}
+.notes-mini{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;max-height:120px;overflow:auto}
+.sticky{background:#fff;border-radius:8px;padding:6px 12px;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08);border-left:6px solid var(--gold)}
+
+/* misc components */
+.cards{display:grid;gap:16px}
+.card{background:var(--wash);border-radius:14px;padding:20px 22px}
+.card h3{margin-bottom:6px}
+.stat{font-family:var(--serif);font-weight:800;font-size:64px;line-height:1;color:var(--royal)}
+.pill{display:inline-block;background:var(--wash);border-radius:999px;padding:4px 14px;font-size:15px;font-weight:600;color:var(--royal)}
+.choices{display:flex;gap:16px;margin-top:16px}
+.choice{flex:1;font-family:var(--serif);font-weight:800;font-size:54px;padding:22px;border-radius:16px;border:3px solid var(--line);background:#fff;color:var(--deep)}
+.choice.right{background:var(--royal);border-color:var(--royal);color:#fff}
+.choice.wrong{opacity:.35}
+.reveal{display:none}
+.reveal.show{display:block;animation:fade .4s ease}
+.flip{perspective:900px;height:96px}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.done .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px 18px;backface-visibility:hidden;font-size:22px;font-weight:700}
+.flip .f{background:var(--deep);color:#fff}
+.flip .b{background:var(--goldsoft);color:var(--deep);transform:rotateY(180deg);font-weight:600}
+.flip button{all:unset;position:absolute;inset:0;cursor:pointer;border-radius:14px}
+.check{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;border-radius:12px;background:var(--wash);cursor:pointer;font-size:19px;border:2px solid transparent}
+.check input{width:26px;height:26px;margin-top:2px;accent-color:var(--royal);flex:none}
+.check.on{border-color:var(--royal);background:#e8f0fc}
+.tabs{display:flex;gap:10px;flex-wrap:wrap}
+.tab{padding:12px 20px;border-radius:12px;border:2px solid var(--line);background:#fff;font-weight:700;font-size:18px;color:var(--deep);min-height:44px}
+.tab[aria-selected=true]{background:var(--royal);border-color:var(--royal);color:#fff}
+.panel{display:none}.panel.on{display:grid;animation:fade .3s ease}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-top:6px}
+.timeline:before{content:"";position:absolute;left:4%;right:4%;top:22px;height:4px;background:var(--line)}
+.tl{position:relative;padding:0 10px;text-align:center}
+.tl .dot{width:48px;height:48px;border-radius:50%;background:var(--m4);color:#fff;font-weight:800;display:grid;place-items:center;margin:0 auto 10px;position:relative;font-size:14px}
+.tl b{display:block;font-size:19px;color:var(--deep)}
+.tl span{font-size:16px;color:var(--muted)}
+.lights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.light{border-radius:14px;padding:16px 18px;color:#fff}
+.light b{font-size:20px;display:block;margin-bottom:4px}
+.light span{font-size:16px;line-height:1.35;display:block}
+.house-btn{border:0;border-radius:14px;padding:16px 12px;color:#fff;font-weight:700;font-size:18px;line-height:1.2;text-align:left;min-height:110px;display:flex;flex-direction:column;justify-content:space-between}
+.house-btn .n{font-family:var(--serif);font-size:34px}
+.house-btn[aria-pressed=true]{outline:4px solid var(--gold);outline-offset:3px}
+
+/* ideas wall */
+.wall{position:absolute;left:80px;right:80px;top:200px;bottom:110px;background:#f8f4ea;border-radius:18px;padding:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));grid-auto-rows:min-content;gap:16px;overflow:auto;border:2px dashed #e4d6b4}
+.note{position:relative;padding:16px 16px 34px;border-radius:6px;font-size:19px;line-height:1.3;color:var(--deep);box-shadow:0 6px 14px rgba(0,0,0,.12);transform:rotate(var(--r,0deg));background:#fff6c9}
+.note small{position:absolute;left:16px;bottom:8px;font-size:13px;font-weight:700;opacity:.75}
+.note .vote{position:absolute;right:8px;bottom:4px;border:0;background:rgba(255,255,255,.7);border-radius:999px;padding:2px 10px;font-weight:700;font-size:14px;min-height:28px}
+.note .x{position:absolute;right:4px;top:2px;border:0;background:none;font-size:18px;opacity:.35;padding:2px 6px}
+.note .x:hover{opacity:1}
+.wall-empty{grid-column:1/-1;align-self:center;text-align:center;color:var(--muted);font-size:22px;padding:60px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.legend span{font-size:14px;font-weight:700;padding:3px 10px;border-radius:999px}
+.dialog{position:absolute;inset:0;background:rgba(11,42,92,.55);display:none;place-items:center;z-index:5}
+.dialog.show{display:grid}
+.dialog div{background:#fff;border-radius:16px;padding:28px 32px;max-width:520px;font-size:20px}
+
+/* library */
+.lib{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 18px;margin-top:22px}
+.lib h3{font-size:20px;margin:0 0 8px;color:var(--royal)}
+.lib a{display:block;font-size:16px;padding:5px 0;text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line)}
+.lib a:hover{color:var(--azure)}
+
+/* bottom bar */
+#bar{position:fixed;left:0;right:0;bottom:0;height:56px;background:var(--deep);color:#cfe0ff;display:flex;align-items:center;gap:10px;padding:0 14px;font-size:15px}
+#bar button{background:rgba(255,255,255,.08);color:#fff;border:0;border-radius:8px;padding:8px 12px;min-height:40px}
+#bar button:hover{background:rgba(255,255,255,.18)}
+#prog{flex:1;display:flex;gap:4px;align-items:center;height:100%}
+#prog button{flex:1;height:10px;min-height:0;padding:0;border-radius:5px;background:rgba(255,255,255,.18)}
+#prog button.done{background:rgba(247,168,27,.55)}
+#prog button.cur{background:var(--gold)}
+#clock{font-variant-numeric:tabular-nums;min-width:118px;text-align:right}
+#notes{position:fixed;left:12px;right:12px;bottom:66px;max-height:38vh;overflow:auto;background:#fff;border-radius:14px;padding:18px 22px;box-shadow:0 20px 50px rgba(0,0,0,.4);display:none;font-size:17px;z-index:10}
+#notes.show{display:block}
+#notes h4{margin:0 0 6px;font-family:var(--serif);font-size:20px;color:var(--royal)}
+aside.n{display:none}
+#help{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;place-items:center;z-index:20}
+#help.show{display:grid}
+#help div{background:#fff;border-radius:16px;padding:26px 32px;max-width:560px;font-size:17px}
+#help kbd{background:var(--wash);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:inherit;font-weight:700}
+
+/* script view (#script) for a second screen */
+#script{display:none;background:#fff;max-width:860px;margin:0 auto;padding:40px 24px 80px}
+body.scriptmode{overflow:auto;background:#fff}
+body.scriptmode #script{display:block}
+body.scriptmode #viewport,body.scriptmode #bar{display:none}
+#script section{border-top:1px solid var(--line);padding:16px 0}
+#script h2{font-size:24px}
+
+/* flow mode: website / phone reading */
+body.flow{overflow-y:auto;overflow-x:clip;background:var(--wash)}
+body.flow [style*="grid-template-columns"]{grid-template-columns:minmax(0,1fr)!important}
+body.flow #jargon{grid-template-columns:1fr 1fr!important}
+body.flow .check{margin-left:0!important}
+body.flow #viewport{position:static;display:block}
+body.flow #stage{position:static;width:auto;height:auto;transform:none!important}
+body.flow .slide{display:block;position:relative;inset:auto;margin:0 0 14px;border-radius:0;box-shadow:none;animation:none}
+body.flow .pad,body.flow .wall{position:relative;inset:auto;left:auto;right:auto;top:auto;bottom:auto}
+body.flow .pad{padding:36px 20px}
+body.flow .wall{margin-top:16px;min-height:200px}
+body.flow .split{display:block}
+body.flow .side{padding:32px 20px}
+body.flow .side .loopwrap{height:220px;margin-top:16px}
+body.flow .main{padding:24px 20px}
+body.flow h1{font-size:44px}body.flow h2{font-size:32px}body.flow h3{font-size:21px}
+body.flow .big{font-size:80px}body.flow .side .mword{font-size:54px}
+body.flow .lead{font-size:19px}
+body.flow .thanks{position:static!important;flex-wrap:wrap;gap:8px;padding:20px!important}
+body.flow .foot{position:static;margin-top:20px;flex-wrap:wrap;gap:6px}
+body.flow .g2,body.flow .g3,body.flow .g5,body.flow .lib,body.flow .lights,body.flow .timeline{grid-template-columns:minmax(0,1fr)!important}
+body.flow .timeline:before{display:none}
+body.flow .choices{flex-direction:column}
+body.flow .choice{font-size:34px}
+body.flow #bar,body.flow .presenter-only{display:none}
+body.flow .res{max-width:none;width:100%}
+
+/* ---------- live (phones) ---------- */
+.livejoin{display:none;flex:none;width:150px;text-align:center;font-size:13px;line-height:1.3;color:var(--muted)}
+.livejoin .qr{background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px;margin-bottom:4px}
+.livejoin .qr svg{width:100%;height:auto;display:block}
+body.live .livejoin{display:block}
+.chat{display:flex;gap:18px;align-items:flex-start}
+.chat .cbody{flex:1}
+.chat .livejoin{width:118px}
+body.live.embed .cap,body.live .chat .cap{display:none}
+body.embed .presenter-only{display:none!important}
+.choice{position:relative;overflow:hidden}
+.choice .cnt{display:block;font-family:var(--sans);font-size:18px;font-weight:700;margin-top:6px;min-height:22px;opacity:.8}
+.lpoll{display:flex;gap:18px;align-items:flex-start}
+.lpoll .rows{flex:1;display:grid;gap:9px}
+.prow{position:relative;overflow:hidden;display:flex;gap:14px;align-items:center;text-align:left;width:100%;padding:12px 16px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);font-size:19px;min-height:48px}
+.prow .pfill{position:absolute;inset:0 auto 0 0;width:0;background:rgba(247,168,27,.32);transition:width .6s}
+.prow b{position:relative;color:var(--royal);font-family:var(--serif);font-size:22px}
+.prow span{position:relative}
+.prow .cnt{margin-left:auto;font-weight:700;white-space:nowrap}
+.prow.top{border-color:var(--gold)}
+.lpoll .ptot{font-size:15px;color:var(--muted);margin-top:4px}
+.note.live{border-top:4px solid rgba(0,0,0,.12)}
+#livestat{font-size:13px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.1);white-space:nowrap}
+#livestat.on{background:#2f8a57;color:#fff}
+body.embed #viewport{inset:0}
+body.embed #bar,body.embed #notes{display:none!important}
+body.live #wall .livejoin{position:absolute;right:80px;top:200px;width:160px}
+body.live #wall .wall{right:270px}
+#google .main{gap:12px}#google .check{padding:6px 14px!important;font-size:17px!important}#google .prow{padding:6px 14px;min-height:38px;font-size:17px}#google .lpoll .rows{grid-template-columns:1fr 1fr}#google #gscore{font-size:19px}
+body.embed #wall .wall{bottom:40px}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- 1 TITLE -->
+<section class="slide" id="start" data-t="Meet Sam" data-mins="0.5">
+  <div class="split" style="grid-template-columns:1fr 640px">
+    <div class="pad" style="position:relative;padding:80px 0 0 90px">
+      <div class="kicker">District 9815 · Membership Growth Strategy 2026–2029</div>
+      <h1>Meet Sam.</h1>
+      <p class="lead" style="font-size:32px;color:var(--ink)">A membership story in five moments, and the tools your club already has for every one of them.</p>
+      <p class="lead">For Presidents, Presidents-Elect, Membership Chairs and every Rotarian who has ever thought, “we should get some new people.”</p>
+      <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap">
+        <span class="pill">Notice</span><span class="pill">Invite</span><span class="pill">Welcome</span><span class="pill">Belong</span><span class="pill">Ask</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:70px 60px 0 0" class="g3">
+        <div class="card" style="background:var(--goldsoft)"><b style="font-size:20px;color:var(--deep)">Grab your phone</b><p style="font-size:17px;margin:6px 0 0">Scan the code or click the link in the chat. No app, no name.</p></div>
+        <div class="card"><b style="font-size:20px;color:var(--deep)">Your answers build the wall</b><p style="font-size:17px;margin:6px 0 0">Answers appear on screen as you send them.</p></div>
+        <div class="card"><b style="font-size:20px;color:var(--deep)">No need to take notes</b><p style="font-size:17px;margin:6px 0 0">Every link is on the last slide, and you'll have this page.</p></div>
+      </div>
+    </div>
+    <div class="side" style="background:var(--royal);justify-content:center">
+      <div class="loopwrap" data-loop="0" style="height:520px;margin:0"></div>
+      <p style="text-align:center;font-size:20px;opacity:.9;margin-top:10px">Grow Rotary · Strengthen clubs · Create lasting impact</p>
+    </div>
+  </div>
+  <aside class="n">Welcome everyone. Tell them up front: this isn't a tour of documents. It's a story about one person, and everything in our membership toolkit turns up where it's needed. They'll get every link at the end, so no need to scribble. Ask people to keep the Zoom chat open, because we'll use it a lot. If you have a co-host, ask them to paste the best chat answers onto the slides (the Add boxes) while you talk.</aside>
+</section>
+
+<!-- 2 WARM UP -->
+<section class="slide" id="warmup" data-t="Who asked you?" data-mins="1">
+  <div class="pad">
+    <div class="kicker">Before we start</div>
+    <h2>Think back to the day you first came along to Rotary.</h2>
+    <p class="lead">Who asked you? And what did they ask you to?</p>
+    <div class="cards g2" style="grid-template-columns:1fr 1fr;margin-top:34px">
+      <div class="card"><div class="stat">About half</div><p style="font-size:21px;margin-top:10px">of all volunteers didn't go looking for it. Someone they knew asked them personally.</p></div>
+      <div class="card"><div class="stat">Almost nobody</div><p style="font-size:21px;margin-top:10px">signs up cold from a poster, a website or a membership drive. That's true of most people in this room, too.</p></div>
+    </div>
+    <div class="chat" data-wall="sam-asked" style="margin-top:26px">
+      <div class="q"><i>Phone or chat</i>Who invited you to Rotary, and to what? A meeting, a project, a BBQ?</div>
+    </div>
+  </div>
+  <aside class="n">LIVE: this opens the first wall on phones. Put the join link in the Zoom chat now too, for people on laptops. Give them 60 seconds. Read out three or four answers. Paste a few into the box. You'll almost always hear "a friend", "my boss", "my neighbour", and very rarely "I saw a poster". That's the whole premise of the toolkit: growth happens one relationship at a time. (Source: You Are the Growth Plan; Stop Recruiting. Start Connecting.)</aside>
+</section>
+
+<!-- 3 HONEST NUMBERS -->
+<section class="slide" id="numbers" data-t="The honest picture" data-mins="1.5">
+  <div class="pad">
+    <div class="kicker">The honest picture</div>
+    <h2>Guess: how much has Australian Rotary membership fallen over twenty years?</h2>
+    <div class="choices" id="guess" data-poll="sam-guess" data-q="How much has Australian Rotary membership fallen over twenty years?" data-opts='["12%","24%","About 36%"]'>
+      <button class="choice" data-v="0" data-opt="0">12%<span class="cnt"></span></button>
+      <button class="choice" data-v="0" data-opt="1">24%<span class="cnt"></span></button>
+      <button class="choice" data-v="1" data-opt="2">about 36%<span class="cnt"></span></button>
+    </div>
+    <div class="reveal" id="guessReveal">
+      <div class="cards g3" style="grid-template-columns:repeat(3,1fr);margin-top:22px">
+        <div class="card"><h3>It's not just us</h3><p style="font-size:18px;margin-top:8px">Formal volunteering in Australia fell from about 36% of adults in 2019 to roughly 27–28% by 2024. It's a whole-of-sector problem, not a Rotary one.</p></div>
+        <div class="card"><h3>Why people here think of leaving</h3><p style="font-size:18px;margin-top:8px">Among ANZP members who had considered leaving: personal circumstances (48%) and cost (48%), both above the global average.</p></div>
+        <div class="card"><h3>Why people here stay</h3><p style="font-size:18px;margin-top:8px"><b style="font-size:26px;color:var(--royal)">91%</b> stay to serve their local community, well above the global 62%. That's our biggest asset.</p></div>
+      </div>
+    </div>
+    <div class="foot" style="justify-content:flex-start;gap:12px;align-items:flex-end">
+      <span class="res-label" style="margin:0 6px 12px 0">Tools for this moment</span>
+      <span data-res="whyarent"></span><span data-res="stoprecruit"></span>
+      <span style="flex:1"></span><div class="livejoin" data-join></div>
+    </div>
+  </div>
+  <aside class="n">LIVE: the vote opens on phones automatically; watch the counts climb, then click the right answer to reveal. OFFLINE: ask for 1, 2 or 3 in the chat, then click the answer. RI leadership has put Australian decline at roughly 36% over twenty years. Then the reframe: volunteering across the whole country has dropped. People haven't stopped being generous; the way they want to give time has changed. The survey data (RI Rotarian Experience Survey 2024–25, ANZP region) says our members stay for local service and friendship, and the pressure points are cost and life circumstances, not "Rotary isn't relevant". Point to "Why Aren't We Growing?" for Boards who want the full conversation.</aside>
+</section>
+
+<!-- 4 STRATEGY HOUSE -->
+<section class="slide" id="plan" data-t="The plan in one picture" data-mins="1">
+  <div class="pad">
+    <div class="kicker">The District plan in one picture · The Strategy House</div>
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:start">
+      <div>
+        <h2>Grow District membership by 15% over three years.</h2>
+        <p class="lead" style="font-size:22px">Alongside better retention, more diversity and livelier clubs. The District offers resources, people and help. <b style="color:var(--ink)">Each club chooses its own way forward.</b></p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px">
+          <div class="card" style="padding:16px"><div class="stat" style="font-size:44px">5%</div><span style="font-size:16px">net growth a year</span></div>
+          <div class="card" style="padding:16px"><div class="stat" style="font-size:44px">90%+</div><span style="font-size:16px">annual retention</span></div>
+          <div class="card" style="padding:16px"><div class="stat" style="font-size:44px">−25%</div><span style="font-size:16px">first-year resignations</span></div>
+        </div>
+        <p style="margin-top:22px;font-size:17px;color:var(--muted)"><b style="color:var(--ink)">Roadmap:</b> Establish 2026 · Activate &amp; learn 2027 · Embed &amp; sustain 2028–29. Step one for every club: a simple membership plan of its own.</p>
+      </div>
+      <div>
+        <div style="background:var(--deep);color:#fff;border-radius:16px 16px 0 0;padding:14px 18px;font-size:17px;text-align:center"><b>Our purpose:</b> magnetic, diverse, sustainable Rotary and Rotaract clubs</div>
+        <div class="g5" id="house" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px;background:var(--wash)"></div>
+        <div id="houseInfo" class="card" style="border-radius:0 0 16px 16px;min-height:150px;font-size:18px"></div>
+      </div>
+    </div>
+    <div class="foot" style="justify-content:flex-start;gap:12px;align-items:flex-end">
+      <span class="res-label" style="margin:0 6px 12px 0">Explore it yourself</span>
+      <span data-res="explorer"></span><span data-res="hub"></span>
+    </div>
+  </div>
+  <aside class="n">Keep this brisk; it's context, not the point. Click two or three pillars to show the success measures. Stress the line "clubs remain in control". The District isn't handing down a quota. Then point at the Pathways Explorer: it's the interactive version of this house, made for club groups to explore ideas together. Now say: "Strategies don't grow clubs. People do. So let me introduce you to someone."</aside>
+</section>
+
+<!-- 5 MEET SAM -->
+<section class="slide" id="sam" data-t="Meet Sam" data-mins="1">
+  <div class="split" style="grid-template-columns:1fr 760px">
+    <div class="pad" style="position:relative;padding:80px 40px 0 90px">
+      <div class="kicker">Our story</div>
+      <h2 style="font-size:72px">This is Sam.</h2>
+      <p class="lead" style="color:var(--ink);font-size:26px">Early forties. Moved into one of the newer estates a few years ago. Kids in the local footy club. Cares about the creek at the end of the street.</p>
+      <p class="lead">Sam has never been to a Rotary meeting, and won't read a brochure. Sam is exactly the person your club needs, and Sam will never walk in on their own.</p>
+      <p style="margin-top:30px;font-size:15px;color:var(--muted)">Sam is made up, but you know a Sam.</p>
+    </div>
+    <div class="side" style="background:var(--deep)">
+      <div class="mnum">The One Ask loop</div>
+      <p class="mline" style="margin-top:6px">Five moments turn a stranger into a Rotarian. Every one of them has a tool, and an owner, in your club.</p>
+      <div class="loopwrap" data-loop="0" style="height:520px"></div>
+    </div>
+  </div>
+  <aside class="n">Paint the picture. Sam is generous, busy, local and unasked. The loop on the right comes straight from our One Ask one-pager: Notice, Invite, Welcome, Belong, and only then Ask. We'll walk Sam round it, and at each stop I'll show you the tool we've built for that moment and who in the club owns it.</aside>
+</section>
+
+<!-- 6 NOTICE -->
+<section class="slide" id="notice" data-t="1 · Notice" data-mins="1" data-moment="1">
+  <div class="split">
+    <div class="side" style="background:var(--m1)">
+      <div class="mnum">Moment 1 of 5</div><div class="mword">Notice</div>
+      <div class="mline">Someone who'd genuinely love this.</div>
+      <div class="loopwrap" data-loop="1"></div>
+    </div>
+    <div class="main">
+      <h2 style="font-size:42px">Sam is already in your orbit. Do you know where?</h2>
+      <div class="cards" style="grid-template-columns:1fr 1fr">
+        <div class="card"><h3>Know your community</h3><p style="font-size:18px;margin-top:6px">A Community Insight Report maps your area: who lives there, what's changing, who's already doing good work. Berwick's showed an older established north (median age 43) and a younger growing south (35). Two communities, two different invitations.</p></div>
+        <div class="card"><h3>Know the ten</h3><p style="font-size:18px;margin-top:6px">Schools, businesses and groups your members already have a link to. A partnership brings ten or twenty people at once, and the relationships formed there become personal invitations later.</p></div>
+      </div>
+      <div class="chat" data-wall="sam-local">
+        <div class="q"><i>Phone or chat</i>Name one local group or business your club doesn't have a relationship with yet, but should.</div>
+      </div>
+      <div class="res-label">Tools for this moment · owner: the whole club, led by the Board</div>
+      <div class="res-row" style="margin-top:0"><span data-res="ten"></span><span data-res="insight"></span></div>
+    </div>
+  </div>
+  <aside class="n">Sam's footy club, Sam's kids' school, the creek Landcare group: these are where Sam already is. "The Ten You Should Know" helps a club list the organisations members already have a personal link to. The Berwick Community Insight Report is our worked example of mapping a community; any club can do one. Ask for chat answers and paste a few.</aside>
+</section>
+
+<!-- 7 INVITE -->
+<section class="slide" id="invite" data-t="2 · Invite" data-mins="1.5" data-moment="2">
+  <div class="split">
+    <div class="side" style="background:var(--m2)">
+      <div class="mnum">Moment 2 of 5</div><div class="mword">Invite</div>
+      <div class="mline">One thing. No pitch.</div>
+      <div class="loopwrap" data-loop="2"></div>
+    </div>
+    <div class="main">
+      <h2 style="font-size:42px">Don't explain Rotary. Invite Sam to one real thing.</h2>
+      <p style="font-size:21px;color:var(--muted);margin:0">“You care about the creek. A few of us are planting along it Saturday morning. Want to come for an hour? No strings.”</p>
+      <div>
+        <div class="res-label" style="margin-bottom:10px">Words that sound like a locked door. Click to translate.</div>
+        <div id="jargon" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
+      </div>
+      <div class="chat" data-wall="sam-30sec">
+        <div class="q"><i>Phone or chat</i>Finish this: “Our club recently ___ for ___, and you could be part of the next one.”</div>
+      </div>
+      <div class="res-label">Tools for this moment · owner: every member</div>
+      <div class="res-row" style="margin-top:0"><span data-res="growthplan"></span><span data-res="minute"></span><span data-res="whatdo"></span></div>
+    </div>
+  </div>
+  <aside class="n">Click through the jargon cards; it gets a laugh, and it lands the point that insider words close doors. The formula from "What Does Your Club Actually Do?": lead with the difference you make, be concrete, tell one story, make them the hero. The One-Minute Invite is a single page for phones or noticeboards. "You Are the Growth Plan" is the member guide behind it. Get two or three chat answers and read the best one aloud.</aside>
+</section>
+
+<!-- 8 SAM GOOGLES YOU -->
+<section class="slide" id="google" data-t="2½ · Sam googles you" data-mins="1" data-moment="2">
+  <div class="split">
+    <div class="side" style="background:#5a1238">
+      <div class="mnum">Between moments 2 and 3</div><div class="mword" style="font-size:74px">Sam googles you</div>
+      <div class="mline">Within minutes, often before replying.</div>
+      <div class="loopwrap" data-loop="2"></div>
+    </div>
+    <div class="main">
+      <h2 style="font-size:42px">Does what Sam finds back up the invitation?</h2>
+      <p style="font-size:20px;color:var(--muted);margin:0">The Google test. Search your club's name the way a stranger would. Tick what's true today:</p>
+      <div id="gtest" style="display:grid;gap:10px"></div>
+      <div id="gscore" style="font-size:22px;font-weight:700;color:var(--deep)"></div>
+      <div class="lpoll" data-poll="sam-google" data-q="Run the Google test on your own club. How many of the 5 can you tick?" data-opts='["All 5","3 or 4","1 or 2","Not sure: I&#39;ll check tonight"]'></div>
+      <div class="res-label">Tool for this moment · owner: Public Image</div>
+      <div class="res-row" style="margin-top:0"><span data-res="prove"></span><span data-res="promote"></span></div>
+    </div>
+  </div>
+  <aside class="n">This is the moment no individual member controls. A member does the hard part, asking face to face, and then a homepage last updated two years ago quietly undoes it. "Prove the Invitation" gives the Public Image person one narrow job: keep the few places a prospect checks in step with what members are promising. Tick through the list live; invite people to do their own club's test after the session.</aside>
+</section>
+
+<!-- 9 WELCOME -->
+<section class="slide" id="welcome" data-t="3 · Welcome" data-mins="1" data-moment="3">
+  <div class="split">
+    <div class="side" style="background:var(--m3)">
+      <div class="mnum">Moment 3 of 5</div><div class="mword">Welcome</div>
+      <div class="mline">Meet three people.</div>
+      <div class="loopwrap" data-loop="3"></div>
+    </div>
+    <div class="main">
+      <h2 style="font-size:42px">Saturday. Sam turns up. What happens next decides everything.</h2>
+      <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+        <div class="card"><div class="stat" style="font-size:54px">3</div><h3>names</h3><p style="font-size:17px;margin-top:6px">Sam leaves knowing three people by name, not just the person who asked.</p></div>
+        <div class="card"><div class="stat" style="font-size:54px">1</div><h3>real job</h3><p style="font-size:17px;margin-top:6px">Something useful to do, not standing and watching.</p></div>
+        <div class="card"><div class="stat" style="font-size:54px">0</div><h3>sign-up forms</h3><p style="font-size:17px;margin-top:6px">Thanked before leaving. No pitch, no speech about Rotary.</p></div>
+      </div>
+      <div class="card" style="background:var(--goldsoft)"><h3>Not ready to join? Perfect.</h3><p style="font-size:18px;margin-top:6px">Sam goes on the <b>Friends of the Club</b> list: no dues, no meetings, just an open invitation to the next thing. Most people aren't ready the first time. Without this list, you lose almost all of them.</p></div>
+      <div class="res-label">Tools for this moment · owner: the inviting member + Membership Chair</div>
+      <div class="res-row" style="margin-top:0"><span data-res="expect"></span><span data-res="friends"></span></div>
+    </div>
+  </div>
+  <aside class="n">"What to Expect" is the only guide written for the prospect, not for us. It answers the questions people are too polite to ask: do I have to join? what does it cost? how much time? Clubs fill in their own answers. Friends of the Club takes one afternoon to set up and needs one named owner, not "the committee".</aside>
+</section>
+
+<!-- 10 BELONG -->
+<section class="slide" id="belong" data-t="4 · Belong" data-mins="1.5" data-moment="4">
+  <div class="split">
+    <div class="side" style="background:var(--m4)">
+      <div class="mnum">Moment 4 of 5</div><div class="mword">Belong</div>
+      <div class="mline">Check in, don't wait.</div>
+      <div class="loopwrap" data-loop="4"></div>
+    </div>
+    <div class="main">
+      <h2 style="font-size:44px">A third or more of the members clubs lose leave in their first two years.</h2>
+      <p style="font-size:21px;color:var(--muted);margin:0">They rarely storm out. They drift, because they never felt they belonged before the dues and rosters arrived. <b style="color:var(--ink)">Belonging before obligation.</b></p>
+      <div class="timeline">
+        <div class="tl"><div class="dot">Day 1</div><b>Welcomed</b><span>Mentor named, introduced properly</span></div>
+        <div class="tl"><div class="dot">Wk 2</div><b>Involved</b><span>A real role in a project</span></div>
+        <div class="tl"><div class="dot">30d</div><b>Checked in</b><span>“Is this what you hoped?”</span></div>
+        <div class="tl"><div class="dot">90d</div><b>Matched</b><span>Role fits why they joined</span></div>
+      </div>
+      <div class="lights">
+        <div class="light" style="background:#2f8a57"><b>Engaged</b><span>Attends, volunteers, brings guests</span></div>
+        <div class="light" style="background:#c98000"><b>At risk</b><span>Attendance slipping, gone quiet</span></div>
+        <div class="light" style="background:#c2423a"><b>Urgent</b><span>Missing for weeks. Pick up the phone today.</span></div>
+      </div>
+      <div class="chat" data-wall="sam-welcome" style="padding:14px 20px">
+        <div class="q"><i>Phone or chat</i>What's one thing your club does well in a new member's first month?</div>
+      </div>
+      <div class="res-label">Tools for this moment · owner: Membership Chair + mentor</div>
+      <div class="res-row" style="margin-top:0"><span data-res="stranger"></span><span data-res="chairhub"></span></div>
+    </div>
+  </div>
+  <aside class="n">"From Stranger to Family" is the new-member action plan, phase by phase, with the psychology behind it: people stay when they feel connected, capable and have a say. The 90-day mark is the highest-risk gate. The Membership Chair Hub has the onboarding checklist and the early-warning traffic lights you see here, ready to use. Ask: "Is anyone in your club sitting in amber right now?" Don't take answers, just let it land.</aside>
+</section>
+
+<!-- 11 ASK -->
+<section class="slide" id="ask" data-t="5 · Ask" data-mins="1" data-moment="5">
+  <div class="split">
+    <div class="side" style="background:var(--m5)">
+      <div class="mnum">Moment 5 of 5</div><div class="mword">Ask</div>
+      <div class="mline">Only once they've felt it.</div>
+      <div class="loopwrap" data-loop="5"></div>
+    </div>
+    <div class="main">
+      <h2 style="font-size:42px">By the time you ask Sam to join, it should be a formality.</h2>
+      <div style="display:grid;gap:10px">
+        <div class="check" style="cursor:default"><b style="width:120px;color:var(--m5)">Stranger</b>Invite to one thing</div>
+        <div class="check" style="cursor:default;padding:9px 16px;margin-left:40px"><b style="width:120px;color:var(--m5)">Participant</b>Invite again, introduce them around</div>
+        <div class="check" style="cursor:default;padding:9px 16px;margin-left:80px"><b style="width:120px;color:var(--m5)">Friend</b>Keep them close with the no-strings list</div>
+        <div class="check" style="cursor:default;padding:9px 16px;margin-left:120px;border-color:var(--m5)"><b style="width:120px;color:var(--m5)">Member</b>Then, and only then, ask</div>
+      </div>
+      <div class="card" style="background:#e3f6f5"><h3>And the warmest list you're not using</h3><p style="font-size:18px;margin-top:6px">Former members, Rotaractors, Interactors and youth program alumni already know what we do. They just haven't been asked, or the path wasn't obvious. That's <b>The Second Yes</b>.</p></div>
+      <div class="chat" data-wall="sam-reinvite" style="padding:14px 20px">
+        <div class="q"><i>Phone or chat</i>Who's one person who left your club, or aged out of Rotaract, you could ring this month?</div>
+      </div>
+      <div class="res-row" style="margin-top:0"><span data-res="secondyes"></span><span data-res="alumni"></span></div>
+    </div>
+  </div>
+  <aside class="n">Fit the ask to the rung. Then the loop begins again: Sam becomes the next person who notices someone. Briefly mention The Second Yes: lapsed members usually left over a mismatch (time, cost, role), so the win-back offer has to be something different, not "we miss you, come back."</aside>
+</section>
+
+<!-- WHERE DOES SAM GET LOST -->
+<section class="slide" id="lost" data-t="Where does Sam get lost?" data-mins="1">
+  <div class="split" style="grid-template-columns:1fr 560px">
+    <div class="pad" style="position:relative;padding:64px 40px 0 80px">
+      <div class="kicker">Your turn</div>
+      <h2>At your club, where does Sam usually get lost?</h2>
+      <p class="lead" style="font-size:22px;margin-bottom:22px">Pick the one moment your club finds hardest. There's no wrong answer, and every club has one.</p>
+      <div class="lpoll" data-poll="sam-lost" data-q="At your club, where does Sam usually get lost?" data-opts='["Notice: we rarely meet anyone new","Invite: members don&#39;t ask","Welcome: first visits feel awkward","Belong: new members drift away","Ask: we ask too soon, or never"]'></div>
+    </div>
+    <div class="side" style="background:var(--deep)">
+      <div class="mnum">The One Ask loop</div>
+      <p class="mline" style="margin-top:6px">The weakest moment is where your club's first small change should go.</p>
+      <div class="loopwrap" data-loop="0" style="height:500px"></div>
+    </div>
+  </div>
+  <aside class="n">LIVE: opens on phones automatically. Read the top two answers aloud. Then: "Whatever came top for your club is where your first small change goes, and the next slide shows who owns each moment." OFFLINE: ask people to type the moment's name in the chat, and click the rows to count.</aside>
+</section>
+
+<!-- 12 WHO DOES WHAT -->
+<section class="slide" id="roles" data-t="Who does what" data-mins="1.5">
+  <div class="pad">
+    <div class="kicker">So who does what?</div>
+    <h2>Everyone has one small job. Pick your seat.</h2>
+    <div class="tabs presenter-tabs" role="tablist" id="roleTabs" style="margin-top:24px"></div>
+    <div id="rolePanels" style="margin-top:20px"></div>
+  </div>
+  <aside class="n">This is the slide for the Presidents and PEs in the room. Click President &amp; Board first. "Clearing the Way" is one page: the toolkit doesn't need the Board to do the work, it needs five boxes ticked so the people who will do it can. Tick them live. Then click Membership Chair (the One Ask Sprint: 90 days, one job for every member, and a party at the end), then Every member. If time is short, skip Public Image; we covered it.</aside>
+</section>
+
+<!-- 13 START SMALL -->
+<section class="slide" id="aha" data-t="Start small" data-mins="1">
+  <div class="pad">
+    <div class="kicker">Not sure where to start? Start with an “aha”.</div>
+    <h2>Which sentence sounds most like your Board?</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:26px">
+      <div id="ahaList" style="display:grid;gap:10px"></div>
+      <div>
+        <div id="ahaOut" class="card" style="background:var(--deep);color:#fff;min-height:290px;font-size:20px"></div>
+        <p style="margin-top:14px;font-size:17px;color:var(--muted)">One discovery cycle fits between two Board meetings: pick an activity, two or three members try it, share what you noticed, agree one small change.</p>
+      </div>
+    </div>
+    <div class="foot" style="justify-content:flex-start;gap:12px;align-items:flex-end">
+      <span class="res-label" style="margin:0 6px 12px 0">Tools for your next club night</span>
+      <span data-res="aha"></span><span data-res="growclub"></span><span data-res="sprg"></span>
+    </div>
+  </div>
+  <aside class="n">The point here: people act on what they discover for themselves, not on what they're told. 15 small activities, most under an hour. Click the sentence people pick in the chat. Then mention the "Grow your club, grow your people" interactive session, which the District can bring to a club meeting, and the Strategic Plan Resource Guide.</aside>
+</section>
+
+<!-- 14 IDEAS WALL -->
+<section class="slide" id="wall" data-t="Ideas wall" data-mins="2.5">
+  <div class="pad">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+      <div>
+        <div class="kicker">Ideas wall</div>
+        <h2 style="font-size:48px">What's one thing your club will try in the next 90 days?</h2>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="livejoin" data-join style="margin-left:auto"></div>
+      <div class="presenter-only" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:420px">
+        <button class="btn ghost" id="copyWall">Copy all ideas</button>
+        <button class="btn ghost" id="clearWall">Clear wall</button>
+      </div>
+    </div>
+    <div class="cap presenter-only" style="position:absolute;left:80px;right:80px;top:auto;bottom:40px">
+      <input id="wallIn" placeholder="Paste an idea from the chat, then press Enter" aria-label="Add an idea">
+      <button id="wallAdd">Add to wall</button>
+    </div>
+    <div class="wall" id="wallBox" data-wallbox="sam-90day"></div>
+    <div class="dialog" id="clearDlg"><div><p><b>Clear every idea from the wall?</b></p><p style="font-size:17px;color:var(--muted)">Copy them first if you want to keep them. This can't be undone.</p><div style="display:flex;gap:10px;margin-top:16px"><button class="btn" id="clearYes">Clear wall</button><button class="btn ghost" id="clearNo">Keep them</button></div></div></div>
+  </div>
+  <aside class="n">LIVE: the wall opens on phones automatically and answers appear within a few seconds, alongside everything from the earlier walls. Then switch to the presenter screen and run "AI summary & ideas" (it reads every wall and vote) so people can tap the one idea they\'ll try. OFFLINE: everything pasted during the session is already here, colour-coded by question. Now ask the big one in the chat and paste answers as they come. Click the +1 on ideas people echo. Before you close, press "Copy all ideas" and paste them into an email to the District Membership Team; that's the follow-up list. Clear the wall before the next session.</aside>
+</section>
+
+<!-- 15 CLOSE + LIBRARY -->
+<section class="slide" id="library" data-t="Your one goal" data-mins="0.5">
+  <div class="pad" style="padding-top:52px">
+    <div style="display:grid;grid-template-columns:1fr 420px;gap:40px;align-items:end">
+      <div>
+        <div class="kicker">Your one goal this year</div>
+        <h1 style="font-size:84px">Invite one person.</h1>
+        <p class="lead" style="font-size:24px">Notice, invite, welcome, help them belong, and only then ask. Do that once this year, with one Sam, and you've done your part.</p>
+      </div>
+      <div class="card" style="background:var(--royal);color:#fff;font-size:18px"><b style="font-size:21px">Every link, in one place.</b><br>Bookmark this page. Share it with your Board. Questions go to the District Membership Team.</div>
+    </div>
+    <div class="lib" id="lib"></div>
+  </div>
+  <div class="thanks" style="position:absolute;left:0;right:0;bottom:0;background:var(--royal);color:#fff;padding:22px 80px;display:flex;justify-content:space-between;align-items:center;font-size:19px"><b style="font-family:var(--serif);font-size:30px">Thank you.</b><span>Rotary District 9815 · Membership Growth Strategy 2026–2029</span></div>
+  <aside class="n">Close on the one goal, not on the library. Then: "Everything we've seen is linked here, and you'll have this page." Thank everyone. Remind Presidents to put "Clearing the Way" on their next Board agenda. Copy the ideas wall before you end the meeting.</aside>
+</section>
+
+</div></div>
+
+<div id="notes" aria-live="polite"></div>
+<div id="help"><div>
+  <h3 style="margin-bottom:10px">Presenter controls</h3>
+  <p><kbd>→</kbd> <kbd>Space</kbd> next · <kbd>←</kbd> back · <kbd>Home</kbd> first slide</p>
+  <p><kbd>N</kbd> speaker notes (visible to Zoom if open, so use them for rehearsal)</p>
+  <p><kbd>F</kbd> full screen · <kbd>T</kbd> start/pause the timer · <kbd>?</kbd> this help</p>
+  <p>Second screen or phone: open this page with <b>#script</b> on the end of the address for the full speaking script with timings.</p>
+  <p><b>Live on phones:</b> sign in once on <b>presenter.html</b> on this computer and choose the <b>Membership: Meet Sam</b> session. Walls and votes then open on phones automatically as you reach each slide. Without that, the talk works as before: paste chat answers into the boxes.</p><p style="color:var(--muted);font-size:15px">Pasted answers are kept in this browser only. Use “Copy all ideas” to keep them.</p>
+  <button class="btn" id="helpClose">Got it</button>
+</div></div>
+<div id="bar">
+  <button id="prev" aria-label="Previous slide">◀</button>
+  <button id="next" aria-label="Next slide">▶</button>
+  <span id="where" style="min-width:210px"></span>
+  <div id="prog"></div>
+  <span id="livestat">Phones: off</span>
+  <span id="clock" title="Elapsed / planned">0:00 / 20:00</span>
+  <button id="timerBtn">Timer</button>
+  <button id="notesBtn">Notes</button>
+  <button id="fsBtn">Full screen</button>
+  <button id="helpBtn" aria-label="Help">?</button>
+</div>
+<div id="script"></div>
+
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script src="app/qrcode.js"></script>
+<script>
+{
+/* ---------- resource links: edit here ---------- */
+const CR='https://portal.clubrunner.ca/50387/Documents/en-au/';
+const RES={
+  whyarent:{t:"Why Aren't We Growing?",d:'Discussion paper · Boards',u:CR+'db6581b1-43ce-42f3-8db1-5c583fc2627a/1/',g:'Board'},
+  stoprecruit:{t:'Stop Recruiting. Start Connecting.',d:'Discussion paper · Boards',u:CR+'985f7ac3-bd66-469b-814e-988fa8039104/1/',g:'Board'},
+  whatdo:{t:'What Does Your Club Actually Do?',d:'Discussion paper · telling your story',u:CR+'0b346083-be99-49a6-aecd-312c6e5b1af3/1/',g:'Board'},
+  clearing:{t:'Clearing the Way',d:'Board briefing · 5 boxes to tick',u:CR+'3a597594-a37f-4b66-b4b5-ddbea0df6873/1/',g:'Board'},
+  aha:{t:'Creating the “Aha” Moment',d:'Discovery guide · 15 small activities',u:CR+'f1acaf11-bce0-4c52-8c6e-b4e8cf7999ce/1/',g:'Board'},
+  sprint:{t:'The One Ask Sprint',d:'Membership Chair playbook · 90 days',u:CR+'a49726ca-7157-4e2b-b45d-cd869bf0e077/1/',g:'Membership Chair'},
+  stranger:{t:'From Stranger to Family',d:'New member action plan',u:CR+'aa1644f0-f79a-425e-960b-0893f7b8149c/1/',g:'Membership Chair'},
+  friends:{t:'Friends of the Club',d:'System guide · the no-strings list',u:CR+'300ca628-4c3b-4d23-81be-163f7646eef0/1/',g:'Membership Chair'},
+  chairhub:{t:'Membership Chair Hub',d:'Checklists, health check, year planner',u:'https://www.rotary9815.org.au/sitepage/membership/membership-resources',g:'Membership Chair'},
+  growthplan:{t:'You Are the Growth Plan',d:'Member guide',u:CR+'dfc8b529-31d0-48d6-8427-82489c3b1300/1/',g:'Every member'},
+  minute:{t:'The One-Minute Invite',d:'Quick reference card',u:CR+'17747d62-98fc-42cc-9b4b-7ba790088db5/1/',g:'Every member'},
+  expect:{t:'What to Expect',d:'Newcomer welcome guide · for Sam',u:CR+'05b54bba-77f6-4e50-91f8-b2c235a1cfcc/1/',g:'Every member'},
+  prove:{t:'Prove the Invitation',d:'Public Image playbook',u:CR+'48923a44-7680-4285-8102-1c0970f18ce8/1/',g:'Public Image'},
+  promote:{t:'Promoting Your Club',d:'District Public Image page',u:'https://www.rotary9815.org.au/sitepage/communications/promoting-your-club',g:'Public Image'},
+  ten:{t:'The Ten You Should Know',d:'Community partnerships playbook',u:CR+'6f0b39b7-871e-43f6-b6dd-d1645a3b958c/1/',g:'Reaching out'},
+  secondyes:{t:'The Second Yes',d:'Alumni & Rotaract pathway',u:CR+'8472e621-64cf-43e7-ae1d-dc948fed2caf/1/',g:'Reaching out'},
+  alumni:{t:'Alumni Hub',d:'District 9815 · for members',u:'https://www.rotary9815.org.au/sitepage/rotary-alumni-for-members/alumni-home-for-members',g:'Reaching out'},
+  insight:{t:'Community Insight Report',d:'Worked example · Berwick',u:'https://www.rotary9815.org.au/sitepage/membership/membership-resources',g:'Reaching out'},
+  explorer:{t:'Membership Pathways Explorer',d:'Interactive · for club groups',u:'https://david-rotary.github.io/PELDS2026/membership-explorer.html',g:'Interactive tools'},
+  hub:{t:'Membership Resources Hub',d:'District 9815 website',u:'https://www.rotary9815.org.au/sitepage/membership/membership-resources',g:'Interactive tools'},
+  growclub:{t:'Grow Your Club, Grow Your People',d:'Interactive club-night session',u:'https://www.rotary9815.org.au/sitepage/membership/membership-resources',g:'Interactive tools'},
+  sprg:{t:'Strategic Plan Resource Guide',d:'Seven steps for your club',u:'https://www.rotary9815.org.au/sitepage/membership/membership-resources',g:'Interactive tools'}
+};
+const LIVE={on:false,admin:'',room:'membership',join:'',qr:''};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const chip=k=>{const r=RES[k];return `<a class="res" href="${esc(r.u)}" target="_blank" rel="noopener"><b>${esc(r.t)}</b><span>${esc(r.d)}</span></a>`};
+document.querySelectorAll('[data-res]').forEach(el=>{el.outerHTML=chip(el.dataset.res)});
+
+/* ---------- the loop picture ---------- */
+const M=[['Notice','var(--m1)'],['Invite','var(--m2)'],['Welcome','var(--m3)'],['Belong','var(--m4)'],['Ask','var(--m5)']];
+function loop(active){
+  const cx=250,cy=250,R=165;let s=`<svg viewBox="-70 -10 640 520" role="img" aria-label="The One Ask loop: Notice, Invite, Welcome, Belong, Ask"><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="6" stroke-dasharray="4 14" stroke-linecap="round"/>`;
+  M.forEach((m,i)=>{
+    const a=-Math.PI/2+i*2*Math.PI/5,x=cx+R*Math.cos(a),y=cy+R*Math.sin(a),on=active===i+1,past=active>i+1;
+    const r=on?50:38;
+    s+=`<g><circle cx="${x}" cy="${y+5}" r="${r}" fill="rgba(0,0,0,.18)"/><circle cx="${x}" cy="${y}" r="${r}" fill="${on||active===0?'#fff':past?'rgba(255,255,255,.75)':'rgba(255,255,255,.22)'}"/>`;
+    s+=`<text x="${x}" y="${y+8}" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="800" font-size="${on?28:24}" fill="${on||active===0||past?'#0B2A5C':'#fff'}">${i+1}</text>`;
+    const lx=x+(Math.cos(a)>0.3?r+12:Math.cos(a)<-0.3?-r-12:0),ly=y+(Math.abs(Math.cos(a))<=0.3?(Math.sin(a)<0?-r-14:r+30):8);
+    const anc=Math.cos(a)>0.3?'start':Math.cos(a)<-0.3?'end':'middle';
+    s+=`<text x="${lx}" y="${ly}" text-anchor="${anc}" font-family="Hanken Grotesk,Arial" font-weight="700" font-size="${on?26:21}" fill="#fff" opacity="${on||active===0?1:.75}">${m[0]}</text></g>`;
+    if(on){s+=`<g><circle cx="${x+34}" cy="${y-34}" r="22" fill="#F7A81B" stroke="#fff" stroke-width="4"/><text x="${x+34}" y="${y-27}" text-anchor="middle" font-family="Hanken Grotesk,Arial" font-weight="700" font-size="18" fill="#0B2A5C">Sam</text></g>`}
+  });
+  s+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="800" font-size="30" fill="#fff">One Ask</text><text x="${cx}" y="${cy+24}" text-anchor="middle" font-family="Hanken Grotesk,Arial" font-size="17" fill="#fff" opacity=".8">…and the loop begins again</text></svg>`;
+  return s;
+}
+document.querySelectorAll('[data-loop]').forEach(el=>{el.innerHTML=loop(+el.dataset.loop)});
+
+/* ---------- ideas: shared store across chat boxes and the wall ---------- */
+const WALLS=[
+  {id:'sam-asked',topic:'Who asked us',col:'#fff6c9'},
+  {id:'sam-local',topic:'Who we could know',col:'#dcebff'},
+  {id:'sam-30sec',topic:'Our 30-second answer',col:'#ffd9ea'},
+  {id:'sam-welcome',topic:'Our welcome habits',col:'#ffe9d6'},
+  {id:'sam-reinvite',topic:'Who we could re-invite',col:'#d3f3f1'},
+  {id:'sam-90day',topic:'Our 90-day ideas',col:'#fff0a8'}];
+const WBY={};WALLS.forEach(w=>WBY[w.id]=w);
+const KEY='d9815-meet-sam-ideas';
+let ideas=[];const liveNotes={};
+try{ideas=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){ideas=[]}
+ideas=ideas.filter(i=>WBY[i.wall]);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ideas))}catch(e){}};
+const rot=()=>(Math.random()*4-2).toFixed(1);
+function addIdea(text,wall){text=text.trim();if(!text)return;ideas.push({id:Date.now()+''+Math.random().toString(36).slice(2,6),text,wall,votes:0,r:rot()});save();renderAll()}
+document.querySelectorAll('.chat[data-wall]').forEach(box=>{
+  const wall=box.dataset.wall;
+  const q=box.querySelector('.q');const body=document.createElement('div');body.className='cbody';box.insertBefore(body,q);body.appendChild(q);
+  body.insertAdjacentHTML('beforeend',`<div class="cap presenter-only"><input aria-label="Add a chat answer" placeholder="Paste a chat answer and press Enter"><button>Add</button></div><div class="notes-mini" data-mini="${wall}"></div>`);
+  box.insertAdjacentHTML('beforeend','<div class="livejoin" data-join></div>');
+  const inp=body.querySelector('input'),btn=body.querySelector('button');
+  const go=()=>{addIdea(inp.value,wall);inp.value='';inp.focus()};
+  btn.addEventListener('click',go);inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go()}e.stopPropagation()});
+});
+const wallIn=document.getElementById('wallIn');
+const wallGo=()=>{addIdea(wallIn.value,'sam-90day');wallIn.value='';wallIn.focus()};
+document.getElementById('wallAdd').addEventListener('click',wallGo);
+wallIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();wallGo()}e.stopPropagation()});
+function allNotes(){
+  const out=ideas.map(i=>({...i,live:false}));
+  Object.keys(liveNotes).forEach(w=>liveNotes[w].forEach((t,k)=>out.push({id:'L'+w+k,text:t.text,wall:w,votes:0,r:t.r,live:true})));
+  return out;
+}
+function renderAll(){
+  const all=allNotes();
+  document.querySelectorAll('[data-mini]').forEach(el=>{
+    const t=el.dataset.mini;
+    el.innerHTML=all.filter(i=>i.wall===t).map(i=>`<span class="sticky">${esc(i.text)}</span>`).join('');
+    el.scrollTop=el.scrollHeight;
+  });
+  const box=document.getElementById('wallBox');
+  const sorted=all.slice().sort((a,b)=>(b.wall==='sam-90day')-(a.wall==='sam-90day')||b.votes-a.votes);
+  box.innerHTML=sorted.length?sorted.map(i=>`<div class="note${i.live?' live':''}" style="--r:${esc(i.r)}deg;background:${WBY[i.wall].col}">${esc(i.text)}<small>${esc(WBY[i.wall].topic)}</small>${i.live?'':`<button class="vote" data-v="${esc(i.id)}" aria-label="Plus one">+1${i.votes?' · '+i.votes:''}</button><button class="x" data-x="${esc(i.id)}" aria-label="Remove idea">×</button>`}</div>`).join('')
+    :`<div class="wall-empty">Ideas land here as people send them from their phones, or as you paste them from the chat.<br><span style="font-size:17px">Answers from the earlier questions appear here too.</span></div>`;
+}
+document.getElementById('wallBox').addEventListener('click',e=>{
+  const v=e.target.closest('[data-v]'),x=e.target.closest('[data-x]');
+  if(v){const i=ideas.find(i=>i.id===v.dataset.v);if(i){i.votes++;save();renderAll()}}
+  if(x){ideas=ideas.filter(i=>i.id!==x.dataset.x);save();renderAll()}
+});
+document.getElementById('legend').innerHTML=WALLS.map(w=>`<span style="background:${w.col}">${esc(w.topic)}</span>`).join('');
+document.getElementById('copyWall').addEventListener('click',async e=>{
+  const groups={};allNotes().forEach(i=>(groups[i.wall]=groups[i.wall]||[]).push(i));
+  const txt='Meet Sam: ideas from the session ('+new Date().toLocaleDateString('en-AU')+')\n\n'+WALLS.filter(w=>groups[w.id]).map(w=>w.topic+'\n'+groups[w.id].map(i=>'- '+i.text+(i.votes?' (+'+i.votes+')':'')).join('\n')).join('\n\n');
+  try{await navigator.clipboard.writeText(txt);e.target.textContent='Copied ✓'}catch(err){e.target.textContent='Copy blocked: select and copy manually'}
+  setTimeout(()=>e.target.textContent='Copy all ideas',2200);
+});
+const dlg=document.getElementById('clearDlg');
+document.getElementById('clearWall').addEventListener('click',()=>dlg.classList.add('show'));
+document.getElementById('clearNo').addEventListener('click',()=>dlg.classList.remove('show'));
+document.getElementById('clearYes').addEventListener('click',()=>{ideas=[];save();renderAll();dlg.classList.remove('show')});
+renderAll();
+
+/* ---------- polls: phones when live, hands-up counting when not ---------- */
+const POLLS={};
+document.querySelectorAll('[data-poll]').forEach(el=>{
+  const id=el.dataset.poll,opts=JSON.parse(el.dataset.opts);
+  if(el.classList.contains('lpoll')){
+    el.innerHTML=`<div><div class="rows">${opts.map((o,k)=>`<button class="prow" data-opt="${k}"><span class="pfill"></span><b>${String.fromCharCode(65+k)}</b><span>${esc(o)}</span><span class="cnt"></span></button>`).join('')}</div><div class="ptot"></div></div><div class="livejoin" data-join></div>`;
+    el.firstElementChild.style.flex='1';
+  }
+  POLLS[id]={el,opts,q:el.dataset.q,counts:opts.map(()=>0),live:false};
+  el.querySelectorAll('.prow').forEach(b=>b.addEventListener('click',()=>{const P=POLLS[id];if(P.live)return;P.counts[+b.dataset.opt]++;drawPoll(id)}));
+});
+function drawPoll(id){
+  const P=POLLS[id],tot=P.counts.reduce((a,b)=>a+b,0),mx=Math.max(...P.counts);
+  P.el.querySelectorAll('[data-opt]').forEach(b=>{const k=+b.dataset.opt,n=P.counts[k],c=b.querySelector('.cnt'),f=b.querySelector('.pfill');
+    if(c)c.textContent=tot?n+' · '+Math.round(100*n/tot)+'%':'';if(f)f.style.width=(tot?100*n/tot:0)+'%';b.classList.toggle('top',tot>0&&n===mx)});
+  const t=P.el.querySelector('.ptot');if(t)t.textContent=tot?tot+(tot===1?' vote':' votes')+(P.live?' · live from phones':' · counted by hand'):(LIVE.on?'Votes appear here as phones answer.':'Click a row to count hands, or tally the chat.');
+}
+Object.keys(POLLS).forEach(drawPoll);
+
+/* ---------- guessing game ---------- */
+document.querySelectorAll('#guess .choice').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#guess .choice').forEach(c=>c.classList.add(c.dataset.v==='1'?'right':'wrong'));
+  document.getElementById('guessReveal').classList.add('show');
+}));
+
+/* ---------- strategy house ---------- */
+const HOUSE=[
+  ['Attract','Grow membership through intentional attraction','More ways in: projects, causes, social events and personal invitations, so people can take part before deciding on membership.','Net district growth of 5% a year','var(--m1)'],
+  ['Retain','Improve member retention','Better onboarding, first-year support, and listening to what members value and what frustrates them.','Retention above 90%; first-year resignations down 25%','var(--m2)'],
+  ['Diversity','Diversity, inclusion and flexible participation','Clubs that look like their communities, with different ways to contribute at different stages of life.','More diversity across age, sex and cultural background','var(--m3)'],
+  ['Experience','Strengthen club experience and engagement','Two questions for every routine: does this strengthen the member experience? Does it extend our community reach?','More club participation in learning; better member experience','var(--m4)'],
+  ['Connect','Connections with Rotary programs and the community','Youth programs, alumni, Rotaract, Interact, schools, businesses and community groups.','Annual increase in alumni and community participation','var(--m5)']];
+const house=document.getElementById('house'),hInfo=document.getElementById('houseInfo');
+house.innerHTML=HOUSE.map((h,i)=>`<button class="house-btn" style="background:${h[4]}" aria-pressed="false" data-h="${i}"><span class="n">${i+1}</span>${h[0]}</button>`).join('');
+function showHouse(i){house.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.h==i));const h=HOUSE[i];hInfo.innerHTML=`<h3 style="color:${h[4]}">${h[1]}</h3><p style="margin:8px 0">${h[2]}</p><p style="margin:0;font-size:16px"><b>Success measure:</b> ${h[3]}</p>`}
+house.addEventListener('click',e=>{const b=e.target.closest('[data-h]');if(b)showHouse(b.dataset.h)});
+hInfo.innerHTML='<p style="margin:0;color:var(--muted)">Five pathways hold up the house. Tap one to open it.</p><p style="margin:10px 0 0;font-size:16px"><b>Built on:</b> shared ownership · connected collaboration · inclusivity</p>';
+
+/* ---------- jargon flips ---------- */
+const JARGON=[['District','our region’s group of clubs'],['The Foundation','the giving arm that funds our projects worldwide'],['Fellowship','the people, and the friendships'],['Classification','what field or job you work in'],['Service Above Self','helping before asking'],['“Would you like to join?”','“Want to come along on Saturday?”']];
+document.getElementById('jargon').innerHTML=JARGON.map(j=>`<div class="flip"><div class="in"><div class="f">${j[0]}</div><div class="b">${j[1]}</div></div><button aria-label="Translate ${esc(j[0])}"></button></div>`).join('');
+document.getElementById('jargon').addEventListener('click',e=>{const f=e.target.closest('.flip');if(f)f.classList.toggle('done')});
+
+/* ---------- google test ---------- */
+const GT=['Our club shows up first when you search its name','The website shows something happening in the next month','Facebook or Instagram has posted in the last two weeks','There’s a real way to get in touch: a name, a number or a form that gets answered','A stranger could tell what we actually do from the first screen'];
+const gt=document.getElementById('gtest'),gs=document.getElementById('gscore');
+gt.innerHTML=GT.map((g,i)=>`<label class="check" style="padding:9px 14px;font-size:18px"><input type="checkbox" data-g="${i}"> ${g}</label>`).join('');
+const gUpd=()=>{const n=gt.querySelectorAll('input:checked').length;gt.querySelectorAll('label').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));gs.textContent=n+' out of 5: '+(n===5?'Sam’s convinced. The invitation holds.':n>=3?'Close. Fix one thing this month.':'Sam may quietly not turn up, and the member will never know why.')};
+gt.addEventListener('change',gUpd);gUpd();
+
+/* ---------- roles ---------- */
+const ROLES=[
+ {k:'President & Board',lead:'Clear the way. Five boxes, one agenda item.',body:`<p style="font-size:19px;margin:0 0 12px">The toolkit doesn’t need the Board to do the work. It needs the Board to formally back the people who will.</p>`,list:['Sixty seconds of agenda time, every meeting, during a Sprint','A small, named budget line: name tags, printed cards, a modest event','Formal authority for the Membership Chair and Public Image to run their playbooks','Sprint dates set in the annual calendar, in advance','Friends of the Club guests welcomed at agreed events, at no cost'],res:['clearing','whyarent','aha']},
+ {k:'President-Elect',lead:'Plan it in before your year starts.',body:`<p style="font-size:19px;margin:0 0 12px">Step one for every club in the District plan: a simple membership plan of your own. Your planning year is the time to build it in.</p>`,list:['Put Sprint dates into next year’s calendar now','Choose one or two priorities, not the whole toolkit','Plan one discovery cycle a quarter with your Board','Agree who your Membership Chair and Public Image lead will be'],res:['explorer','aha','sprg']},
+ {k:'Membership Chair',lead:'Run the system, not the asking.',body:`<p style="font-size:19px;margin:0 0 12px">The One Ask Sprint gives every member one job for 90 days: invite one person to one thing. It has a start, a middle and a party at the end.</p>`,list:['Launch it with the five-minute meeting script','Bring three numbers to each Board meeting: asks made, guests hosted, new and returning members','Own the Friends of the Club list','Check new members at 30 and 90 days'],res:['sprint','chairhub','stranger','friends']},
+ {k:'Public Image',lead:'Make the promise checkable.',body:`<p style="font-size:19px;margin:0 0 12px">Keep the handful of places a prospect checks in step with what members are promising this month.</p>`,list:['Run the Google test monthly','Post the next hands-on activity before members start inviting to it','Make sure a real person answers the contact form'],res:['prove','promote']},
+ {k:'Every member',lead:'Invite one person. That’s it.',body:`<p style="font-size:19px;margin:0 0 12px">Not a pitch, not a quota. Notice someone who’d love this, invite them to one thing, and make sure they meet three people.</p>`,list:['Know your 30-second answer: one real thing your club did','Invite to a project, not a meeting','Introduce your guest to three people by name','If a newer member goes quiet, reach out. Don’t wait and see.'],res:['growthplan','minute','expect']}];
+const tabs=document.getElementById('roleTabs'),panels=document.getElementById('rolePanels');
+tabs.innerHTML=ROLES.map((r,i)=>`<button class="tab" role="tab" aria-selected="${i===0}" data-r="${i}">${r.k}</button>`).join('');
+panels.innerHTML=ROLES.map((r,i)=>`<div class="panel${i===0?' on':''}" data-p="${i}" style="grid-template-columns:1.25fr 1fr;gap:36px"><div><h3 style="font-size:34px;font-weight:800;margin-bottom:12px">${r.lead}</h3>${r.body}<div style="display:grid;gap:8px">${r.list.map(l=>i===0?`<label class="check" style="padding:9px 14px;font-size:18px"><input type="checkbox"> ${l}</label>`:`<div class="check" style="cursor:default;padding:9px 16px;padding:9px 14px;font-size:18px"><b style="color:var(--royal)">→</b> ${l}</div>`).join('')}</div></div><div style="display:flex;flex-direction:column;gap:12px"><div class="res-label">Your tools</div>${r.res.map(chip).join('')}</div></div>`).join('');
+tabs.addEventListener('click',e=>{const b=e.target.closest('[data-r]');if(!b)return;tabs.querySelectorAll('button').forEach(t=>t.setAttribute('aria-selected',t===b));panels.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.r))});
+panels.addEventListener('change',e=>{const l=e.target.closest('label');if(l)l.classList.toggle('on',e.target.checked)});
+
+/* ---------- aha picker ---------- */
+const AHA=[['“Hardly anyone new walks through our door.”','See Us Through New Eyes · Follow the Visitor · Be the Stranger','Visit a club where nobody knows you and notice exactly when you first felt welcome. Then ask: what would a first-timer feel at ours?'],
+ ['“New members join, then quietly drift away.”','The First-Year Conversation · The Disappearing Member','Have an honest coffee with someone who joined in the last two years, or who left. Listen before fixing.'],
+ ['“We’re not sure why people stay.”','Why Do You Stay?','Ask five members why they stay. You may be surprised how few answers are about meetings.'],
+ ['“We all look (and think) a bit alike.”','Look Around the Room · Walk in Their Shoes','Compare the room with your community’s profile. Who’s missing?'],
+ ['“Our meetings feel much like they did years ago.”','Experience Your Own Meeting · Stop One Thing','Sit through your own meeting as if it were your first. Then stop one thing that no longer adds value.'],
+ ['“We’ve lost touch with young people and alumni.”','Follow the Alumni · Participate Before Joining','Track down three past Rotaract or youth program participants and find out where they went.']];
+const al=document.getElementById('ahaList'),ao=document.getElementById('ahaOut');
+al.innerHTML=AHA.map((a,i)=>`<button class="tab" style="text-align:left;font-weight:600;font-size:19px" aria-selected="false" data-a="${i}">${a[0]}</button>`).join('');
+const showAha=i=>{al.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.a==i));ao.innerHTML=`<div style="font-size:15px;font-weight:700;color:var(--gold)">Try one of these activities</div><h3 style="color:#fff;font-size:30px;margin:8px 0 14px">${AHA[i][1]}</h3><p style="margin:0;opacity:.92">${AHA[i][2]}</p><p style="margin-top:18px;font-size:17px;opacity:.8">Aim for the moment someone says, “I hadn’t thought about our club that way before.”</p>`};
+al.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)showAha(b.dataset.a)});
+ao.innerHTML='<div style="font-size:15px;font-weight:700;color:var(--gold)">Creating the “Aha” moment</div><h3 style="color:#fff;font-size:30px;margin:8px 0 14px">15 small activities. Most take an hour or less.</h3><p style="margin:0;opacity:.92">No reading, no experts, no big plan. Pick the sentence on the left that your Board keeps saying.</p>';
+
+/* ---------- library ---------- */
+const groups={};Object.entries(RES).forEach(([k,r])=>(groups[r.g]=groups[r.g]||[]).push(r));
+document.getElementById('lib').innerHTML=Object.entries(groups).map(([g,l])=>`<div><h3>${esc(g)}</h3>${l.map(r=>`<a href="${esc(r.u)}" target="_blank" rel="noopener">${esc(r.t)}</a>`).join('')}</div>`).join('');
+
+/* ---------- deck engine ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+const total=slides.reduce((s,x)=>s+(+x.dataset.mins||0),0);
+let cur=0;
+const prog=document.getElementById('prog'),where=document.getElementById('where'),notes=document.getElementById('notes');
+prog.innerHTML=slides.map((s,i)=>`<button title="${esc(s.dataset.t)}" aria-label="Go to slide ${i+1}: ${esc(s.dataset.t)}" data-i="${i}"></button>`).join('');
+function go(i,push=true){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,j)=>s.classList.toggle('on',j===cur));
+  prog.querySelectorAll('button').forEach((b,j)=>{b.className=j<cur?'done':j===cur?'cur':''});
+  const s=slides[cur];where.textContent=(cur+1)+' / '+slides.length+' · '+s.dataset.t;
+  notes.innerHTML=`<h4>${esc(s.dataset.t)} · about ${s.dataset.mins} min</h4>${s.querySelector('aside.n').innerHTML}`;
+  if(push&&!document.body.classList.contains('flow')){try{history.replaceState(null,'','#'+(cur+1))}catch(e){}}
+  report();live.enter(s);
+}
+prog.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)go(+b.dataset.i)});
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+document.getElementById('notesBtn').onclick=()=>notes.classList.toggle('show');
+const help=document.getElementById('help');
+document.getElementById('helpBtn').onclick=()=>help.classList.add('show');
+document.getElementById('helpClose').onclick=()=>help.classList.remove('show');
+document.getElementById('fsBtn').onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}};
+/* timer */
+let t0=null,acc=0,tick=null;const clock=document.getElementById('clock');
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+const showClock=()=>{const el=acc+(t0?(Date.now()-t0)/1000:0);clock.textContent=fmt(el)+' / '+fmt(total*60);clock.style.color=el>total*60?'#ff9b8f':''};
+const toggleTimer=()=>{if(t0){acc+=(Date.now()-t0)/1000;t0=null;clearInterval(tick);document.getElementById('timerBtn').textContent='Timer'}else{t0=Date.now();tick=setInterval(showClock,1000);document.getElementById('timerBtn').textContent='Pause'}showClock()};
+document.getElementById('timerBtn').onclick=toggleTimer;showClock();
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea'))return;
+  if(document.body.classList.contains('flow'))return;
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1)}
+  else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(cur-1)}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(slides.length-1);
+  else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+  else if(e.key==='f'||e.key==='F')document.getElementById('fsBtn').click();
+  else if(e.key==='t'||e.key==='T')toggleTimer();
+  else if(e.key==='?')help.classList.toggle('show');
+  else if(e.key==='Escape'){help.classList.remove('show');notes.classList.remove('show');dlg.classList.remove('show')}
+});
+/* swipe */
+let sx=null;document.getElementById('viewport').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+document.getElementById('viewport').addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)go(cur+(dx<0?1:-1));sx=null});
+/* scaling and flow mode */
+const stage=document.getElementById('stage'),vp=document.getElementById('viewport');
+function fit(){
+  const flow=window.innerWidth<760;document.body.classList.toggle('flow',flow);
+  if(flow){stage.style.transform='';return}
+  const s=Math.min(vp.clientWidth/1600,vp.clientHeight/900)*0.98;stage.style.transform='translate(-50%,-50%) scale('+s+')';
+}
+const ro=new ResizeObserver(fit);ro.observe(document.body);
+/* script view */
+document.getElementById('script').innerHTML=`<h1 style="font-size:40px">Meet Sam · speaking script</h1><p style="color:var(--muted)">About ${total} minutes across ${slides.length} slides. Keep this open on a second screen or phone.</p>`+slides.map((s,i)=>`<section><h2>${i+1}. ${esc(s.dataset.t)} <span style="font-family:var(--sans);font-size:16px;color:var(--muted);font-weight:500">· ${s.dataset.mins} min</span></h2><p>${s.querySelector('aside.n').innerHTML}</p></section>`).join('');
+function route(){
+  const h=location.hash.slice(1);
+  document.body.classList.toggle('scriptmode',h==='script');
+  let i=parseInt(h,10)-1;if(isNaN(i))i=slides.findIndex(s=>s.id===h);
+  if(i!==cur||!started){started=true;go(i<0?0:i,false)}
+}
+let started=false;
+window.addEventListener('hashchange',route);
+/* ---------- projector mode: the run sheet on the laptop drives this talk (same protocol as talk.html) ---------- */
+const EMBED=/[?&]embed=1/.test(location.search);
+if(EMBED)document.body.classList.add('embed');
+let bc=null;try{bc=new BroadcastChannel('pe-stage')}catch(e){}
+function report(){if(!bc)return;const s=slides[cur];bc.postMessage({talkAt:cur+1,total:slides.length,title:s.dataset.t,notes:s.querySelector('aside.n').textContent,isPoll:!!s.querySelector('[data-poll],[data-wall],[data-wallbox]'),hasReveal:!!s.querySelector('#guess'),phones:LIVE.on?'live · '+LIVE.room:(livestat.textContent||'').replace(/^Phones: /,'')})}
+if(bc)bc.onmessage=e=>{const m=e.data||{};
+  if(m.talk==='go')go(m.n-1);else if(m.talk==='step')go(cur+m.d);else if(m.talk==='ask')report();
+  else if(m.talk==='openPoll')live.enter(slides[cur],true);
+  else if(m.talk==='reveal'){const b=slides[cur].querySelector('#guess .choice[data-v="1"]');if(b)b.click()}};
+
+/* ---------- live on phones: uses the presenter sign-in saved on this computer ---------- */
+const livestat=document.getElementById('livestat');
+const live=(()=>{
+  let timer=null,curSlide=null;
+  const api=(a,b)=>{b=b||{};b.admin=LIVE.admin;b.room=LIVE.room;return PE.ai.post('/api/live/'+a,b)};
+  function qrSVG(url){try{const q=qrcode(0,'M');q.addData(url);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){return ''}}
+  function init(){
+    try{LIVE.admin=localStorage.getItem('pe-admin')||'';LIVE.room=localStorage.getItem('pe-room')||'membership'}catch(e){}
+    if(!window.PE||!PE.ai||!PE.ai.url||!LIVE.admin){livestat.textContent=window.PE&&PE.ai&&PE.ai.url?'Phones: sign in on presenter.html':'Phones: off (chat mode)';return}
+    if(!/^membership/i.test(LIVE.room)){livestat.textContent='Phones: switch presenter session to Membership';}
+    api('whoami').then(r=>{
+      if(!r.ok){livestat.textContent='Phones: presenter sign-in needed';report();return}
+      const base=(window.PE_CONFIG&&PE_CONFIG.SITE_URL)||'';
+      LIVE.join=base+'join.html?code='+encodeURIComponent(r.accessCode)+(LIVE.room!=='prepelds'?'&room='+encodeURIComponent(LIVE.room):'');
+      LIVE.qr=base?qrSVG(LIVE.join):'';
+      LIVE.on=true;document.body.classList.add('live');
+      livestat.textContent='Phones: live · '+LIVE.room;livestat.classList.add('on');
+      document.querySelectorAll('[data-join]').forEach(j=>j.innerHTML=(LIVE.qr?`<div class="qr">${LIVE.qr}</div>`:'')+'Scan with your phone, or use the link in the chat');
+      Object.keys(POLLS).forEach(drawPoll);renderAll();
+      enter(slides[cur],true);report();
+    }).catch(()=>{livestat.textContent='Phones: offline (chat mode)'});
+  }
+  function enter(s,force){
+    curSlide=s;clearTimeout(timer);
+    if(!LIVE.on)return;
+    const p=s.querySelector('[data-poll]'),w=s.querySelector('[data-wall],[data-wallbox]');
+    let act=null;
+    if(p){const P=POLLS[p.dataset.poll];act={type:'poll',id:p.dataset.poll,title:P.q,options:P.opts,open:true,reveal:false}}
+    else if(w){const id=w.dataset.wall||w.dataset.wallbox;const q=id==='sam-90day'?"What's one thing your club will try in the next 90 days?":(w.querySelector('.q')?w.querySelector('.q').textContent.replace(/^Phone or chat/,'').trim():WBY[id].topic);act={type:'wall',id,title:q,open:true}}
+    if(!act){/* no live element: leave phones on the last question */return}
+    if(force||s.dataset.opened!=='1'||true){api('set',{activity:act}).then(()=>{s.dataset.opened='1'}).catch(()=>{})}
+    poll();
+  }
+  function poll(){
+    clearTimeout(timer);const s=curSlide;if(!LIVE.on||!s)return;
+    const jobs=[];
+    s.querySelectorAll('[data-poll]').forEach(p=>{const id=p.dataset.poll;jobs.push(api('results',{poll:id}).then(r=>{const c=r.counts||{},P=POLLS[id];P.live=true;P.counts=P.opts.map((_,k)=>c[k]||0);drawPoll(id)}))});
+    s.querySelectorAll('[data-wall],[data-wallbox]').forEach(w=>{const id=w.dataset.wall||w.dataset.wallbox;jobs.push(api('worries',{topic:id}).then(r=>{const L=(r.worries||[]);const old=liveNotes[id]||[];liveNotes[id]=L.map((x,k)=>({text:x.text,r:(old[k]&&old[k].r)||rot()}));renderAll()}))});
+    Promise.all(jobs).catch(()=>{}).then(()=>{timer=setTimeout(poll,2500)});
+  }
+  /* walls answered earlier: fetch once at the end so the ideas wall shows everything */
+  function fetchAll(){if(!LIVE.on)return;WALLS.forEach(w=>api('worries',{topic:w.id}).then(r=>{const L=r.worries||[];liveNotes[w.id]=L.map(x=>({text:x.text,r:rot()}));renderAll()}).catch(()=>{}))}
+  return{init,enter:(s,f)=>{enter(s,f);if(s&&s.id==='wall')fetchAll()}};
+})();
+fit();route();live.init();
+}
+</script>
+</body>
+</html>

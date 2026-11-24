@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Run Sheet · Meet Sam · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B2A5C;--royal:#17458F;--azure:#0067C8;--sky:#00A2E0;--gold:#F7A81B;--ink:#1b2333;--ink2:#4a5468;--line:#dfe4ec;--soft:#f3f6fb;
+  --display:'Fraunces',Georgia,serif;--body:'Hanken Grotesk','Segoe UI',system-ui,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--body);color:var(--ink);background:#f4f6fa;line-height:1.45}
+header{background:linear-gradient(135deg,#0B2A5C,#17458F 60%,#0067C8);color:#fff;padding:16px 20px 14px;position:sticky;top:0;z-index:10}
+header .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;max-width:980px;margin:0 auto}
+header h1{font-family:var(--display);font-weight:600;font-size:1.45rem;margin:0;flex:1;min-width:220px}
+header h1 em{color:var(--gold);font-weight:500}
+.clock{font-weight:800;font-size:1.4rem;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.12);padding:4px 12px;border-radius:10px}
+.hb{background:var(--gold);color:var(--navy);border:0;border-radius:999px;padding:8px 14px;font:800 .9rem var(--body);cursor:pointer}
+.hb.alt{background:rgba(255,255,255,.15);color:#fff}
+.rb{display:flex;height:5px}.rb i{flex:1}
+main{max-width:980px;margin:0 auto;padding:18px 16px 60px}
+.intro{font-size:.95rem;color:var(--ink2);margin:0 0 14px}
+.sec{background:#fff;border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden;scroll-margin-top:90px}
+.sec.now{border-color:var(--gold);box-shadow:0 0 0 3px rgba(247,168,27,.35)}
+.sec.done{opacity:.55}
+.sh{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--soft);cursor:pointer}
+.t{font-weight:800;color:var(--royal);font-variant-numeric:tabular-nums;min-width:58px}
+.sh h2{font-size:1.05rem;margin:0;flex:1}
+.sh .d{font-size:.8rem;color:var(--ink2);white-space:nowrap}
+.sb{padding:10px 16px 14px}
+.say{font-family:var(--display);font-style:italic;font-size:1.05rem;color:var(--royal);border-left:4px solid var(--gold);padding:4px 0 4px 12px;margin:6px 0 10px}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.links a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:700;font-size:.9rem;padding:7px 12px;border-radius:10px;border:1px solid var(--line);color:var(--ink);background:#fff}
+.links a:hover{border-color:var(--azure)}
+.links a.talk{background:#eaf2fd;border-color:#b9d3f4}
+.links a.pres{background:#fff4dc;border-color:#f3d08a}
+.links a.web{background:#eef9f1;border-color:#bfe6cd}
+.links a .n{background:var(--royal);color:#fff;border-radius:6px;padding:0 6px;font-size:.78rem}
+ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
+.opt{border:1px dashed #c9a24a;background:#fffaf0}
+.opt .sh{background:#fff6e0}
+.tag{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:var(--gold);color:var(--navy);padding:2px 8px;border-radius:999px}
+.key{font-size:.85rem;color:var(--ink2);display:flex;gap:14px;flex-wrap:wrap;margin:4px 0 12px}
+.key span{display:inline-flex;align-items:center;gap:6px}.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.check{display:flex;gap:8px;align-items:flex-start;margin:4px 0}
+.check input{margin-top:4px;width:18px;height:18px;accent-color:var(--royal)}
+/* projector remote */
+.remote{display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:980px;margin:10px auto 0;padding-top:10px;border-top:1px solid rgba(255,255,255,.18)}
+.rbtn{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:7px 12px;font:700 .88rem var(--body);cursor:pointer}
+.rbtn:hover{background:rgba(255,255,255,.24)} .rbtn.on{background:#fff;color:var(--navy)} .rbtn.big{font-size:1.05rem;padding:6px 16px}
+.rbtn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.pstat{font-size:.82rem;display:inline-flex;align-items:center;gap:6px;opacity:.95}
+.pstat i{width:10px;height:10px;border-radius:50%;background:#e05b5b;display:inline-block}.pstat.ok i{background:#3fd17a}
+.nowbox{max-width:980px;margin:8px auto 0;background:rgba(0,0,0,.18);border-radius:10px;padding:8px 12px;font-size:.88rem;display:none}
+.nowbox.show{display:block}.nowbox b{color:var(--gold)}.nowbox .nn{margin-top:4px;opacity:.92;max-height:6.5em;overflow:auto}
+.sp{flex:1}
+@media print{header{position:static}.hb,.clock,.remote,.nowbox{display:none}.sec{break-inside:avoid}.sec.done{opacity:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="row">
+    <h1>Run sheet · <em>Meet Sam</em></h1>
+    <span class="clock" id="clock" title="Time since you pressed Start">0:00</span>
+    <button class="hb" id="start">Start timer</button>
+    <button class="hb alt" id="reset">Reset</button>
+  </div>
+  <div class="remote">
+    <button class="rbtn gold" id="pOpen" title="Opens a window to drag onto the projector">Open projector window</button>
+    <span class="pstat" id="pStat"><i></i><span>Projector not open</span></span>
+    <span class="sp"></span>
+    <button class="rbtn big" id="pPrev" title="Previous slide (← or Page Up)">◀</button>
+    <button class="rbtn big" id="pNext" title="Next slide (→, space or Page Down)">▶</button>
+    <button class="rbtn" id="pTalk">Show talk</button>
+    <button class="rbtn" id="pLive">Show live screen</button>
+    <button class="rbtn" id="pBlack">Blank</button>
+    <button class="rbtn" id="pPoll" style="display:none" title="Re-sends this slide's question to phones">Re-open on phones</button>
+    <button class="rbtn" id="pReveal" style="display:none">Reveal the answer</button>
+    <button class="rbtn gold" id="pJoin" title="Copies the link people click to join from a laptop">Copy join link for Zoom chat</button>
+  </div>
+  <div class="nowbox" id="nowbox"></div>
+</header>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+<main>
+  <p class="intro"><b>On Zoom:</b> click <b>Open projector window</b>, leave it open (not minimised) and in Zoom choose <b>Share screen → that window</b>. Zoom then shows only the talk and the live results; this run sheet, your notes and the presenter controls stay private. Paste the join link into the Zoom chat so people on laptops can answer too; people with phones can scan the code on screen. Walls and votes open on phones <b>by themselves</b> when you reach their slide. The flip cards, tabs and pickers are clicked directly in the projector window, which is fine to do while sharing.</p>
+  <p class="intro"><b>In a room with a projector:</b> Click <b>Open projector window</b>, drag that window onto the projector and click its full-screen button. From then on the projector only ever shows the talk or the live results; this run sheet, your notes and the presenter controls stay on your laptop. Use ◀ ▶ (or your clicker, with this page in front) to move slides.</p>
+  <p class="intro">Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons open a website or the toolkit. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
+  <div class="key"><span><i style="background:#b9d3f4"></i>Talk slide</span><span><i style="background:#f3d08a"></i>Presenter screen</span><span><i style="background:#bfe6cd"></i>Website / toolkit</span></div>
+  <div id="list"></div>
+</main>
+<script src="app/config.js"></script>
+<script>
+/* Edit the run sheet here. t = start time (minutes), d = duration, talk = slide numbers. */
+var SECTIONS = [
+  { id: 'setup', t: -15, d: 15, title: 'Before people join', checks: [
+      'Laptop on power, good internet. Close email and anything with pop-up notifications',
+      'Gold button: open the presenter screen and sign in. Choose the session "Membership: Meet Sam" so this group\'s answers stay separate',
+      'Presenter screen: Reset for a new session → Clear all votes, then Clear the walls',
+      'Run sheet: Open projector window → Fill the projector (or leave it as a big window if you only have one screen). The slide box at the top of this page should say "Phones: live · membership" (if not, sign in on the presenter screen and click Open projector window again)',
+      'Zoom: Share screen → choose the projector window (not your whole desktop). Check Zoom shows the title slide',
+      'Click "Copy join link for Zoom chat" (top of this page) and keep it ready to paste',
+      'People with no phone or laptop handy can type in the Zoom chat instead: read the best ones aloud'],
+    links: [['pres', 'presenter.html', 'Presenter screen'], ['talk', 1, 'Talk: title slide']] },
+
+  { id: 'welcome', t: 0, d: 1.5, title: 'Welcome, phones out, who asked you?', talk: [1, 2],
+    say: 'This isn\'t a tour of documents. It\'s a story about one person, and every tool we\'ve built turns up exactly where it\'s needed.',
+    notes: ['Paste the join link into the Zoom chat now. "Grab your phone and scan the code, or click the link in the chat."',
+      'Slide 2 opens the first wall by itself: "Who asked you to Rotary, and to what?" Give it 60 seconds, read three answers aloud',
+      'Point to make: almost everyone was asked by someone they knew. That\'s the whole toolkit in one line'],
+    links: [['talk', 1, 'Title'], ['talk', 2, 'Who asked you? (wall)']] },
+
+  { id: 'honest', t: 1.5, d: 2.5, title: 'The honest picture and the plan', talk: [3, 4],
+    notes: ['Slide 3: the guess vote opens on phones. Let the bars climb, then click "Reveal the answer" (top of this page) to show the cards',
+      'Reframe: volunteering is down across Australia. Our members stay to serve locally (91%): that\'s our asset',
+      'Slide 4, Strategy House: click two pillars. Stress that clubs choose their own way forward'],
+    links: [['talk', 3, 'Guess vote'], ['talk', 4, 'Strategy House']] },
+
+  { id: 'sam', t: 4, d: 1, title: 'Meet Sam', talk: [5],
+    say: 'Sam is exactly the person your club needs, and Sam will never walk in on their own.',
+    links: [['talk', 5, 'Meet Sam']] },
+
+  { id: 'notice', t: 5, d: 3.5, title: 'Moments 1 and 2: Notice, Invite, and Sam googles you', talk: [6, 7, 8],
+    notes: ['Slide 6 wall: "One local group your club should get to know"',
+      'Slide 7: flip the jargon cards. Wall: "Our club recently ___ for ___". Read the best one aloud',
+      'Slide 8: tick the Google test live, then the vote "How many of the 5 can you tick?"'],
+    links: [['talk', 6, 'Notice'], ['talk', 7, 'Invite'], ['talk', 8, 'Google test']] },
+
+  { id: 'belong', t: 8.5, d: 3.5, title: 'Moments 3 to 5: Welcome, Belong, Ask', talk: [9, 10, 11],
+    notes: ['Slide 9: three names, one real job, zero sign-up forms. Friends of the Club',
+      'Slide 10 wall: "One thing your club does well in a new member\'s first month". Ask quietly: anyone in amber right now?',
+      'Slide 11 wall: "Someone who left, or aged out of Rotaract, you could ring this month"'],
+    links: [['talk', 9, 'Welcome'], ['talk', 10, 'Belong'], ['talk', 11, 'Ask']] },
+
+  { id: 'roles', t: 12, d: 2.5, title: 'Where does Sam get lost? Who does what', talk: [12, 13],
+    notes: ['Slide 12 vote: the hardest moment for your club. Read the top two',
+      'Slide 13: click President & Board first and tick the five Clearing the Way boxes. Then Membership Chair (the 90-day One Ask Sprint), then Every member'],
+    links: [['talk', 12, 'Where Sam gets lost (vote)'], ['talk', 13, 'Who does what']] },
+
+  { id: 'aha', t: 14.5, d: 1, title: 'Start small: the Aha picker', talk: [14],
+    notes: ['Ask which sentence sounds like their Board; click the one most people say'],
+    links: [['talk', 14, 'Start small']] },
+
+  { id: 'wall', t: 15.5, d: 2.5, title: 'Ideas wall: one thing in the next 90 days', talk: [15],
+    notes: ['The wall opens on phones by itself and also shows every earlier answer, colour-coded',
+      'Read out three or four. Celebrate the bold ones'],
+    links: [['talk', 15, 'Ideas wall']] },
+
+  { id: 'summary', t: 18, d: 1.5, title: 'AI summary and "the one I\'ll try"', notes: [
+      'Presenter screen: click "AI summary & ideas" (under To finish). Run sheet: Show live screen',
+      'It reads every wall and vote from today and suggests ideas. Everyone\'s phone shows them: "Tap the one idea you\'ll try in your club"',
+      'Back to the talk when the picks are in: Show talk'],
+    links: [['pres', 'presenter.html', 'Presenter screen: AI summary']] },
+
+  { id: 'close', t: 19.5, d: 0.5, title: 'Invite one person. Thank you', talk: [16],
+    say: 'Notice, invite, welcome, help them belong, and only then ask. Do that once this year, with one Sam, and you\'ve done your part.',
+    links: [['talk', 16, 'Your one goal and the library']] },
+
+  { id: 'after', t: 20, d: 5, optional: true, title: 'After the session', checks: [
+      'Presenter screen: Download results (every wall and vote, as a spreadsheet) and Save the summary',
+      'Send the District Membership Team the summary and the top 90-day ideas',
+      'Email attendees the talk link so they have every resource'],
+    links: [['pres', 'presenter.html', 'Presenter screen'], ['web', 'sam.html#16', 'Talk: resource library']] }
+];
+
+(function () {
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fmt(m) { if (m < 0) return '−' + Math.abs(m) + ' min'; var mm = Math.floor(m), ss = Math.round((m - mm) * 60); return mm + ':' + ('0' + ss).slice(-2); }
+  var store = {}; try { store = JSON.parse(localStorage.getItem('pe-runsheet-sam') || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem('pe-runsheet-sam', JSON.stringify(store)); } catch (e) {} }
+  var list = document.getElementById('list');
+  SECTIONS.forEach(function (s, i) {
+    var d = document.createElement('section'); d.className = 'sec' + (s.optional ? ' opt' : ''); d.id = s.id;
+    var links = (s.links || []).map(function (l) {
+      if (l[0] === 'talk') return '<a class="talk" data-n="' + l[1] + '" href="sam.html#' + l[1] + '" target="pe-talk"><span class="n">' + l[1] + '</span>' + esc(l[2]) + '</a>';
+      if (l[0] === 'pres') return '<a class="pres" href="' + l[1] + '" target="pe-presenter">' + esc(l[2]) + '</a>';
+      return '<a class="web" href="' + l[1] + '" target="pe-web">' + esc(l[2]) + ' ↗</a>';
+    }).join('');
+    var body = (s.say ? '<div class="say">“' + esc(s.say) + '”</div>' : '') +
+      (s.notes ? '<ul>' + s.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>' : '') +
+      (s.checks ? s.checks.map(function (c, k) { var key = s.id + k; return '<label class="check"><input type="checkbox" data-k="' + key + '"' + (store['c' + key] ? ' checked' : '') + '><span>' + esc(c) + '</span></label>'; }).join('') : '') +
+      (links ? '<div class="links">' + links + '</div>' : '');
+    d.innerHTML = '<div class="sh"><span class="t">' + fmt(s.t) + '</span><h2>' + (s.optional ? '<span class="tag">Optional</span> ' : '') + esc(s.title) + '</h2><span class="d">' + (s.talk ? 'Slides ' + s.talk.join(', ') + ' · ' : '') + s.d + ' min</span></div><div class="sb">' + body + '</div>';
+    d.querySelector('.sh').onclick = function () { store.now = s.id; save(); mark(); };
+    list.appendChild(d);
+  });
+  list.addEventListener('change', function (e) { var k = e.target.dataset.k; if (k) { store['c' + k] = e.target.checked; save(); } });
+  function mark() {
+    var hit = false;
+    SECTIONS.forEach(function (s) { var el = document.getElementById(s.id); var now = s.id === store.now; if (now) hit = true; el.classList.toggle('now', now); el.classList.toggle('done', !!store.now && !hit); });
+  }
+  mark();
+  /* timer */
+  var clock = document.getElementById('clock');
+  function tick() { if (!store.t0) { clock.textContent = '0:00'; return; } var s = Math.floor((Date.now() - store.t0) / 1000); clock.textContent = Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
+  setInterval(tick, 1000); tick();
+  document.getElementById('start').onclick = function () { store.t0 = Date.now(); store.now = 'welcome'; save(); mark(); tick(); };
+  /* ---------- projector remote (BroadcastChannel; needs the pages on the same web address) ---------- */
+  var bc = null; try { bc = new BroadcastChannel('pe-stage'); } catch (e) {}
+  var stageSeen = 0, talkSeen = 0, showing = '', stageWin = null;
+  function stageUp() { return Date.now() - stageSeen < 7000; }
+  function talkUp() { return Date.now() - talkSeen < 600000 && (stageUp() || talkSeen); }
+  function send(m) { if (bc) bc.postMessage(m); }
+  var pStat = document.getElementById('pStat'), nowbox = document.getElementById('nowbox');
+  function status() {
+    var ok = stageUp();
+    pStat.classList.toggle('ok', ok);
+    pStat.lastChild.textContent = ok ? (showing === 'waiting' ? 'Projector open: click its full-screen button' : 'Projector showing: ' + ({ talk: 'talk', live: 'live screen', black: 'blank' }[showing] || '…')) : (bc ? 'Projector not open' : 'This browser cannot link windows');
+    ['pTalk', 'pLive', 'pBlack'].forEach(function (id, k) { document.getElementById(id).classList.toggle('on', ok && showing === ['talk', 'live', 'black'][k]); });
+  }
+  setInterval(status, 1500); status();
+  if (bc) bc.onmessage = function (e) {
+    var m = e.data || {};
+    if (m.stage === 'alive') { stageSeen = Date.now(); showing = m.showing; status(); }
+    if (m.talkAt) {
+      talkSeen = Date.now();
+      nowbox.classList.add('show');
+      nowbox.innerHTML = '<b>Slide ' + m.talkAt + ' / ' + m.total + '</b> · ' + esc(m.title).slice(0, 120) + (m.phones ? ' · <span style="background:' + (/^live/.test(m.phones) ? '#2f8a57' : '#a33') + ';color:#fff;border-radius:999px;padding:1px 8px">Phones: ' + esc(m.phones) + '</span>' : '') + (m.notes ? '<div class="nn">' + esc(m.notes).replace(/\n/g, '<br>') + '</div>' : '');
+      document.getElementById('pPoll').style.display = m.isPoll ? '' : 'none';
+      document.getElementById('pReveal').style.display = m.hasReveal ? '' : 'none';
+    }
+  };
+  send({ ping: 1 }); send({ talk: 'ask' });
+  /* Browsers open new windows on the screen you're using. Chrome/Edge can open it on the
+     projector instead once you allow "window management" (asked once, the first time). */
+  function pickScreen(d) {
+    var others = d.screens.filter(function (x) { return x !== d.currentScreen; });
+    return others.filter(function (x) { return !x.isPrimary; })[0] || others[0] || null;
+  }
+  var pOpen = document.getElementById('pOpen');
+  pOpen.onclick = function () {
+    var feat = 'popup,width=1280,height=720';
+    function open(f) {
+      stageWin = window.open('stage.html?talk=sam.html', 'pe-stage', f);
+      if (stageWin) { stageWin.focus(); pOpen.textContent = 'Open projector window'; }
+      else pOpen.textContent = 'Click again to open on the projector';
+    }
+    if (!window.getScreenDetails) return open(feat);
+    window.getScreenDetails().then(function (d) {
+      var sc = pickScreen(d);
+      if (!sc) { PEnote('Windows can only see one screen. Check the projector is plugged in and set to Extend (Windows key + P).'); return open(feat); }
+      open('popup,left=' + sc.availLeft + ',top=' + sc.availTop + ',width=' + sc.availWidth + ',height=' + sc.availHeight);
+    }).catch(function () { PEnote('Chrome was not allowed to place windows, so it opened here: drag it to the projector (or press Windows key + Shift + →).'); open(feat); });
+  };
+  function PEnote(t) { nowbox.classList.add('show'); nowbox.innerHTML = '<b>Projector:</b> ' + esc(t); }
+  document.getElementById('pPrev').onclick = function () { send({ talk: 'step', d: -1 }); };
+  document.getElementById('pNext').onclick = function () { send({ talk: 'step', d: 1 }); };
+  document.getElementById('pTalk').onclick = function () { send({ show: 'talk' }); };
+  document.getElementById('pLive').onclick = function () { send({ show: 'live' }); };
+  document.getElementById('pBlack').onclick = function () { send({ show: 'black' }); };
+  document.getElementById('pPoll').onclick = function () { send({ talk: 'openPoll' }); };
+  document.getElementById('pReveal').onclick = function () { send({ talk: 'reveal' }); };
+  /* join link for the Zoom chat: uses the presenter sign-in saved on this computer */
+  document.getElementById('pJoin').onclick = function () {
+    var C = window.PE_CONFIG || {}, admin = '', room = 'membership', btn = this;
+    try { admin = localStorage.getItem('pe-admin') || ''; room = localStorage.getItem('pe-room') || 'membership'; } catch (e) {}
+    if (!C.AI_URL || !admin) { PEnote('Sign in on the presenter screen first (gold button), choose the Membership session, then click again.'); return; }
+    fetch(String(C.AI_URL).replace(/\/+$/, '') + '/api/live/whoami', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ admin: admin, room: room }) })
+      .then(function (r) { return r.json(); }).then(function (r) {
+        if (!r.ok) { PEnote('The presenter sign-in was not accepted. Sign in again on the presenter screen.'); return; }
+        var url = (C.SITE_URL || '') + 'join.html?code=' + encodeURIComponent(r.accessCode) + (room !== 'prepelds' ? '&room=' + encodeURIComponent(room) : '');
+        var msg = 'Join in from your phone or laptop (no app, no name needed): ' + url;
+        var ok = function () { btn.textContent = 'Copied ✓ paste into Zoom chat'; setTimeout(function () { btn.textContent = 'Copy join link for Zoom chat'; }, 3000); };
+        if (navigator.clipboard) navigator.clipboard.writeText(msg).then(ok, function () { PEnote(msg); }); else PEnote(msg);
+        if (!/^membership/i.test(room)) PEnote('Heads up: the presenter screen is on session "' + esc(room) + '". Switch it to "Membership: Meet Sam" so answers land in the right place.');
+      }).catch(function () { PEnote('Could not reach the online service. Check the internet connection.'); });
+  };
+  /* blue buttons: move the projector's talk instead of opening a new window */
+  list.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a'); if (!a) return;
+    if (a.classList.contains('talk') && (stageUp() || talkSeen)) { e.preventDefault(); send({ show: 'talk' }); send({ talk: 'go', n: +a.dataset.n }); }
+    else if (a.classList.contains('pres') && stageUp()) { send({ show: 'live' }); } /* controls open here on the laptop, results go to the projector */
+  });
+  document.addEventListener('keydown', function (e) {
+    if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (['ArrowRight', 'PageDown', ' '].indexOf(e.key) > -1) { e.preventDefault(); send({ talk: 'step', d: 1 }); }
+    if (['ArrowLeft', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); send({ talk: 'step', d: -1 }); }
+    if (e.key === 'b' || e.key === 'B') send({ show: showing === 'black' ? 'talk' : 'black' });
+  });
+
+  document.getElementById('reset').onclick = function () { store = {}; save(); document.querySelectorAll('input[type=checkbox]').forEach(function (c) { c.checked = false; }); mark(); tick(); };
+})();
+</script>
+</body>
+</html>

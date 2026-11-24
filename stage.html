@@ -20,14 +20,17 @@
 <div class="bar"></div>
 <div id="start">
   <h1>Projector screen</h1>
-  <p><b>1.</b> Drag this window onto the projector.<br><b>2.</b> Click the button below to fill the screen.<br><b>3.</b> Go back to your laptop and drive everything from the run sheet.</p>
-  <button id="go">Full screen on this display</button>
+  <p>Click the button. If Chrome asks to <b>manage windows on all your displays</b>, choose <b>Allow</b>; this window then fills the projector by itself.<br>No question, or it lands on the laptop? Drag this window to the projector (or press <b>Windows key + Shift + →</b>), then click again.</p>
+  <button id="go">Fill the projector</button>
   <p style="font-size:.85rem;opacity:.7">Nothing you click on the laptop (notes, timer, controls) will appear here.</p>
 </div>
-<iframe id="talk" src="talk.html?embed=1" allow="autoplay; fullscreen" title="Talk"></iframe>
+<iframe id="talk" src="about:blank" allow="autoplay; fullscreen" title="Talk"></iframe>
 <iframe id="live" src="presenter.html?view=audience" title="Live screen"></iframe>
 <script>
 (function () {
+  /* stage.html?talk=sam.html shows another talk (default: talk.html) */
+  var TALK = (/[?&]talk=([\w.-]+\.html)/.exec(location.search) || [])[1] || 'talk.html';
+  document.getElementById('talk').src = TALK + '?embed=1';
   var talk = document.getElementById('talk'), live = document.getElementById('live'), start = document.getElementById('start');
   var bc = null; try { bc = new BroadcastChannel('pe-stage'); } catch (e) {}
   var showing = 'talk';
@@ -38,10 +41,27 @@
     if (w === 'live') { try { live.contentWindow.location.reload(); } catch (e) {} } /* picks up a fresh sign-in */
     if (bc) bc.postMessage({ stage: 'alive', showing: w });
   }
-  document.getElementById('go').onclick = function () {
-    var r = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
-    if (r && r.catch) r.catch(function () {});
-    start.classList.add('gone'); show('talk');
+  /* Full screen on the projector: with "window management" allowed, Chrome/Edge can fill the
+     other screen even if this window is still on the laptop */
+  function target(d) {
+    var others = d.screens.filter(function (x) { return x !== d.currentScreen; });
+    if (d.currentScreen && !d.currentScreen.isPrimary) return d.currentScreen; /* already on the projector */
+    return others.filter(function (x) { return !x.isPrimary; })[0] || others[0] || d.currentScreen;
+  }
+  function full(opts) {
+    var r = document.documentElement.requestFullscreen(opts || {});
+    return r && r.then ? r : Promise.resolve();
+  }
+  var goBtn = document.getElementById('go');
+  goBtn.onclick = function () {
+    function done() { start.classList.add('gone'); show('talk'); }
+    if (!window.getScreenDetails) { full().catch(function () {}); return done(); }
+    window.getScreenDetails().then(function (d) {
+      return full({ screen: target(d) }).then(done);
+    }).catch(function () {
+      /* permission just granted (click once more) or refused (drag this window across first) */
+      full().then(done).catch(function () { goBtn.textContent = 'Click again to fill the projector'; });
+    });
   };
   document.addEventListener('keydown', function (e) {
     if (e.key === 'f' || e.key === 'F') document.getElementById('go').click();

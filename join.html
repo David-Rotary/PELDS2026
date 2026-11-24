@@ -50,6 +50,7 @@
   var code = ai.code(), dev = ai.device(), last = '', act = null, myVote = null, timer;
   var role = ''; try { role = localStorage.getItem('pe-role') || ''; } catch (e) {}
   if (/^presidents/i.test(room)) document.getElementById('hdr').textContent = 'District 9815 · Presidents';
+  else if (/^membership/i.test(room)) document.getElementById('hdr').textContent = 'District 9815 · Membership';
   else if (room !== 'prepelds') document.getElementById('hdr').textContent = 'District 9815 · Pre-PELDS';
   var ROLE_NAME = { pe: 'President-Elect', mc: 'Membership Chair', other: 'Something else' };
   document.getElementById('tk').href = 'START%20HERE.html' + (code ? '?code=' + encodeURIComponent(code) : '');
