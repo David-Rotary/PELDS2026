@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grow your club. Grow your people. — District 9815</title>
+<style>
+:root{
+  --navy:#0b2a5b; --blue:#17458F; --azure:#0067C8; --sky:#e6eefb;
+  --gold:#F7A81B; --gold-soft:#fdf0d5; --paper:#F7F3EA; --card:#ffffff;
+  --ink:#18202f; --muted:#5a6476; --line:#ddd6c6;
+  --green:#2f8a57; --amber:#d98b0b; --red:#c2423a; --cran:#c4135f;
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --sans: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0a1b38;overflow:hidden;font-family:var(--sans);color:var(--ink)}
+button{font-family:inherit;cursor:pointer}
+input,textarea{font-family:inherit}
+
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 52px 0}
+#stage{position:absolute;width:1600px;height:900px;transform-origin:0 0;background:var(--paper);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.slide{position:absolute;inset:0;padding:70px 90px 60px;display:none;flex-direction:column}
+.slide.active{display:flex;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide .foot{position:absolute;left:90px;right:90px;bottom:22px;display:flex;justify-content:space-between;font-size:15px;color:var(--muted);letter-spacing:.02em}
+.slide .foot b{color:var(--blue);font-weight:600}
+
+.kicker{font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--azure);font-weight:700;margin-bottom:10px}
+h1,h2{font-family:var(--serif);font-weight:700;margin:0;color:var(--navy);letter-spacing:-.01em}
+h2{font-size:58px;line-height:1.05}
+h2 em{font-style:normal;color:var(--azure)}
+.lede{font-size:26px;color:var(--muted);margin:14px 0 0;max-width:1150px;line-height:1.4}
+.ask{margin-top:auto;background:var(--navy);color:#fff;border-radius:14px;padding:18px 26px;font-size:25px;display:flex;gap:18px;align-items:center}
+.ask .tag{background:var(--gold);color:var(--navy);font-weight:800;font-size:15px;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:6px;white-space:nowrap}
+.row{display:flex;gap:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 26px}
+.btn{border:0;border-radius:10px;padding:10px 18px;font-size:19px;font-weight:600;background:var(--blue);color:#fff}
+.btn.ghost{background:transparent;border:2px solid var(--blue);color:var(--blue)}
+.btn.gold{background:var(--gold);color:var(--navy)}
+.btn.small{font-size:15px;padding:6px 12px}
+.addrow{display:flex;gap:8px;margin-top:12px}
+.addrow input{flex:1;font-size:18px;padding:8px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff}
+
+/* ---------- title ---------- */
+#s-title{background:radial-gradient(1200px 700px at 85% 110%, #1d5bb8 0%, transparent 60%), var(--navy);color:#fff;justify-content:center}
+#s-title .kicker{color:var(--gold)}
+#s-title h1{color:#fff;font-size:112px;line-height:.98;max-width:1200px}
+#s-title h1 span{color:var(--gold)}
+#s-title .lede{color:#c9d6ee;font-size:30px;max-width:1050px;margin-top:28px}
+#s-title .meta{margin-top:56px;display:flex;gap:40px;font-size:22px;color:#c9d6ee}
+#s-title .meta label{display:block;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+#s-title .meta input{background:transparent;border:0;border-bottom:2px dashed rgba(255,255,255,.35);color:#fff;font-size:28px;font-family:var(--serif);padding:4px 0;width:520px;outline:none}
+#s-title .meta input:focus{border-bottom-color:var(--gold)}
+#s-title .foot{color:#8fa6cf}
+.rings{position:absolute;right:-140px;top:-140px;width:620px;height:620px;opacity:.16}
+
+/* ---------- how it works ---------- */
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px}
+.how .card{padding:34px}
+.how .ico{width:68px;height:68px;border-radius:18px;background:var(--sky);display:grid;place-items:center;font-size:34px;margin-bottom:18px}
+.how h3{font-family:var(--serif);font-size:32px;margin:0 0 10px;color:var(--navy)}
+.how p{font-size:21px;line-height:1.45;color:var(--muted);margin:0}
+
+/* ---------- tally ---------- */
+.tallies{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px;flex:1;min-height:0}
+.tallies .card{display:flex;flex-direction:column}
+.tallies h3{font-family:var(--serif);font-size:34px;margin:0 0 4px;color:var(--navy)}
+.tallies .sub{color:var(--muted);font-size:17px;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.chip{position:relative;display:inline-flex;align-items:center;gap:10px;border:2px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px 9px 18px;font-size:19px;user-select:none;transition:all .15s}
+.chip:hover{border-color:var(--azure)}
+.chip .n{min-width:34px;height:30px;border-radius:999px;background:#eef1f6;color:var(--muted);display:grid;place-items:center;font-weight:700;font-size:17px;padding:0 8px}
+.chip.on{border-color:var(--azure);background:var(--sky)}
+.chip.on .n{background:var(--azure);color:#fff}
+.chip.top{border-color:var(--gold);background:var(--gold-soft)}
+.chip.top .n{background:var(--gold);color:var(--navy)}
+.chip .minus{border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1;padding:0 2px;opacity:.45}
+.chip .minus:hover{opacity:1;color:var(--red)}
+.reveal{margin-top:16px;border-left:6px solid var(--gold);background:#fff;padding:16px 22px;border-radius:0 12px 12px 0;font-size:23px;line-height:1.4;display:none}
+.reveal.show{display:block;animation:fade .4s}
+
+/* ---------- quiz ---------- */
+.quiz{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:40px}
+.quiz .card{display:flex;flex-direction:column;gap:14px;padding:30px}
+.quiz .q{font-family:var(--serif);font-size:29px;line-height:1.2;color:var(--navy);min-height:105px}
+.quiz .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz .opts button{font-size:28px;font-weight:700;padding:16px 0;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.quiz .opts button:hover{border-color:var(--azure)}
+.quiz .opts button.right{background:var(--green);border-color:var(--green);color:#fff}
+.quiz .opts button.wrong{background:#f6dcda;border-color:var(--red);color:var(--red)}
+.quiz .why{font-size:18px;color:var(--muted);line-height:1.4;min-height:78px;visibility:hidden}
+.quiz .why.show{visibility:visible}
+
+/* ---------- bucket ---------- */
+.bucket-wrap{display:grid;grid-template-columns:520px 1fr;gap:50px;margin-top:30px;align-items:start}
+.field{margin-bottom:22px}
+.field label{display:flex;justify-content:space-between;font-size:21px;font-weight:600;margin-bottom:8px}
+.field label b{font-family:var(--serif);font-size:30px;color:var(--azure)}
+input[type=range]{width:100%;accent-color:var(--azure);height:28px}
+.big-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.stat .v{font-family:var(--serif);font-size:62px;font-weight:700;color:var(--navy);line-height:1}
+.stat .l{font-size:18px;color:var(--muted);margin-top:8px;line-height:1.35}
+.stat.hot{background:var(--navy);border-color:var(--navy)}
+.stat.hot .v{color:var(--gold)} .stat.hot .l{color:#c9d6ee}
+.bucket-svg{width:100%;height:260px;margin-top:10px}
+.drip{animation:drip 1.6s infinite ease-in}
+@keyframes drip{0%{transform:translateY(0);opacity:1}100%{transform:translateY(70px);opacity:0}}
+.punch{font-family:var(--serif);font-size:30px;color:var(--navy);margin-top:18px;line-height:1.3}
+
+/* ---------- skills ---------- */
+.skillgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:34px}
+.skill{background:#fff;border:2px solid var(--line);border-radius:14px;padding:18px 16px;font-size:21px;font-weight:600;text-align:left;color:var(--ink);min-height:92px;display:flex;align-items:flex-end;transition:all .2s;position:relative}
+.skill:hover{border-color:var(--gold)}
+.skill.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.skill.on::after{content:"★";position:absolute;top:10px;right:14px;color:var(--gold);font-size:22px}
+.skillcount{display:flex;align-items:baseline;gap:14px;margin-top:24px;font-size:24px;color:var(--muted)}
+.skillcount b{font-family:var(--serif);font-size:56px;color:var(--azure)}
+
+/* ---------- roles ---------- */
+.roles{display:grid;grid-template-columns:360px 1fr;gap:34px;margin-top:30px;flex:1;min-height:0}
+.rolelist{display:flex;flex-direction:column;gap:8px}
+.rolelist button{text-align:left;font-size:21px;padding:12px 18px;border-radius:11px;border:2px solid var(--line);background:#fff;color:var(--ink);font-weight:600}
+.rolelist button.on{background:var(--azure);border-color:var(--azure);color:#fff}
+.rolecard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:34px 40px;display:flex;flex-direction:column;gap:20px}
+.rolecard h3{font-family:var(--serif);font-size:44px;margin:0;color:var(--navy)}
+.rolecard .lab{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--azure);font-weight:700;margin-bottom:6px}
+.rolecard .txt{font-size:23px;line-height:1.45}
+.pills{display:flex;flex-wrap:wrap;gap:10px}
+.pill{background:var(--gold-soft);border:1px solid #efd39b;color:#6b4a06;border-radius:999px;padding:7px 16px;font-size:19px;font-weight:600}
+.cv{font-family:var(--serif);font-style:italic;font-size:25px;background:var(--sky);border-radius:12px;padding:16px 20px;color:var(--navy)}
+.rolecard .empty{color:var(--muted);font-size:24px;margin:auto;text-align:center}
+
+/* ---------- ladder ---------- */
+.ladder-wrap{display:grid;grid-template-columns:1fr 470px;gap:50px;margin-top:20px;flex:1;min-height:0}
+.ladder{display:flex;flex-direction:column-reverse;gap:10px;margin-bottom:10px;position:relative;padding-left:40px}
+.ladder::before,.ladder::after{content:"";position:absolute;top:0;bottom:0;width:8px;background:#c9bfa8;border-radius:4px}
+.ladder::before{left:12px}.ladder::after{right:-20px}
+.rung{flex:1;display:flex;align-items:center;gap:16px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 18px;font-size:21px;cursor:pointer;user-select:none;transition:all .15s}
+.rung .num{font-family:var(--serif);font-weight:700;color:var(--muted);width:26px}
+.rung .t{font-weight:700;flex:0 0 330px}
+.rung .d{color:var(--muted);font-size:17px;flex:1}
+.rung .st{width:22px;height:22px;border-radius:50%;background:#e4e0d6;flex:none}
+.rung.s1{border-color:var(--green)} .rung.s1 .st{background:var(--green)}
+.rung.s2{border-color:var(--amber)} .rung.s2 .st{background:var(--amber)}
+.rung.s3{border-color:var(--red);background:#fbeceb} .rung.s3 .st{background:var(--red)}
+.legend{display:flex;flex-direction:column;gap:10px;font-size:19px;margin:16px 0 24px}
+.legend span{display:inline-block;width:16px;height:16px;border-radius:50%;margin-right:10px;vertical-align:-2px}
+
+/* ---------- health / radar ---------- */
+.health{display:grid;grid-template-columns:1fr 560px;gap:40px;margin-top:26px;flex:1;min-height:0}
+.hrow{display:grid;grid-template-columns:44px 1fr 250px;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:12px}
+.hrow .pn{width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:22px}
+.hrow .pt{font-size:21px;font-weight:700;line-height:1.2}
+.hrow .pt small{display:block;font-weight:400;color:var(--muted);font-size:16px;margin-top:3px}
+.dots{display:flex;gap:8px}
+.dots button{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:18px;font-weight:700;color:var(--muted)}
+.dots button.on{background:var(--azure);border-color:var(--azure);color:#fff}
+.radar{width:100%;height:470px}
+.lowest{background:var(--navy);color:#fff;border-radius:14px;padding:18px 22px;font-size:20px;line-height:1.4}
+.lowest b{color:var(--gold)}
+
+/* ---------- matrix ---------- */
+.matrix-wrap{display:grid;grid-template-columns:330px 1fr;gap:30px;margin-top:20px;flex:1;min-height:0}
+.tray{background:#fff;border:2px dashed var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;min-height:0}
+.tray h4{margin:0 0 10px;font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tray .zone{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;flex:1;overflow:auto}
+.act{background:var(--gold-soft);border:1.5px solid #ecc977;border-radius:9px;padding:8px 12px;font-size:17px;font-weight:600;cursor:grab;user-select:none;touch-action:none;color:#4a3305}
+.act.sel{outline:3px solid var(--azure);outline-offset:2px}
+.dragghost{position:fixed;pointer-events:none;z-index:999;opacity:.9;transform-origin:0 0;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.matrix{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:0 0 38px 46px}
+.quad{border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:0;transition:outline .1s}
+.quad.hover{outline:3px solid var(--azure)}
+.quad h5{margin:0;font-family:var(--serif);font-size:25px;color:var(--navy)}
+.quad p{margin:0;font-size:15px;color:var(--muted)}
+.quad .zone{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;flex:1;overflow:auto}
+.q-tl{background:#e8f0fb}.q-tr{background:#dcefe3}.q-bl{background:#f6e3e1}.q-br{background:#f8eedb}
+.axis-y{position:absolute;left:0;top:0;bottom:38px;width:36px;display:flex;align-items:center;justify-content:center}
+.axis-y span{transform:rotate(-90deg);white-space:nowrap;font-size:17px;font-weight:700;color:var(--blue);letter-spacing:.08em;text-transform:uppercase}
+.axis-x{position:absolute;left:46px;right:0;bottom:0;height:32px;text-align:center;font-size:17px;font-weight:700;color:var(--blue);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- sam ---------- */
+.sam{display:grid;grid-template-columns:330px 1fr;gap:34px;margin-top:22px;flex:1;min-height:0}
+.persona{background:var(--navy);color:#fff;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px}
+.avatar{width:96px;height:96px;border-radius:50%;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-family:var(--serif);font-size:46px;font-weight:700}
+.persona h3{font-family:var(--serif);font-size:36px;margin:0}
+.persona p{margin:0;font-size:18px;line-height:1.45;color:#c9d6ee}
+.meter{height:18px;border-radius:9px;background:rgba(255,255,255,.18);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--gold);transition:width .6s ease}
+.steps{display:flex;flex-direction:column;gap:10px;overflow:auto;scroll-behavior:smooth}
+.step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 18px;display:none;flex:none}
+.step.show{display:block;animation:fade .4s}
+.step .when{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--azure);font-weight:700}
+.step .sit{font-size:20px;margin:2px 0 8px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choices button{text-align:left;border:2px solid var(--line);background:#fff;border-radius:11px;padding:11px 14px;font-size:17px;line-height:1.35;color:var(--ink)}
+.choices button:hover{border-color:var(--azure)}
+.choices button.picked{border-color:var(--azure);background:var(--sky)}
+.choices button.faded{opacity:.4}
+.outcome{margin-top:8px;font-size:18px;line-height:1.4;color:var(--navy);font-style:italic;display:none}
+.outcome.show{display:block}
+
+/* ---------- invite table ---------- */
+table.inv{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:20px}
+table.inv th{text-align:left;font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--azure);padding:0 10px}
+table.inv td{padding:0 6px}
+table.inv input{width:100%;font-size:21px;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+table.inv input:focus{outline:none;border-color:var(--azure)}
+table.inv td.x{width:40px}
+table.inv td.x button{border:0;background:none;font-size:24px;color:var(--muted)}
+
+/* ---------- cycle + vote ---------- */
+.cycle{display:flex;gap:10px;margin-top:22px;align-items:stretch}
+.cyc{flex:1;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;position:relative}
+.cyc .n{font-family:var(--serif);font-size:15px;color:var(--azure);font-weight:700;letter-spacing:.1em}
+.cyc b{display:block;font-size:22px;color:var(--navy);margin:2px 0 4px}
+.cyc span{font-size:16px;color:var(--muted);line-height:1.35}
+.cyc.now{background:var(--gold-soft);border-color:var(--gold)}
+.votes{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.vote{display:grid;grid-template-columns:420px 1fr 130px;gap:18px;align-items:center}
+.vote .lbl{font-size:21px;font-weight:700}
+.vote .bar{height:44px;background:#ece6d8;border-radius:10px;overflow:hidden;position:relative}
+.vote .bar i{position:absolute;inset:0 auto 0 0;background:var(--azure);border-radius:10px;transition:width .4s}
+.vote.lead .bar i{background:var(--gold)}
+.vote .bar em{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-style:normal;font-weight:800;font-size:20px;color:var(--navy)}
+.vote .ctl{display:flex;gap:8px}
+.vote .ctl button{width:56px;height:44px;border-radius:10px;border:2px solid var(--line);background:#fff;font-size:24px;font-weight:700;color:var(--navy)}
+.vote .ctl button.plus{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* ---------- commitment ---------- */
+.commit{display:grid;grid-template-columns:1fr 1fr;gap:20px 30px;margin-top:26px}
+.commit .f{display:flex;flex-direction:column;gap:8px}
+.commit .f.wide{grid-column:1/-1}
+.commit label{font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--azure);font-weight:700}
+.commit input,.commit textarea{font-size:23px;padding:14px 16px;border:2px solid var(--line);border-radius:12px;background:#fff;resize:none}
+.commit textarea{font-family:var(--serif);font-size:30px;height:110px;color:var(--navy)}
+.commit input:focus,.commit textarea:focus{outline:none;border-color:var(--gold)}
+
+/* ---------- summary ---------- */
+#s-summary{background:var(--navy);color:#fff}
+#s-summary h2{color:#fff;font-size:50px}
+#s-summary .kicker{color:var(--gold)}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto 1fr 1fr;gap:16px;margin-top:22px;flex:1;min-height:0}
+.sumbox{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:16px 20px;overflow:hidden}
+.sumbox h4{margin:0 0 8px;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.sumbox div{font-size:17px;line-height:1.42;color:#e2e9f6}
+.sumbox.big{grid-column:span 2;background:var(--gold);color:var(--navy);border:0}
+.sumbox.big h4{color:var(--navy)}
+.sumbox.big div{color:var(--navy);font-family:var(--serif);font-size:26px;line-height:1.3}
+.sumbox .none{opacity:.5;font-style:italic}
+.sumactions{display:flex;gap:14px;margin-top:18px;align-items:center}
+.sumactions .close{margin-left:auto;font-family:var(--serif);font-size:24px;color:var(--gold)}
+#s-summary .foot{color:#8fa6cf}
+
+/* ---------- bottom bar ---------- */
+#bar{position:fixed;left:0;right:0;bottom:0;height:52px;background:#081630;display:flex;align-items:center;gap:10px;padding:0 14px;color:#c9d6ee;font-size:14px;z-index:50}
+#bar button{background:#14284d;border:0;color:#e8eefa;border-radius:8px;height:34px;padding:0 12px;font-size:14px}
+#bar button:hover{background:#1d3767}
+#bar .prog{flex:1;display:flex;gap:5px;justify-content:center}
+#bar .prog i{width:22px;height:6px;border-radius:3px;background:#2a3f66;cursor:pointer}
+#bar .prog i.on{background:var(--gold)}
+#bar .prog i.done{background:#5b77a8}
+#timer{font-variant-numeric:tabular-nums;font-weight:700;min-width:58px;text-align:center;font-size:18px;color:#fff}
+#timer.end{color:var(--gold);animation:blink .6s 6}
+@keyframes blink{50%{opacity:.2}}
+#bigtimer{position:absolute;top:22px;right:30px;z-index:20;background:var(--navy);color:#fff;font-family:var(--serif);font-size:44px;font-weight:700;padding:8px 22px;border-radius:14px;display:none;font-variant-numeric:tabular-nums;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+#bigtimer.show{display:block}
+#bigtimer.end{background:var(--gold);color:var(--navy)}
+#notes{position:fixed;left:0;right:0;bottom:52px;max-height:42vh;overflow:auto;background:#fffbe9;border-top:4px solid var(--gold);padding:18px 28px;font-size:17px;line-height:1.55;display:none;z-index:40;color:#2b2b2b}
+#notes.show{display:block}
+#notes h4{margin:0 0 6px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+#notes p{margin:0 0 8px}
+#help{position:fixed;inset:0;background:rgba(5,15,35,.75);display:none;place-items:center;z-index:100}
+#help.show{display:grid}
+#help .card{max-width:640px;font-size:18px;line-height:1.6}
+#help kbd{background:#eef1f6;border:1px solid #ccd;border-radius:5px;padding:1px 7px;font-size:15px}
+
+@media print{
+  body{background:#fff;overflow:visible}
+  #viewport,#bar,#notes,#help{display:none!important}
+  #printout{display:block!important;font-family:var(--sans);padding:10mm;color:#111}
+  #printout h1{font-family:var(--serif);color:var(--navy);font-size:26pt;margin:0 0 4mm}
+  #printout h3{font-size:11pt;letter-spacing:.1em;text-transform:uppercase;color:var(--azure);margin:6mm 0 1mm}
+  #printout p{font-size:12pt;margin:0;line-height:1.45;white-space:pre-wrap}
+}
+#printout{display:none}
+</style>
+</head>
+<body>
+
+<div id="viewport"><div id="stage">
+<div id="bigtimer"></div>
+
+<!-- 1 TITLE -->
+<section class="slide" id="s-title" data-notes="<h4>Opening · 2 min</h4><p>Welcome everyone. Tell the room up front: tonight isn't a talk about membership, it's a conversation, and their answers build a plan for the club.</p><p>Type the club name and presenter name into the fields before you start (they're remembered on this computer). The club name shows up on later slides and in the summary.</p><p><b>Controls:</b> → / Space / clicker = next, ← = back, <b>N</b> = these notes, <b>F</b> = full screen, <b>?</b> = help. Use the timer buttons in the bottom bar for table talk.</p>">
+  <svg class="rings" viewBox="0 0 200 200"><g fill="none" stroke="#F7A81B" stroke-width="2"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="74"/><circle cx="100" cy="100" r="52"/><circle cx="100" cy="100" r="30"/></g></svg>
+  <div class="kicker">District 9815 · A membership conversation</div>
+  <h1>Grow your club.<br><span>Grow your people.</span></h1>
+  <p class="lede">How <span class="clubname">our club</span> can attract, keep and grow great Rotarians, and why Rotary might be the best leadership school in town.</p>
+  <div class="meta">
+    <div><label>Club</label><input id="in-club" placeholder="Rotary Club of …" autocomplete="off"></div>
+    <div><label>Presented by</label><input id="in-presenter" placeholder="PDG Malcolm Chiverton, District Membership Chair" autocomplete="off"></div>
+  </div>
+  <div class="foot"><span>Membership Growth Strategy 2026–2029</span><span>Grow Rotary · Strengthen Clubs · Create Lasting Impact</span></div>
+</section>
+
+<!-- 2 HOW -->
+<section class="slide" id="s-how" data-notes="<h4>Set the rules · 2 min</h4><p>Explain the three ways people will take part. Make it clear there are no wrong answers and that the District isn't here to tell the club what to do. The strategy itself says clubs choose their own way forward.</p><p>Tip: ask someone to be the <b>scribe</b> who types into the slides while you facilitate. It keeps you facing the room.</p>">
+  <div class="kicker">Before we start</div>
+  <h2>This isn't a talk. <em>It's a conversation.</em></h2>
+  <p class="lede">The District has a three-year membership strategy, but every club finds its own way forward. Tonight we work out ours.</p>
+  <div class="how">
+    <div class="card"><div class="ico">✋</div><h3>Hands up, we count</h3><p>Quick shows of hands. Every count goes up on screen as you vote.</p></div>
+    <div class="card"><div class="ico">💬</div><h3>Table talk</h3><p>Short, timed chats with the people beside you, then we share the best idea from each table.</p></div>
+    <div class="card"><div class="ico">📝</div><h3>You write the plan</h3><p>Everything we capture tonight lands on the last slide as a one-page summary the club keeps.</p></div>
+  </div>
+  <div class="ask"><span class="tag">House rule</span><span>The best idea in the room tonight probably isn't on these slides.</span></div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 3 WHY JOIN / STAY -->
+<section class="slide" id="s-why" data-notes="<h4>Warm-up · 6 min</h4><p>Ask: <i>“Hands up if you joined Rotary because…”</i> and read each chip. Click a chip to add one to its count; click the small − to undo. Then do the same for <i>“…and the reason you're still here.”</i> Use the box to add answers that come from the room.</p><p>The two highest in each column turn gold. Then press <b>What do we notice?</b></p><p>Point to make: people usually <b>join</b> because someone asked them or because of a cause, and <b>stay</b> because of friendships, purpose and growing as a person. Our plan needs both a reason to come and a reason to stay. (Strategy pathways 1 and 2.)</p>">
+  <div class="kicker">Warm-up · Pathways 1 &amp; 2</div>
+  <h2>Why did you <em>join</em>? Why do you <em>stay</em>?</h2>
+  <div class="tallies">
+    <div class="card"><h3>I joined because…</h3><div class="sub">Show of hands. Tap to count, tap − to undo.</div><div class="chips" id="t-join"></div><div class="addrow"><input placeholder="Add another reason…" data-add="join"><button class="btn small" data-addbtn="join">Add</button></div></div>
+    <div class="card"><h3>I stay because…</h3><div class="sub">Same again. What keeps you coming back?</div><div class="chips" id="t-stay"></div><div class="addrow"><input placeholder="Add another reason…" data-add="stay"><button class="btn small" data-addbtn="stay">Add</button></div></div>
+  </div>
+  <div class="row" style="margin-top:16px;align-items:center"><button class="btn gold" data-reveal="why-r">What do we notice?</button></div>
+  <div class="reveal" id="why-r">People join for a reason, and they <b>stay</b> for relationships, purpose and growth. A membership plan needs both: <b>a reason to come</b> and <b>a reason to stay</b>.</div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 4 QUIZ -->
+<section class="slide" id="s-quiz" data-notes="<h4>Quick quiz · 4 min · optional if short on time</h4><p>Read each question and take a show of hands for each option, then click the room's favourite. The right answer turns green either way.</p><p>Point to make: the District aims for <b>15% growth over three years</b> (about 5% net a year), <b>retention above 90%</b>, and <b>25% fewer first-year resignations</b>. Two of the three targets are about keeping people, not finding them. That leads into the next slide.</p>">
+  <div class="kicker">The District picture</div>
+  <h2>Guess the target.</h2>
+  <p class="lede">The District 9815 Membership Growth Strategy 2026–2029 sets three headline goals. How close can the room get?</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="ask"><span class="tag">Notice</span><span>Two of the three targets are about <b>keeping</b> people, not finding them.</span></div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 5 BUCKET -->
+<section class="slide" id="s-bucket" data-notes="<h4>The leaky bucket · 5 min</h4><p>Ask the President or Secretary for the club's real numbers: members today, and roughly how many left in the last 12 months. Set the sliders live.</p><p>Retention % = members who stayed ÷ members at the start of the year. If 3 of 30 left, retention is 90%.</p><p>The maths: members lost each year = members × (1 − retention). To grow, you have to replace those <i>and</i> add the growth on top. Most clubs are surprised by the middle number.</p><p>Discussion: <i>“Do we know why the last few people left? Did anyone ask them?”</i> (Pathway 2, Retention.)</p>">
+  <div class="kicker">Pathway 2 · Retention</div>
+  <h2>The <em>leaky bucket</em>.</h2>
+  <div class="bucket-wrap">
+    <div>
+      <div class="field"><label>Members today <b id="bk-m-v">25</b></label><input type="range" id="bk-m" min="8" max="120" step="1"></div>
+      <div class="field"><label>Retention rate <b id="bk-r-v">85%</b></label><input type="range" id="bk-r" min="60" max="100" step="1"></div>
+      <div class="field"><label>Growth goal per year <b id="bk-g-v">5%</b></label><input type="range" id="bk-g" min="0" max="20" step="1"></div>
+      <svg class="bucket-svg" id="bk-svg" viewBox="0 0 520 260"></svg>
+    </div>
+    <div>
+      <div class="big-stats">
+        <div class="stat"><div class="v" id="bk-lost">4</div><div class="l">members we lose in a typical year</div></div>
+        <div class="stat"><div class="v" id="bk-grow">1</div><div class="l">extra members to reach our growth goal</div></div>
+        <div class="stat hot"><div class="v" id="bk-need">5</div><div class="l">new members we need <b>every year</b></div></div>
+      </div>
+      <div class="punch" id="bk-punch"></div>
+      <div class="ask" style="margin-top:30px"><span class="tag">Discuss</span><span>Do we know why the last few people left? Did anyone ask them?</span></div>
+    </div>
+  </div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 6 BIG IDEA SKILLS -->
+<section class="slide" id="s-skills" data-notes="<h4>The big idea · 6 min</h4><p>This is the heart of the session. Ask: <i>“Which of these have you learned or sharpened through Rotary?”</i> Click each one somebody claims. Ask one or two people for the story behind it.</p><p>Then ask: <i>“Which of these have you used at work, or in your family or community, because of Rotary?”</i></p><p>Point to make: Rotary is one of the few places where you can practise leadership with real stakes and a safety net. People pay a lot for courses that teach this. We rarely say it out loud when we invite people. (Strategy 4.3, Leadership development.)</p>">
+  <div class="kicker">The big idea · Pathway 4.3 Leadership development</div>
+  <h2>Rotary is a <em>leadership school</em>.<br>We just forgot to put it in the brochure.</h2>
+  <p class="lede" style="font-size:23px">Which of these have <b>you</b> learned or sharpened through Rotary? Tap each one somebody in the room claims.</p>
+  <div class="skillgrid" id="skills"></div>
+  <div class="skillcount"><b id="skill-n">0</b> of <span id="skill-t">15</span> leadership skills built in this room, without paying a cent in course fees.</div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 7 ROLES -->
+<section class="slide" id="s-roles" data-notes="<h4>Every role is a training ground · 5 min · optional if short on time</h4><p>Click through two or three roles, ideally ones held by people in the room. Ask them: <i>“Is that fair? What did you learn that isn't on the list?”</i></p><p>The ‘How it reads on a CV’ line is the provocation. Ask: <i>“Would a 32-year-old project manager join for this? Do we ever invite people this way?”</i></p><p>Point to make: when we invite people, we can offer growth, not just meetings.</p>">
+  <div class="kicker">Pathway 4.3 · Leadership development</div>
+  <h2>Every club role is a <em>training ground</em>.</h2>
+  <div class="roles">
+    <div class="rolelist" id="rolelist"></div>
+    <div class="rolecard" id="rolecard"><div class="empty">Pick a role on the left.<br>Better still, pick one somebody in the room holds.</div></div>
+  </div>
+  <div class="ask" style="margin-top:20px"><span class="tag">Discuss</span><span>Would a busy 30-something professional join for <i>this</i>? Do we ever invite people this way?</span></div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 8 LADDER -->
+<section class="slide" id="s-ladder" data-notes="<h4>The leadership ladder · 7 min · table talk</h4><p>Walk up the ladder from ‘Curious’ to ‘President and beyond’. Start a <b>3-minute timer</b> and ask tables: <i>“Where does the ladder break in our club? Which step do people fall off?”</i></p><p>Take feedback and click each rung to mark it: <span style='color:#2f8a57'>●</span> we do this well → <span style='color:#d98b0b'>●</span> patchy → <span style='color:#c2423a'>●</span> gap / broken → clear.</p><p>Second question: <i>“Who in this room is ready to go up a rung, and has anybody asked them?”</i></p><p>This links the 90-day onboarding and 3/6/12-month check-ins (Pathway 2) with progressively responsible roles (Pathway 4.3) and youth/alumni pathways (Pathway 5.1).</p>">
+  <div class="kicker">Pathways 2, 4 &amp; 5 · From curious to leader</div>
+  <h2>The <em>leadership ladder</em>. Where does ours break?</h2>
+  <div class="ladder-wrap">
+    <div class="ladder" id="ladder"></div>
+    <div>
+      <div class="card">
+        <div style="font-size:19px;color:var(--muted)">Tap a rung to mark it:</div>
+        <div class="legend">
+          <div><span style="background:var(--green)"></span>We do this well</div>
+          <div><span style="background:var(--amber)"></span>Patchy, depends who's around</div>
+          <div><span style="background:var(--red)"></span>A gap. People fall off here.</div>
+        </div>
+      </div>
+      <div class="ask" style="margin-top:22px;flex-direction:column;align-items:flex-start;gap:10px"><span class="tag">Table talk · 3 min</span>Where do people fall off our ladder?<br><span style="color:#c9d6ee;font-size:21px">And who in this room is ready to go up a rung? Has anybody asked them?</span></div>
+    </div>
+  </div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 9 HEALTH -->
+<section class="slide" id="s-health" data-notes="<h4>Five-pathway health check · 6 min</h4><p>Read each pathway and ask for a <b>show of fingers, 1 to 5</b> (1 = not really, 5 = we're great at this). Eyeball the average and click it. Don't chase precision. The conversation matters more than the number.</p><p>The chart redraws as you go and the box underneath names the lowest-scoring pathway with a starting action from the District strategy.</p><p>Ask: <i>“Is anyone surprised? Would a new member score us the same way?”</i></p>">
+  <div class="kicker">All five strategy pathways</div>
+  <h2>How healthy are we, <em>really</em>?</h2>
+  <div class="health">
+    <div id="hrows"></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <svg class="radar" id="radar" viewBox="0 0 560 470"></svg>
+      <div class="lowest" id="lowest"></div>
+    </div>
+  </div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 10 MATRIX -->
+<section class="slide" id="s-matrix" data-notes="<h4>The two-question test · 8 min</h4><p>The District strategy asks clubs to test every activity with two questions: <b>Does it strengthen the member experience? Does it extend meaningful community reach?</b></p><p>Drag each activity into a box as the room decides. You can also click an activity and then click a box. Double-click to send it back. Add the club's own activities with the box at the bottom left; the starters are only examples.</p><p>The bottom-left box is the brave one. Ask: <i>“If we stopped this, who would really miss it?”</i> Then ask: <i>“What would we do with the time and energy we got back?”</i> (Strategy 4.1, stop / start / continue.)</p>">
+  <div class="kicker">Pathway 4.1 · Stop, start, continue</div>
+  <h2>The <em>two-question</em> test.</h2>
+  <div class="matrix-wrap">
+    <div class="tray">
+      <h4>Our activities · drag to sort</h4>
+      <div class="zone" data-q="tray" id="tray"></div>
+      <div class="addrow"><input id="act-new" placeholder="Add one of ours…"><button class="btn small" id="act-add">Add</button></div>
+    </div>
+    <div class="matrix">
+      <div class="axis-y"><span>Strengthens member experience ↑</span></div>
+      <div class="quad q-tl" data-q="tl"><h5>Great for us: open it up</h5><p>Members love it. Could we invite the community in?</p><div class="zone"></div></div>
+      <div class="quad q-tr" data-q="tr"><h5>Magnetic: grow it</h5><p>Members love it and the community sees it. Tell its story.</p><div class="zone"></div></div>
+      <div class="quad q-bl" data-q="bl"><h5>Rethink or stop</h5><p>Neither energises us nor reaches anyone. Who'd miss it?</p><div class="zone"></div></div>
+      <div class="quad q-br" data-q="br"><h5>Good for them: make it fun for us</h5><p>Great reach, but it feels like a chore. Can we refresh it?</p><div class="zone"></div></div>
+      <div class="axis-x">Extends community reach →</div>
+    </div>
+  </div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 11 SAM -->
+<section class="slide" id="s-sam" data-notes="<h4>Meet Sam · 7 min</h4><p>Read Sam's story. At each moment, ask the room: <i>“Honestly, which is more like us, A or B?”</i> Click the answer the room gives, not the ‘right’ one. Watch Sam's engagement meter.</p><p>After the third choice, ask: <i>“Which Sam story is closest to our club today? What would it take to make the B path normal?”</i></p><p>Links to the District's onboarding framework: a mentor or support contact, structured induction in the first 90 days, purposeful check-ins at 3, 6 and 12 months, and responding quickly when expectations aren't met (Pathway 2).</p><p>Use <b>Replay</b> to try the other path.</p>">
+  <div class="kicker">Pathway 2 · The first year</div>
+  <h2>Meet <em>Sam</em>. What happens next is up to us.</h2>
+  <div class="sam">
+    <div class="persona">
+      <div class="avatar">S</div>
+      <h3>Sam, 34</h3>
+      <p>Project manager, two young kids. Came to our tree-planting day because a friend asked, loved it, and joined two weeks ago.</p>
+      <p style="color:#fff;font-weight:600;margin-top:6px">Sam's engagement</p>
+      <div class="meter"><i id="sam-m" style="width:60%"></i></div>
+      <div id="sam-lbl" style="font-size:17px;color:var(--gold)">Keen and curious</div>
+      <button class="btn small ghost" id="sam-reset" style="margin-top:auto;border-color:#fff;color:#fff;align-self:flex-start">↺ Replay</button>
+    </div>
+    <div class="steps" id="sam-steps"></div>
+  </div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 12 INVITE -->
+<section class="slide" id="s-invite" data-notes="<h4>Invite to a project, not a meeting · 6 min · optional if short on time</h4><p>The strategy suggests the first invitation might be to a project, cause, social event or volunteer opportunity rather than a club meeting (Pathways 1.2, 1.3 and 5).</p><p>Ask: <i>“What have we got coming up in the next three months that a non-Rotarian would enjoy?”</i> Fill in the left column first. Then for each one: <i>“Who in our community cares about this?”</i> (alumni, youth program families, local businesses, schools, new residents, Friends of Rotary). Finally get a name in the right-hand column: <b>who will make the personal invitation?</b></p><p>A name in every right-hand cell is the goal. Personal invitations work far better than flyers.</p>">
+  <div class="kicker">Pathways 1 &amp; 5 · More ways in</div>
+  <h2>Invite people to a <em>project</em>, not a meeting.</h2>
+  <p class="lede">People can take part before they decide whether membership is right for them. What have we got coming up?</p>
+  <table class="inv"><thead><tr><th style="width:36%">Coming up in the next 3 months</th><th style="width:38%">Who in our community would care?</th><th>Who will invite them?</th><th></th></tr></thead><tbody id="inv-body"></tbody></table>
+  <div><button class="btn small ghost" id="inv-add">+ Add a row</button></div>
+  <div class="ask"><span class="tag">Remember</span><span>A personal “come and help us with this” beats any flyer.</span></div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 13 CYCLE + VOTE -->
+<section class="slide" id="s-vote" data-notes="<h4>Choose our priority · 5 min</h4><p>Walk through the District's implementation cycle quickly. The point is that clubs pick <b>one or two</b> priorities, try simple actions, review and adapt. They don't attempt everything at once.</p><p>Run a dot vote: everyone gets <b>two votes</b>. Read each pathway and count hands, then use + / − to enter the totals. The leader turns gold.</p><p>If the health check on slide 9 pointed somewhere different, say so. It's a great discussion point.</p>">
+  <div class="kicker">The District implementation cycle</div>
+  <h2>Pick <em>one or two</em>. Try. Learn. Adjust.</h2>
+  <div class="cycle">
+    <div class="cyc"><div class="n">1</div><b>Understand</b><span>Our position, opportunities and priorities</span></div>
+    <div class="cyc now"><div class="n">2 · TONIGHT</div><b>Choose</b><span>One or two priorities that matter most</span></div>
+    <div class="cyc"><div class="n">3</div><b>Try</b><span>Simple actions in our context</span></div>
+    <div class="cyc"><div class="n">4</div><b>Review</b><span>What happened? What did we learn?</span></div>
+    <div class="cyc"><div class="n">5</div><b>Adapt</b><span>Refine and build on what works</span></div>
+    <div class="cyc"><div class="n">6</div><b>Share</b><span>Tell our story, inspire other clubs</span></div>
+  </div>
+  <div class="votes" id="votes"></div>
+  <div class="ask"><span class="tag">Discuss</span><span>Does our vote match what the health check told us? If not, why not?</span></div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 14 COMMIT -->
+<section class="slide" id="s-commit" data-notes="<h4>Our one change · 6 min</h4><p>This is the close. Ask the strategy's own call to action: <i>“What is one change our club can make now to become more welcoming, engaging and accessible to the people in our community?”</i></p><p>Don't leave the room without a <b>name</b> in ‘Who owns it’ and a <b>date</b> in ‘When will we review it’. A change with no owner is a wish.</p><p>This becomes the first line of the club's annual membership plan (Strategy 1.1).</p>">
+  <div class="kicker">Strategy 1.1 · Our membership plan starts here</div>
+  <h2>Our <em>one change</em>.</h2>
+  <div class="commit">
+    <div class="f wide"><label>The one change we will make</label><textarea id="c-change" placeholder="e.g. Every new member gets a mentor and a real role within 90 days"></textarea></div>
+    <div class="f"><label>Why it matters to us</label><input id="c-why" placeholder="e.g. We lost three newer members last year without noticing"></div>
+    <div class="f"><label>Who owns it</label><input id="c-owner" placeholder="A name, not a committee"></div>
+    <div class="f"><label>First step, in the next 30 days</label><input id="c-first" placeholder="e.g. Pair our two newest members with mentors"></div>
+    <div class="f"><label>When we'll review it</label><input id="c-review" placeholder="e.g. Board meeting, first week of March"></div>
+  </div>
+  <div class="ask"><span class="tag">Rule</span><span>A change without an owner and a date is just a wish.</span></div>
+  <div class="foot"><span><b class="clubname">our club</b> · Membership conversation</span><span>District 9815</span></div>
+</section>
+
+<!-- 15 SUMMARY -->
+<section class="slide" id="s-summary" data-notes="<h4>Wrap-up · 2 min</h4><p>This slide builds itself from everything captured tonight. Read the gold box aloud: it's the club's commitment.</p><p>Click <b>Download summary</b> to save a text file, or <b>Print / PDF</b> for a one-page record to send to the President and Secretary.</p><p>Close by reminding the club that they aren't on their own: the District membership team, Community Groups, Rotary Community Leaders and Rotary South Pacific all provide resources and help.</p><p>To reuse the deck at another club, press <b>Reset</b> in the bottom bar.</p>">
+  <div class="kicker">What we said tonight</div>
+  <h2><span class="clubname">Our club</span>: our membership conversation</h2>
+  <div class="sumgrid" id="sumgrid"></div>
+  <div class="sumactions">
+    <button class="btn gold" id="dl">⬇ Download summary</button>
+    <button class="btn ghost" id="pr" style="border-color:#fff;color:#fff">Print / PDF</button>
+    <span class="close">Grow Rotary. Strengthen Clubs. Create Lasting Impact.</span>
+  </div>
+  <div class="foot"><span>Support: District membership team · Community Groups · Rotary Community Leaders · Rotary South Pacific</span><span>District 9815</span></div>
+</section>
+
+</div></div>
+
+<div id="notes"></div>
+<div id="bar">
+  <button id="prev" title="Previous (←)">◀</button>
+  <button id="next" title="Next (→)">▶</button>
+  <span id="count" style="min-width:52px;text-align:center">1 / 15</span>
+  <div class="prog" id="prog"></div>
+  <span>Timer</span>
+  <button data-t="120">2m</button><button data-t="180">3m</button><button data-t="300">5m</button>
+  <span id="timer">–:––</span><button id="tstop" title="Stop timer">■</button>
+  <button id="bn">Notes (N)</button>
+  <button id="bf">Full screen (F)</button>
+  <button id="bh">?</button>
+  <button id="breset" title="Clear all answers">Reset</button>
+</div>
+<div id="help"><div class="card">
+  <h3 style="font-family:var(--serif);color:var(--navy);margin-top:0;font-size:28px">Presenter controls</h3>
+  <p><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd> next slide · <kbd>←</kbd> <kbd>PgUp</kbd> previous (works with most clickers)</p>
+  <p><kbd>N</kbd> speaker notes · <kbd>F</kbd> full screen · <kbd>T</kbd> 3-minute table-talk timer · <kbd>?</kbd> this help · <kbd>Esc</kbd> close</p>
+  <p>Everything typed or counted is saved in this browser on this computer, so a page refresh won't lose it. Press <b>Reset</b> before using the deck at another club.</p>
+  <p>Works offline: just open the file in Chrome, Edge or Safari.</p>
+  <p style="text-align:right;margin-bottom:0"><button class="btn" onclick="document.getElementById('help').classList.remove('show')">Got it</button></p>
+</div></div>
+<div id="printout"></div>
+
+<script>
+(function(){
+"use strict";
+var KEY="d9815-grow-your-people-v1";
+var DEF={
+  club:"",presenter:"",
+  join:{"A friend asked me":0,"To serve my community":0,"Business & networking":0,"New to the area":0,"A specific project or cause":0,"Family connection to Rotary":0,"To learn and develop":0},
+  stay:{"The friendships":0,"Making a real difference":0,"Learning & leadership":0,"Fun and fellowship":0,"International projects":0,"Feeling useful and valued":0,"Habit / loyalty":0},
+  quiz:{}, bucket:{m:25,r:85,g:5}, skills:[], ladder:[0,0,0,0,0,0,0,0],
+  health:[0,0,0,0,0],
+  acts:["Weekly dinner meeting","Guest speaker","Sausage sizzle","Market stall","Christmas fundraiser","Board meeting","Fellowship night","Youth awards night","Raffle","Working bee","Club bulletin","Fundraising gala"],
+  matrix:{}, sam:[null,null,null],
+  invite:[{p:"",w:"",by:""},{p:"",w:"",by:""},{p:"",w:"",by:""}],
+  vote:[0,0,0,0,0], commit:{change:"",why:"",owner:"",first:"",review:""}
+};
+function clone(o){return JSON.parse(JSON.stringify(o))}
+var S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||typeof S!=="object")S=clone(DEF);
+for(var k in DEF){if(!(k in S))S[k]=clone(DEF[k])}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+
+/* ---------- stage scaling + navigation ---------- */
+var stage=$("#stage"),slides=$$(".slide"),cur=0,scale=1;
+function fit(){
+  var vw=innerWidth,vh=innerHeight-52;
+  scale=Math.min(vw/1600,vh/900);
+  stage.style.transform="scale("+scale+")";
+  stage.style.left=((vw-1600*scale)/2)+"px";
+  stage.style.top=((vh-900*scale)/2)+"px";
+}
+addEventListener("resize",fit);fit();
+var prog=$("#prog");
+slides.forEach(function(s,i){var d=document.createElement("i");d.title="Slide "+(i+1);d.onclick=function(){go(i)};prog.appendChild(d)});
+function go(i){
+  if(i<0||i>=slides.length)return;
+  slides[cur].classList.remove("active");cur=i;slides[cur].classList.add("active");
+  $("#count").textContent=(cur+1)+" / "+slides.length;
+  $$("#prog i").forEach(function(d,j){d.className=j===cur?"on":(j<cur?"done":"")});
+  $("#notes").innerHTML=slides[cur].getAttribute("data-notes")||"";
+  if(slides[cur].id==="s-summary")renderSummary();
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  try{history.replaceState(null,"","#"+(cur+1))}catch(e){}
+}
+$("#prev").onclick=function(){go(cur-1)};$("#next").onclick=function(){go(cur+1)};
+function typing(e){var t=e.target;return t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.isContentEditable)}
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){$("#help").classList.remove("show");if(typing(e))e.target.blur();return}
+  if(typing(e)){ if(e.key==="Enter"&&e.target.hasAttribute("data-add")){addTally(e.target.getAttribute("data-add"));} if(e.key==="Enter"&&e.target.id==="act-new"){addAct();} return;}
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  var k=e.key;
+  if(k==="ArrowRight"||k==="PageDown"||k===" "){e.preventDefault();go(cur+1)}
+  else if(k==="ArrowLeft"||k==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(k==="Home")go(0); else if(k==="End")go(slides.length-1);
+  else if(k==="n"||k==="N")toggleNotes();
+  else if(k==="f"||k==="F")toggleFS();
+  else if(k==="t"||k==="T")startTimer(180);
+  else if(k==="?")$("#help").classList.toggle("show");
+});
+function toggleNotes(){$("#notes").classList.toggle("show")}
+function toggleFS(){try{if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()}catch(e){}}
+$("#bn").onclick=toggleNotes;$("#bf").onclick=toggleFS;$("#bh").onclick=function(){$("#help").classList.toggle("show")};
+$("#breset").onclick=function(){if(confirm("Clear every answer, count and note captured in this deck? (Use this before presenting at another club.)")){S=clone(DEF);save();renderAll();go(0)}};
+
+/* ---------- timer ---------- */
+var tEnd=0,tInt=null;
+function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+("0"+(s%60)).slice(-2)}
+function startTimer(sec){
+  clearInterval(tInt);tEnd=Date.now()+sec*1000;
+  $("#timer").classList.remove("end");$("#bigtimer").classList.remove("end");$("#bigtimer").classList.add("show");
+  tick();tInt=setInterval(tick,250);
+}
+function tick(){
+  var left=(tEnd-Date.now())/1000;var txt=fmt(left);
+  $("#timer").textContent=txt;$("#bigtimer").textContent=left>0?txt:"Time!";
+  if(left<=0){clearInterval(tInt);$("#timer").classList.add("end");$("#bigtimer").classList.add("end");setTimeout(function(){$("#bigtimer").classList.remove("show")},6000)}
+}
+$$("#bar [data-t]").forEach(function(b){b.onclick=function(){startTimer(+b.getAttribute("data-t"))}});
+$("#tstop").onclick=function(){clearInterval(tInt);$("#timer").textContent="–:––";$("#bigtimer").classList.remove("show")};
+
+/* ---------- title fields ---------- */
+var inClub=$("#in-club"),inPres=$("#in-presenter");
+function paintClub(){var n=S.club.trim()||"our club";$$(".clubname").forEach(function(el){
+  var cap=el.closest("h2")&&el===el.closest("h2").firstElementChild&&!S.club.trim();
+  el.textContent=cap?"Our club":n;})}
+inClub.oninput=function(){S.club=inClub.value;save();paintClub()};
+inPres.oninput=function(){S.presenter=inPres.value;save()};
+
+/* ---------- tallies ---------- */
+function renderTally(key){
+  var box=$("#t-"+key),obj=S[key];box.innerHTML="";
+  var vals=Object.keys(obj).map(function(k){return obj[k]}).sort(function(a,b){return b-a});
+  var thresh=vals[1]>0?vals[1]:(vals[0]>0?vals[0]:Infinity);
+  Object.keys(obj).forEach(function(label){
+    var n=obj[label];
+    var c=document.createElement("span");c.className="chip"+(n>0?(n>=thresh?" top":" on"):"");
+    c.innerHTML='<span>'+esc(label)+'</span><span class="n">'+n+'</span><button class="minus" title="Undo one">−</button>';
+    c.onclick=function(ev){
+      if(ev.target.classList.contains("minus")){obj[label]=Math.max(0,obj[label]-1)}else{obj[label]++}
+      save();renderTally(key);
+    };
+    box.appendChild(c);
+  });
+}
+function addTally(key){
+  var inp=$('[data-add="'+key+'"]');var v=inp.value.trim();if(!v)return;
+  if(!(v in S[key]))S[key][v]=1;else S[key][v]++;
+  inp.value="";save();renderTally(key);
+}
+$$("[data-addbtn]").forEach(function(b){b.onclick=function(){addTally(b.getAttribute("data-addbtn"))}});
+$$("[data-reveal]").forEach(function(b){b.onclick=function(){$("#"+b.getAttribute("data-reveal")).classList.toggle("show")}});
+
+/* ---------- quiz ---------- */
+var QUIZ=[
+  {q:"How much does the District aim to grow membership over three years?",o:["5%","10%","15%","25%"],a:2,w:"15% over three years: about 5% net growth every year, with engagement, diversity, retention and club vitality improving alongside."},
+  {q:"What annual retention rate is the District aiming for?",o:["70%","80%","85%","90%+"],a:3,w:"Above 90%. For a 30-member club, that means losing no more than about three people a year."},
+  {q:"By how much should we cut first-year resignations?",o:["10%","25%","50%","75%"],a:1,w:"25%. The first year is where we lose people fastest, so it's where onboarding, mentors and check-ins pay off most."}
+];
+function renderQuiz(){
+  var box=$("#quiz");box.innerHTML="";
+  QUIZ.forEach(function(q,i){
+    var c=document.createElement("div");c.className="card";
+    var picked=S.quiz[i];
+    c.innerHTML='<div class="q">'+q.q+'</div><div class="opts"></div><div class="why'+(picked!=null?' show':'')+'">'+q.w+'</div>';
+    var opts=$(".opts",c);
+    q.o.forEach(function(o,j){
+      var b=document.createElement("button");b.textContent=o;
+      if(picked!=null){if(j===q.a)b.className="right";else if(j===picked)b.className="wrong"}
+      b.onclick=function(){S.quiz[i]=j;save();renderQuiz()};
+      opts.appendChild(b);
+    });
+    box.appendChild(c);
+  });
+}
+
+/* ---------- bucket ---------- */
+function renderBucket(){
+  var B=S.bucket;
+  $("#bk-m").value=B.m;$("#bk-r").value=B.r;$("#bk-g").value=B.g;
+  $("#bk-m-v").textContent=B.m;$("#bk-r-v").textContent=B.r+"%";$("#bk-g-v").textContent=B.g+"%";
+  var lost=B.m*(1-B.r/100),grow=B.m*B.g/100,need=lost+grow;
+  function r1(x){return x<10?Math.round(x*10)/10:Math.round(x)}
+  $("#bk-lost").textContent=r1(lost);$("#bk-grow").textContent=r1(grow);$("#bk-need").textContent=Math.ceil(need-1e-9);
+  var p;
+  if(need<=0.05)p="With no losses and no growth goal, the bucket is full. Enjoy it while it lasts!";
+  else{var months=12/need;
+    p="That's one new member every <b>"+(months>=1.95?Math.round(months)+" months":(months>=0.95?"month":Math.round(months*4.3)+" weeks"))+"</b>, just to hit our goal. "+
+      (lost>grow?"Most of that is replacing people who leave. <b>Every member we keep is one we don't have to find.</b>":"Holding on to people is working. Now the job is finding new ones.");}
+  $("#bk-punch").innerHTML=p;
+  // svg bucket
+  var svg=$("#bk-svg");var lvl=Math.max(0.15,B.r/100);var drips=Math.min(8,Math.round(lost));
+  var top=40,bot=200,h=bot-top,wy=bot-h*lvl*0.92;
+  function xAt(y){var t=(y-top)/h;return [150+t*30,370-t*30]}
+  var wl=xAt(wy);
+  var s='<defs><clipPath id="bc"><path d="M150 40 L370 40 L340 200 L180 200 Z"/></clipPath></defs>';
+  s+='<rect x="0" y="'+wy+'" width="520" height="'+(bot-wy)+'" fill="#0067C8" opacity=".85" clip-path="url(#bc)"/>';
+  s+='<path d="M150 40 L370 40 L340 200 L180 200 Z" fill="none" stroke="#0b2a5b" stroke-width="6" stroke-linejoin="round"/>';
+  s+='<path d="M150 40 Q260 -30 370 40" fill="none" stroke="#0b2a5b" stroke-width="4"/>';
+  s+='<text x="260" y="'+Math.min(190,wy+34)+'" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="28" fill="#fff">'+B.m+' members</text>';
+  for(var i=0;i<drips;i++){var x=200+i*(120/Math.max(1,drips-1||1));s+='<circle class="drip" cx="'+x+'" cy="205" r="6" fill="#0067C8" style="animation-delay:'+(i*0.27).toFixed(2)+'s"/>'}
+  if(drips>0)s+='<text x="350" y="238" font-size="17" fill="#5a6476">≈ '+r1(lost)+' leave / yr</text>';
+  s+='<path d="M60 10 l0 60" stroke="#F7A81B" stroke-width="5" stroke-dasharray="6 6"/><text x="70" y="22" font-size="17" fill="#5a6476">+'+Math.ceil(need-1e-9)+' new / yr</text>';
+  svg.innerHTML=s;
+}
+["m","r","g"].forEach(function(k){$("#bk-"+k).oninput=function(e){S.bucket[k]=+e.target.value;save();renderBucket()}});
+
+/* ---------- skills ---------- */
+var SKILLS=["Chairing a meeting","Public speaking","Budgeting","Project management","Leading volunteers","Negotiating with partners","Fundraising","Writing & storytelling","Running an event","Mentoring others","Strategic planning","Working across cultures","Handling conflict","Governance & boards","Digital & social media"];
+function renderSkills(){
+  var box=$("#skills");box.innerHTML="";
+  SKILLS.forEach(function(sk){
+    var b=document.createElement("button");b.className="skill"+(S.skills.indexOf(sk)>-1?" on":"");b.textContent=sk;
+    b.onclick=function(){var i=S.skills.indexOf(sk);if(i>-1)S.skills.splice(i,1);else S.skills.push(sk);save();renderSkills()};
+    box.appendChild(b);
+  });
+  $("#skill-n").textContent=S.skills.length;$("#skill-t").textContent=SKILLS.length;
+}
+
+/* ---------- roles ---------- */
+var ROLES=[
+  {r:"Project lead",d:"Take a community project from idea to done: scope it, recruit helpers, manage a budget, work with a council or partner, and report back.",s:["Project management","Leading volunteers","Budgeting","Stakeholder management"],cv:"“Led a 25-volunteer community project from concept to delivery, on time and on budget.”"},
+  {r:"President",d:"Set direction for the year, chair the board and meetings, represent the club in public, and grow the next leaders.",s:["Strategic leadership","Chairing","Public representation","Succession planning"],cv:"“Chaired the board of a not-for-profit and led its annual strategy and community program.”"},
+  {r:"Treasurer",d:"Manage the club's and foundation's money, budgets, audit and compliance, and explain the numbers to non-finance people.",s:["Financial governance","Budgeting","Compliance","Clear reporting"],cv:"“Managed finances, audit and compliance for a community not-for-profit and its charitable trust.”"},
+  {r:"Secretary",d:"Keep the club running: governance, minutes, records, reporting to District and Rotary International, and the systems behind it.",s:["Governance","Organisation","Systems & records","Attention to detail"],cv:"“Ran governance, reporting and member systems for a volunteer organisation.”"},
+  {r:"Membership chair",d:"Attract, welcome and keep members: invitations, onboarding, mentoring and noticing when someone is drifting.",s:["Recruitment","Onboarding","Culture building","Using data"],cv:"“Led recruitment and retention for a volunteer organisation, designing its onboarding program.”"},
+  {r:"Communications / bulletin",d:"Tell the club's story: bulletin, social media, website, local media and photos that make people want to be part of it.",s:["Storytelling","Digital media","Writing","Brand & reputation"],cv:"“Ran communications and social media for a community organisation, growing its local profile.”"},
+  {r:"Youth programs",d:"Run RYLA, Youth Exchange, school programs or Interact: mentoring young people and coordinating families, schools and District.",s:["Mentoring","Duty of care","Coaching","Program delivery"],cv:"“Coordinated youth leadership programs and mentored young people with schools and families.”"},
+  {r:"Partnerships & fundraising",d:"Build relationships with businesses, councils and community groups; pitch for sponsorship and grants; deliver what you promised.",s:["Negotiation","Sponsorship & grants","Relationship management","Pitching"],cv:"“Secured sponsorship and grants from local business and government partners.”"},
+  {r:"Meeting host / MC",d:"Run the room: welcome guests, introduce speakers, keep time, think on your feet and make people feel at home.",s:["Public speaking","Hosting","Thinking on your feet","Hospitality"],cv:"“Regularly hosted and MC'd events, introducing speakers to audiences of 30 to 200.”"}
+];
+var roleSel=-1;
+function renderRoles(){
+  var list=$("#rolelist");list.innerHTML="";
+  ROLES.forEach(function(R,i){var b=document.createElement("button");b.textContent=R.r;if(i===roleSel)b.className="on";b.onclick=function(){roleSel=i;renderRoles()};list.appendChild(b)});
+  if(roleSel<0)return;
+  var R=ROLES[roleSel];
+  $("#rolecard").innerHTML='<h3>'+R.r+'</h3><div><div class="lab">What you actually do</div><div class="txt">'+R.d+'</div></div><div><div class="lab">Leadership skills it builds</div><div class="pills">'+R.s.map(function(x){return'<span class="pill">'+x+'</span>'}).join("")+'</div></div><div><div class="lab">How it reads on a CV</div><div class="cv">'+R.cv+'</div></div>';
+}
+
+/* ---------- ladder ---------- */
+var RUNGS=[
+  ["Curious","Has heard of us, follows a post, knows a member"],
+  ["Guest at a project or event","Comes along to help or enjoy, no strings attached"],
+  ["Regular volunteer / Friend of Rotary","Turns up again, knows names, feels welcome"],
+  ["New member: first 90 days","Mentor, induction, a real job early"],
+  ["Contributor","On a committee, owns a small piece of work"],
+  ["Project lead","Leads a project end to end, with backup"],
+  ["Board director","Leads an avenue or portfolio"],
+  ["President, District and beyond","District learning, PELDS, wider Rotary roles"]
+];
+function renderLadder(){
+  var box=$("#ladder");box.innerHTML="";
+  RUNGS.forEach(function(R,i){
+    var d=document.createElement("div");d.className="rung"+(S.ladder[i]?" s"+S.ladder[i]:"");
+    d.innerHTML='<span class="num">'+(i+1)+'</span><span class="t">'+R[0]+'</span><span class="d">'+R[1]+'</span><span class="st"></span>';
+    d.onclick=function(){S.ladder[i]=(S.ladder[i]+1)%4;save();renderLadder()};
+    box.appendChild(d);
+  });
+}
+
+/* ---------- health ---------- */
+var PATHS=[
+  {t:"Intentional attraction",s:"Plan, many ways in, invitation culture",tip:"Start a <b>‘bring a friend to a project’</b> habit and write a simple annual membership plan with a realistic target."},
+  {t:"Member retention",s:"Onboarding, first-year support, listening",tip:"Give every new member a <b>mentor</b>, an induction within 90 days and <b>check-ins at 3, 6 and 12 months</b>."},
+  {t:"Diversity, inclusion & flexibility",s:"Reflect our community, remove barriers",tip:"Look honestly at <b>barriers</b> (time, cost, format, traditions) and try one more flexible way to take part."},
+  {t:"Club experience & engagement",s:"Magnetic meetings, projects, leadership",tip:"Run the <b>two-question test</b> on our routines and give emerging leaders progressively bigger roles."},
+  {t:"Connections with programs & community",s:"Alumni, Family of Rotary, partners",tip:"Reconnect with <b>youth program alumni</b> and one community partner. Invite them to a project."}
+];
+function renderHealth(){
+  var box=$("#hrows");box.innerHTML="";
+  PATHS.forEach(function(P,i){
+    var r=document.createElement("div");r.className="hrow";
+    r.innerHTML='<div class="pn">'+(i+1)+'</div><div class="pt">'+P.t+'<small>'+P.s+'</small></div><div class="dots"></div>';
+    var dots=$(".dots",r);
+    for(var v=1;v<=5;v++){(function(v){var b=document.createElement("button");b.textContent=v;if(S.health[i]===v)b.className="on";b.onclick=function(){S.health[i]=(S.health[i]===v?0:v);save();renderHealth()};dots.appendChild(b)})(v)}
+    box.appendChild(r);
+  });
+  // radar
+  var cx=280,cy=225,R=170,n=5,svg="";
+  function pt(i,r){var a=-Math.PI/2+i*2*Math.PI/n;return[cx+r*Math.cos(a),cy+r*Math.sin(a)]}
+  for(var g=1;g<=5;g++){var ps=[];for(var i=0;i<n;i++)ps.push(pt(i,R*g/5).join(","));svg+='<polygon points="'+ps.join(" ")+'" fill="'+(g%2?"#fff":"#faf7f0")+'" stroke="#ddd6c6"/>'}
+  for(var i2=0;i2<n;i2++){var e=pt(i2,R);svg+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0]+'" y2="'+e[1]+'" stroke="#ddd6c6"/>';
+    var l=pt(i2,R+34);svg+='<circle cx="'+l[0]+'" cy="'+l[1]+'" r="18" fill="#0b2a5b"/><text x="'+l[0]+'" y="'+(l[1]+7)+'" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="19" fill="#F7A81B">'+(i2+1)+'</text>'}
+  var any=S.health.some(function(v){return v>0});
+  if(any){var ps2=[];for(var i3=0;i3<n;i3++)ps2.push(pt(i3,R*S.health[i3]/5).join(","));
+    svg+='<polygon points="'+ps2.join(" ")+'" fill="rgba(0,103,200,.25)" stroke="#0067C8" stroke-width="4" stroke-linejoin="round"/>';
+    for(var i4=0;i4<n;i4++){if(S.health[i4]){var p=pt(i4,R*S.health[i4]/5);svg+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="7" fill="#0067C8" stroke="#fff" stroke-width="2"/>'}}}
+  else svg+='<text x="'+cx+'" y="'+(cy+6)+'" text-anchor="middle" font-size="19" fill="#5a6476">Score each pathway to draw our shape</text>';
+  $("#radar").innerHTML=svg;
+  var scored=S.health.map(function(v,i){return{v:v,i:i}}).filter(function(x){return x.v>0});
+  if(scored.length<5){$("#lowest").innerHTML=scored.length?("Scored "+scored.length+" of 5. Keep going…"):"Take a show of fingers, <b>1 to 5</b>, for each pathway.";return}
+  var min=Math.min.apply(null,S.health);var lows=scored.filter(function(x){return x.v===min});
+  $("#lowest").innerHTML="Our lowest: <b>"+lows.map(function(x){return(x.i+1)+". "+PATHS[x.i].t}).join(" &amp; ")+"</b><br>A place to start: "+PATHS[lows[0].i].tip;
+}
+
+/* ---------- matrix ---------- */
+function renderMatrix(){
+  $$(".zone",$("#s-matrix")).forEach(function(z){z.innerHTML=""});
+  S.acts.forEach(function(a){
+    var q=S.matrix[a]||"tray";
+    var zone=q==="tray"?$("#tray"):$('.quad[data-q="'+q+'"] .zone');
+    if(!zone)zone=$("#tray");
+    var el=document.createElement("div");el.className="act"+(a===selAct?" sel":"");el.textContent=a;el.setAttribute("data-act",a);
+    zone.appendChild(el);
+  });
+}
+var selAct=null,drag=null;
+$("#s-matrix").addEventListener("pointerdown",function(e){
+  var a=e.target.closest(".act");if(!a)return;
+  e.preventDefault();
+  var r=a.getBoundingClientRect();
+  drag={name:a.getAttribute("data-act"),el:a,sx:e.clientX,sy:e.clientY,ox:e.clientX-r.left,oy:e.clientY-r.top,moved:false,ghost:null};
+  try{a.setPointerCapture(e.pointerId)}catch(err){}
+});
+document.addEventListener("pointermove",function(e){
+  if(!drag)return;
+  if(!drag.moved&&Math.abs(e.clientX-drag.sx)+Math.abs(e.clientY-drag.sy)<6)return;
+  if(!drag.moved){drag.moved=true;var g=drag.el.cloneNode(true);g.classList.add("dragghost");g.style.transform="scale("+scale+")";document.body.appendChild(g);drag.ghost=g;drag.el.style.opacity=".3"}
+  drag.ghost.style.left=(e.clientX-drag.ox)+"px";drag.ghost.style.top=(e.clientY-drag.oy)+"px";
+  $$(".quad,.tray").forEach(function(q){q.classList.remove("hover")});
+  var t=dropTarget(e.clientX,e.clientY);if(t&&t!=="tray")$('.quad[data-q="'+t+'"]').classList.add("hover");
+});
+function dropTarget(x,y){
+  if(drag&&drag.ghost)drag.ghost.style.display="none";
+  var el=document.elementFromPoint(x,y);
+  if(drag&&drag.ghost)drag.ghost.style.display="";
+  if(!el)return null;
+  var q=el.closest(".quad");if(q)return q.getAttribute("data-q");
+  if(el.closest(".tray"))return "tray";
+  return null;
+}
+document.addEventListener("pointerup",function(e){
+  if(!drag)return;
+  var d=drag;drag=null;
+  $$(".quad").forEach(function(q){q.classList.remove("hover")});
+  if(d.moved){
+    var t=dropTarget(e.clientX,e.clientY);
+    if(d.ghost)d.ghost.remove();
+    if(t){if(t==="tray")delete S.matrix[d.name];else S.matrix[d.name]=t;save()}
+    selAct=null;renderMatrix();
+  }else{
+    selAct=(selAct===d.name)?null:d.name;renderMatrix();
+  }
+});
+$("#s-matrix").addEventListener("click",function(e){
+  if(!selAct||e.target.closest(".act"))return;
+  var q=e.target.closest(".quad");var tr=e.target.closest(".tray");
+  if(q){S.matrix[selAct]=q.getAttribute("data-q");}else if(tr&&!e.target.closest(".addrow")){delete S.matrix[selAct];}else return;
+  selAct=null;save();renderMatrix();
+});
+$("#s-matrix").addEventListener("dblclick",function(e){var a=e.target.closest(".act");if(!a)return;delete S.matrix[a.getAttribute("data-act")];selAct=null;save();renderMatrix()});
+function addAct(){var i=$("#act-new");var v=i.value.trim();if(!v)return;if(S.acts.indexOf(v)<0)S.acts.push(v);i.value="";save();renderMatrix()}
+$("#act-add").onclick=addAct;
+
+/* ---------- Sam ---------- */
+var SAM=[
+  {w:"Week 1",sit:"Sam arrives at their first meeting as a member.",a:"Gets a badge and a round of applause, then sits wherever there's a spare seat. Nobody quite knows what to do with Sam next.",b:"Is introduced to a mentor, who rings during the week for a coffee and asks what Sam hopes to get out of Rotary.",oa:"Sam enjoys the night but goes home unsure what to do next, or who to ask.",ob:"Sam mentions wanting to “do something practical” and to “get better at leading teams”. The mentor writes it down."},
+  {w:"Month 3",sit:"The club needs help with its biggest fundraiser of the year.",a:"Sam is handed a book of raffle tickets to sell.",b:"Sam is asked to co-lead the next working bee alongside an experienced member.",oa:"Sam sells the tickets, dutifully. It feels like a chore and nobody mentions the project the money is for.",ob:"Sam organises 14 volunteers, learns plenty, and brings along a work colleague who is curious about Rotary."},
+  {w:"Month 6",sit:"A big work deadline and a sick child mean Sam has missed three meetings in a row.",a:"Sam receives a standard email reminding members about attendance expectations.",b:"Sam's mentor calls: “No pressure. What would make Rotary work for you right now?”",oa:"Sam feels guilty, then quietly stops coming. At renewal time, Sam doesn't renew.",ob:"Sam takes on a small task that can be done from home for a few months, and is back at full speed by spring."}
+];
+var SAMLBL=["Gone","Drifting away","Hanging on","Keen and curious","Engaged","Hooked","Future president?"];
+function renderSam(){
+  var box=$("#sam-steps");box.innerHTML="";
+  var score=60;
+  SAM.forEach(function(st,i){
+    var ch=S.sam[i];
+    var show=i===0||S.sam[i-1]!=null;
+    var d=document.createElement("div");d.className="step"+(show?" show":"");
+    d.innerHTML='<div class="when">'+st.w+'</div><div class="sit">'+st.sit+'</div><div class="choices"><button data-c="a"><b>A.</b> '+st.a+'</button><button data-c="b"><b>B.</b> '+st.b+'</button></div><div class="outcome'+(ch?" show":"")+'">'+(ch==="a"?st.oa:ch==="b"?st.ob:"")+'</div>';
+    $$("button",d).forEach(function(b){
+      var c=b.getAttribute("data-c");
+      if(ch){b.className=ch===c?"picked":"faded"}
+      b.onclick=function(){S.sam[i]=c;for(var j=i+1;j<3;j++)S.sam[j]=null;save();renderSam()};
+    });
+    box.appendChild(d);
+    if(ch==="a")score-=(i===2?45:15);else if(ch==="b")score+=13;
+  });
+  if(S.sam[2]){
+    var bs=S.sam.filter(function(x){return x==="b"}).length;
+    var f=document.createElement("div");f.className="step show";f.style.background="var(--gold-soft)";f.style.borderColor="var(--gold)";
+    f.innerHTML='<div class="when">Your turn</div><div class="sit" style="margin:4px 0 0;font-family:var(--serif);font-size:24px;color:var(--navy)">'+(bs===3?"Sam is now the club's next membership chair, and two of Sam's friends have joined.":bs===0?"Sam has left. Nobody is quite sure when, or why.":"Sam is still with us, but it was closer than it should have been.")+'<br><span style="font-size:20px;color:var(--ink)">Which Sam story is closest to our club today? What would make path B normal?</span></div>';
+    box.appendChild(f);
+  }
+  box.scrollTop=box.scrollHeight;
+  score=Math.max(4,Math.min(100,score));
+  $("#sam-m").style.width=score+"%";
+  $("#sam-lbl").textContent=SAMLBL[Math.max(0,Math.min(6,Math.round(score/100*6)))];
+  if(S.sam[2]==="a")$("#sam-lbl").textContent="Gone";
+}
+$("#sam-reset").onclick=function(){S.sam=[null,null,null];save();renderSam()};
+
+/* ---------- invite ---------- */
+var PH=[["e.g. Tree planting, Sat 14 March","e.g. Landcare group, young families, new residents","e.g. Jan"],["e.g. Youth awards night","e.g. Past RYLA and exchange students and their parents","e.g. Priya"],["e.g. Christmas cake stall","e.g. Local businesses, school parents","e.g. Tom"]];
+function renderInvite(){
+  var tb=$("#inv-body");tb.innerHTML="";
+  S.invite.forEach(function(row,i){
+    var ph=PH[i]||["","",""];
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td><input data-k="p" value="'+esc(row.p)+'" placeholder="'+ph[0]+'"></td><td><input data-k="w" value="'+esc(row.w)+'" placeholder="'+ph[1]+'"></td><td><input data-k="by" value="'+esc(row.by)+'" placeholder="'+ph[2]+'"></td><td class="x"><button title="Remove row">×</button></td>';
+    $$("input",tr).forEach(function(inp){inp.oninput=function(){row[inp.getAttribute("data-k")]=inp.value;save()}});
+    $("button",tr).onclick=function(){S.invite.splice(i,1);if(!S.invite.length)S.invite.push({p:"",w:"",by:""});save();renderInvite()};
+    tb.appendChild(tr);
+  });
+}
+$("#inv-add").onclick=function(){if(S.invite.length<6){S.invite.push({p:"",w:"",by:""});save();renderInvite()}};
+
+/* ---------- vote ---------- */
+function renderVote(){
+  var box=$("#votes");box.innerHTML="";
+  var max=Math.max.apply(null,S.vote.concat([1]));var top=Math.max.apply(null,S.vote);
+  PATHS.forEach(function(P,i){
+    var v=S.vote[i];
+    var d=document.createElement("div");d.className="vote"+(v>0&&v===top?" lead":"");
+    d.innerHTML='<div class="lbl">'+(i+1)+'. '+P.t+'</div><div class="bar"><i style="width:'+(v/max*100)+'%"></i><em>'+v+'</em></div><div class="ctl"><button class="minus">−</button><button class="plus">+</button></div>';
+    $(".minus",d).onclick=function(){S.vote[i]=Math.max(0,S.vote[i]-1);save();renderVote()};
+    $(".plus",d).onclick=function(){S.vote[i]++;save();renderVote()};
+    box.appendChild(d);
+  });
+}
+
+/* ---------- commit ---------- */
+["change","why","owner","first","review"].forEach(function(k){var el=$("#c-"+k);el.oninput=function(){S.commit[k]=el.value;save()}});
+function renderCommit(){["change","why","owner","first","review"].forEach(function(k){$("#c-"+k).value=S.commit[k]||""})}
+
+/* ---------- summary ---------- */
+function topOf(obj,n){return Object.keys(obj).filter(function(k){return obj[k]>0}).sort(function(a,b){return obj[b]-obj[a]}).slice(0,n).map(function(k){return k+" ("+obj[k]+")"})}
+function collect(){
+  var B=S.bucket,lost=B.m*(1-B.r/100),need=Math.ceil(lost+B.m*B.g/100-1e-9);
+  var gaps=RUNGS.filter(function(r,i){return S.ladder[i]===3}).map(function(r){return r[0]});
+  var patchy=RUNGS.filter(function(r,i){return S.ladder[i]===2}).map(function(r){return r[0]});
+  var hs=S.health.every(function(v){return v>0})?PATHS.map(function(p,i){return(i+1)+". "+p.t+": "+S.health[i]+"/5"}):[];
+  function inQ(q){return S.acts.filter(function(a){return S.matrix[a]===q})}
+  var vt=Math.max.apply(null,S.vote);var lead=vt>0?PATHS.filter(function(p,i){return S.vote[i]===vt}).map(function(p){return p.t}):[];
+  var inv=S.invite.filter(function(r){return r.p||r.w||r.by}).map(function(r){return(r.p||"?")+" → "+(r.w||"?")+" (invited by "+(r.by||"?")+")"});
+  var sam=S.sam[2]?S.sam.map(function(c,i){return SAM[i].w+": "+(c==="a"?"A":"B")}).join(", "):"";
+  return {
+    commit:S.commit,
+    join:topOf(S.join,3),stay:topOf(S.stay,3),
+    skills:S.skills,
+    bucket:B.m+" members, "+B.r+"% retention, "+B.g+"% growth goal → about "+(Math.round(lost*10)/10)+" leave a year; we need "+need+" new members a year.",
+    gaps:gaps,patchy:patchy,health:hs,
+    magnetic:inQ("tr"),rethink:inQ("bl"),openup:inQ("tl"),refresh:inQ("br"),
+    lead:lead,invite:inv,sam:sam
+  };
+}
+function li(arr,empty){return arr&&arr.length?arr.map(esc).join("<br>"):'<span class="none">'+(empty||"Not captured")+'</span>'}
+function renderSummary(){
+  var C=collect(),c=C.commit;
+  var g=$("#sumgrid");
+  var commitHtml=c.change?esc(c.change)+'<div style="font-family:var(--sans);font-size:17px;margin-top:10px;line-height:1.5">'+
+      (c.owner?"<b>Owner:</b> "+esc(c.owner)+" &nbsp; ":"")+(c.first?"<b>First step:</b> "+esc(c.first)+" &nbsp; ":"")+(c.review?"<b>Review:</b> "+esc(c.review):"")+(c.why?"<br><b>Why:</b> "+esc(c.why):"")+'</div>'
+      :'<span class="none" style="opacity:.6">Go back to slide 14 to capture the club\'s one change.</span>';
+  g.innerHTML=
+    '<div class="sumbox big"><h4>Our one change</h4><div>'+commitHtml+'</div></div>'+
+    '<div class="sumbox"><h4>Our priority pathway</h4><div>'+li(C.lead,"No vote taken")+'</div></div>'+
+    '<div class="sumbox"><h4>The leaky bucket</h4><div>'+esc(C.bucket)+'</div></div>'+
+    '<div class="sumbox"><h4>Why we join · why we stay</h4><div><b>Join:</b> '+(C.join.length?esc(C.join.join(", ")):'<span class="none">—</span>')+'<br><b>Stay:</b> '+(C.stay.length?esc(C.stay.join(", ")):'<span class="none">—</span>')+'</div></div>'+
+    '<div class="sumbox"><h4>Leadership ladder: where we break</h4><div>'+(C.gaps.length||C.patchy.length?(C.gaps.length?"<b>Gaps:</b> "+esc(C.gaps.join(", ")):"")+(C.patchy.length?(C.gaps.length?"<br>":"")+"<b>Patchy:</b> "+esc(C.patchy.join(", ")):""):'<span class="none">Not marked</span>')+'</div></div>'+
+    '<div class="sumbox"><h4>Two-question test</h4><div>'+(C.magnetic.length?"<b>Grow:</b> "+esc(C.magnetic.join(", "))+"<br>":"")+(C.openup.length?"<b>Open up:</b> "+esc(C.openup.join(", "))+"<br>":"")+(C.refresh.length?"<b>Refresh:</b> "+esc(C.refresh.join(", "))+"<br>":"")+(C.rethink.length?"<b>Rethink / stop:</b> "+esc(C.rethink.join(", ")):"")+((C.magnetic.length+C.openup.length+C.refresh.length+C.rethink.length)?"":'<span class="none">Not sorted</span>')+'</div></div>'+
+    '<div class="sumbox"><h4>People we\'ll invite</h4><div>'+li(C.invite,"No invitations captured")+'</div></div>'+
+    '<div class="sumbox"><h4>Leadership skills in the room</h4><div>'+(C.skills.length?"<b>"+C.skills.length+" of "+SKILLS.length+"</b>: "+esc(C.skills.join(", ")):'<span class="none">Not captured</span>')+'</div></div>'+
+    '<div class="sumbox"><h4>Health check (out of 5)</h4><div>'+(C.health.length?PATHS.map(function(p,i){return esc(p.t)+": <b>"+S.health[i]+"</b>"}).join("<br>"):'<span class="none">Not completed</span>')+'</div></div>'+
+    '<div class="sumbox" style="grid-column:span 2"><h4>Meet Sam: our honest path</h4><div>'+(C.sam?esc(C.sam)+'<br>'+(S.sam.filter(function(x){return x==="b"}).length===3?"Sam stays and becomes a future leader.":S.sam[2]==="a"?"We lost Sam. What would make path B normal here?":"Sam stays, but only just."):'<span class="none">Not played</span>')+'</div></div>';
+}
+function summaryText(){
+  var C=collect(),c=C.commit,L=[];
+  var club=S.club.trim()||"Our club";
+  L.push(club.toUpperCase()+": MEMBERSHIP CONVERSATION");
+  L.push("District 9815 Membership Growth Strategy 2026–2029");
+  if(S.presenter.trim())L.push("Facilitated by "+S.presenter.trim());
+  L.push(new Date().toLocaleDateString("en-AU",{day:"numeric",month:"long",year:"numeric"}));
+  L.push("");
+  L.push("OUR ONE CHANGE");L.push(c.change||"(not captured)");
+  if(c.why)L.push("Why: "+c.why);if(c.owner)L.push("Owner: "+c.owner);if(c.first)L.push("First step (30 days): "+c.first);if(c.review)L.push("Review: "+c.review);
+  L.push("");L.push("PRIORITY PATHWAY (dot vote)");L.push(C.lead.length?C.lead.join(", "):"(no vote)");
+  L.push("Votes: "+PATHS.map(function(p,i){return p.t+" "+S.vote[i]}).join("; "));
+  L.push("");L.push("WHY WE JOIN / WHY WE STAY");L.push("Join: "+(C.join.join(", ")||"-"));L.push("Stay: "+(C.stay.join(", ")||"-"));
+  L.push("");L.push("THE LEAKY BUCKET");L.push(C.bucket);
+  L.push("");L.push("LEADERSHIP SKILLS BUILT IN THIS ROOM ("+C.skills.length+")");L.push(C.skills.join(", ")||"-");
+  L.push("");L.push("LEADERSHIP LADDER");L.push("Gaps: "+(C.gaps.join(", ")||"-"));L.push("Patchy: "+(C.patchy.join(", ")||"-"));
+  L.push("");L.push("FIVE-PATHWAY HEALTH CHECK");L.push(C.health.length?C.health.join("\n"):"(not completed)");
+  L.push("");L.push("TWO-QUESTION TEST");L.push("Magnetic, grow it: "+(C.magnetic.join(", ")||"-"));L.push("Great for us, open it up: "+(C.openup.join(", ")||"-"));L.push("Good for them, make it fun for us: "+(C.refresh.join(", ")||"-"));L.push("Rethink or stop: "+(C.rethink.join(", ")||"-"));
+  L.push("");L.push("MEET SAM (our honest path)");L.push(C.sam||"-");
+  L.push("");L.push("PEOPLE WE'LL INVITE TO A PROJECT");L.push(C.invite.length?C.invite.join("\n"):"-");
+  L.push("");L.push("Support: District membership team, Community Groups, Rotary Community Leaders, Rotary South Pacific.");
+  L.push("Grow Rotary. Strengthen Clubs. Create Lasting Impact.");
+  return L.join("\n");
+}
+$("#dl").onclick=function(){
+  var t=summaryText();var name=(S.club.trim()||"Club").replace(/[^\w\- ]+/g,"").replace(/\s+/g,"_")+"_Membership_Conversation.txt";
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/plain;charset=utf-8"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+};
+$("#pr").onclick=function(){
+  var parts=summaryText().split("\n\n");var head=parts.shift().split("\n");
+  var h='<h1>'+esc(head[0])+'</h1><p>'+esc(head.slice(1).join("\n"))+'</p>';
+  parts.forEach(function(p){var ls=p.split("\n");h+='<h3>'+esc(ls[0])+'</h3><p>'+esc(ls.slice(1).join("\n"))+'</p>'});
+  $("#printout").innerHTML=h;window.print();
+};
+
+/* ---------- boot ---------- */
+function renderAll(){
+  inClub.value=S.club;inPres.value=S.presenter;paintClub();
+  renderTally("join");renderTally("stay");renderQuiz();renderBucket();renderSkills();roleSel=-1;renderRoles();
+  $("#rolecard").innerHTML='<div class="empty">Pick a role on the left.<br>Better still, pick one somebody in the room holds.</div>';
+  renderLadder();renderHealth();renderMatrix();renderSam();renderInvite();renderVote();renderCommit();
+  $("#why-r").classList.remove("show");
+}
+renderAll();
+var h=parseInt((location.hash||"").slice(1),10);
+slides[0].classList.add("active");go(h>0&&h<=slides.length?h-1:0);
+})();
+</script>
+</body>
+</html>
