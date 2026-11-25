@@ -36,6 +36,7 @@ main{max-width:980px;margin:0 auto;padding:18px 16px 60px}
 .links a.talk{background:#eaf2fd;border-color:#b9d3f4}
 .links a.pres{background:#fff4dc;border-color:#f3d08a}
 .links a.web{background:#eef9f1;border-color:#bfe6cd}
+.links a.tab{margin-left:-6px;padding:7px 9px;background:#eef9f1;border-color:#bfe6cd;font-weight:400}
 .links a .n{background:var(--royal);color:#fff;border-radius:6px;padding:0 6px;font-size:.78rem}
 ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
 .opt{border:1px dashed #c9a24a;background:#fffaf0}
@@ -82,7 +83,7 @@ ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
 <div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
 <main>
   <p class="intro"><b>Two screens?</b> Click <b>Open projector window</b>, drag that window onto the projector and click its full-screen button. From then on the projector only ever shows the talk or the live results; this run sheet, your notes and the presenter controls stay on your laptop. Use ◀ ▶ (or your clicker, with this page in front) to move slides.</p>
-  <p class="intro">Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons open a website or the toolkit. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
+  <p class="intro">Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons show a website or the toolkit on the projector (or a laptop tab if the projector isn't open; ↗ always opens a laptop tab). Click <b>Show talk</b> to come back. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
   <div class="key"><span><i style="background:#b9d3f4"></i>Talk slide</span><span><i style="background:#f3d08a"></i>Presenter screen</span><span><i style="background:#bfe6cd"></i>Website / toolkit</span></div>
   <div id="list"></div>
 </main>
@@ -174,7 +175,7 @@ var SECTIONS = [
     var links = (s.links || []).map(function (l) {
       if (l[0] === 'talk') return '<a class="talk" data-n="' + l[1] + '" href="talk.html#' + l[1] + '" target="pe-talk"><span class="n">' + l[1] + '</span>' + esc(l[2]) + '</a>';
       if (l[0] === 'pres') return '<a class="pres" href="' + l[1] + '" target="pe-presenter">' + esc(l[2]) + '</a>';
-      return '<a class="web" href="' + l[1] + '" target="pe-web">' + esc(l[2]) + ' ↗</a>';
+      return '<a class="web" href="' + l[1] + '" target="pe-web">' + esc(l[2]) + '</a><a class="tab" href="' + l[1] + '" target="pe-web" title="Open in a tab on this laptop instead">↗</a>';
     }).join('');
     var body = (s.say ? '<div class="say">“' + esc(s.say) + '”</div>' : '') +
       (s.notes ? '<ul>' + s.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>' : '') +
@@ -201,11 +202,14 @@ var SECTIONS = [
   function stageUp() { return Date.now() - stageSeen < 7000; }
   function talkUp() { return Date.now() - talkSeen < 600000 && (stageUp() || talkSeen); }
   function send(m) { if (bc) bc.postMessage(m); }
+  /* sites that refuse to appear inside another page always open in a laptop tab */
+  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|sam)\.html/i];
+  function frameable(u) { return !TAB_ONLY.some(function (r) { return r.test(u); }); }
   var pStat = document.getElementById('pStat'), nowbox = document.getElementById('nowbox');
   function status() {
     var ok = stageUp();
     pStat.classList.toggle('ok', ok);
-    pStat.lastChild.textContent = ok ? (showing === 'waiting' ? 'Projector open: click its full-screen button' : 'Projector showing: ' + ({ talk: 'talk', live: 'live screen', black: 'blank' }[showing] || '…')) : (bc ? 'Projector not open' : 'This browser cannot link windows');
+    pStat.lastChild.textContent = ok ? (showing === 'waiting' ? 'Projector open: click its full-screen button' : 'Projector showing: ' + ({ talk: 'talk', live: 'live screen', black: 'blank', web: 'web page' }[showing] || '…')) : (bc ? 'Projector not open' : 'This browser cannot link windows');
     ['pTalk', 'pLive', 'pBlack'].forEach(function (id, k) { document.getElementById(id).classList.toggle('on', ok && showing === ['talk', 'live', 'black'][k]); });
   }
   setInterval(status, 1500); status();
@@ -253,6 +257,8 @@ var SECTIONS = [
     var a = e.target.closest && e.target.closest('a'); if (!a) return;
     if (a.classList.contains('talk') && (stageUp() || talkSeen)) { e.preventDefault(); send({ show: 'talk' }); send({ talk: 'go', n: +a.dataset.n }); }
     else if (a.classList.contains('pres') && stageUp()) { send({ show: 'live' }); } /* controls open here on the laptop, results go to the projector */
+    /* web pages show on the projector when it is open (Ctrl/Shift-click or ↗ opens a laptop tab instead) */
+    else if (a.classList.contains('web') && stageUp() && !e.ctrlKey && !e.shiftKey && !e.metaKey && frameable(a.href)) { e.preventDefault(); send({ show: 'web', url: a.href }); }
   });
   document.addEventListener('keydown', function (e) {
     if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;

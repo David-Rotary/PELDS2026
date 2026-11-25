@@ -36,6 +36,7 @@ main{max-width:980px;margin:0 auto;padding:18px 16px 60px}
 .links a.talk{background:#eaf2fd;border-color:#b9d3f4}
 .links a.pres{background:#fff4dc;border-color:#f3d08a}
 .links a.web{background:#eef9f1;border-color:#bfe6cd}
+.links a.tab{margin-left:-6px;padding:7px 9px;background:#eef9f1;border-color:#bfe6cd;font-weight:400}
 .links a .n{background:var(--royal);color:#fff;border-radius:6px;padding:0 6px;font-size:.78rem}
 ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
 .opt{border:1px dashed #c9a24a;background:#fffaf0}
@@ -85,7 +86,7 @@ ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
 <main>
   <p class="intro"><b>On Zoom:</b> click <b>Open projector window</b>, leave it open (not minimised) and in Zoom choose <b>Share screen → that window</b>. Zoom then shows only the talk and the live results; this run sheet, your notes and the presenter controls stay private. Paste the join link into the Zoom chat so people on laptops can answer too; people with phones can scan the code on screen. Walls and votes open on phones <b>by themselves</b> when you reach their slide. The flip cards, tabs and pickers are clicked directly in the projector window, which is fine to do while sharing.</p>
   <p class="intro"><b>In a room with a projector:</b> Click <b>Open projector window</b>, drag that window onto the projector and click its full-screen button. From then on the projector only ever shows the talk or the live results; this run sheet, your notes and the presenter controls stay on your laptop. Use ◀ ▶ (or your clicker, with this page in front) to move slides.</p>
-  <p class="intro">Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons open a website or the toolkit. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
+  <p class="intro">Each button opens or jumps the right screen: <b>blue</b> buttons move the <b>talk</b> to that slide, <b>gold</b> buttons open the <b>presenter screen</b> (votes and walls), <b>green</b> buttons show a website or the toolkit on the projector (or a laptop tab if the projector isn't open; ↗ always opens a laptop tab). Click <b>Show talk</b> to come back. Tap a section heading to mark where you are. About <b>20 minutes</b> plus optional extras.</p>
   <div class="key"><span><i style="background:#b9d3f4"></i>Talk slide</span><span><i style="background:#f3d08a"></i>Presenter screen</span><span><i style="background:#bfe6cd"></i>Website / toolkit</span></div>
   <div id="list"></div>
 </main>
@@ -114,7 +115,7 @@ var SECTIONS = [
     notes: ['Slide 3: the guess vote opens on phones. Let the bars climb, then click "Reveal the answer" (top of this page) to show the cards',
       'Reframe: volunteering is down across Australia. Our members stay to serve locally (91%): that\'s our asset',
       'Slide 4, Strategy House: click two pillars. Stress that clubs choose their own way forward'],
-    links: [['talk', 3, 'Guess vote'], ['talk', 4, 'Strategy House']] },
+    links: [['talk', 3, 'Guess vote'], ['talk', 4, 'Strategy House'], ['web', 'membership-explorer.html', 'Membership Pathways Explorer']] },
 
   { id: 'sam', t: 4, d: 1, title: 'Meet Sam', talk: [5],
     say: 'Sam is exactly the person your club needs, and Sam will never walk in on their own.',
@@ -139,7 +140,7 @@ var SECTIONS = [
 
   { id: 'aha', t: 14.5, d: 1, title: 'Start small: the Aha picker', talk: [14],
     notes: ['Ask which sentence sounds like their Board; click the one most people say'],
-    links: [['talk', 14, 'Start small']] },
+    links: [['talk', 14, 'Start small'], ['web', 'grow-your-club.html', 'Grow Your Club session']] },
 
   { id: 'wall', t: 15.5, d: 2.5, title: 'Ideas wall: one thing in the next 90 days', talk: [15],
     notes: ['The wall opens on phones by itself and also shows every earlier answer, colour-coded',
@@ -154,7 +155,7 @@ var SECTIONS = [
 
   { id: 'close', t: 19.5, d: 0.5, title: 'Invite one person. Thank you', talk: [16],
     say: 'Notice, invite, welcome, help them belong, and only then ask. Do that once this year, with one Sam, and you\'ve done your part.',
-    links: [['talk', 16, 'Your one goal and the library']] },
+    links: [['talk', 16, 'Your one goal and the library'], ['web', 'https://www.rotary9815.org.au/page/membership-flow', 'Membership Hub (live)']] },
 
   { id: 'after', t: 20, d: 5, optional: true, title: 'After the session', checks: [
       'Presenter screen: Download results (every wall and vote, as a spreadsheet) and Save the summary',
@@ -174,7 +175,7 @@ var SECTIONS = [
     var links = (s.links || []).map(function (l) {
       if (l[0] === 'talk') return '<a class="talk" data-n="' + l[1] + '" href="sam.html#' + l[1] + '" target="pe-talk"><span class="n">' + l[1] + '</span>' + esc(l[2]) + '</a>';
       if (l[0] === 'pres') return '<a class="pres" href="' + l[1] + '" target="pe-presenter">' + esc(l[2]) + '</a>';
-      return '<a class="web" href="' + l[1] + '" target="pe-web">' + esc(l[2]) + ' ↗</a>';
+      return '<a class="web" href="' + l[1] + '" target="pe-web">' + esc(l[2]) + '</a><a class="tab" href="' + l[1] + '" target="pe-web" title="Open in a tab on this laptop instead">↗</a>';
     }).join('');
     var body = (s.say ? '<div class="say">“' + esc(s.say) + '”</div>' : '') +
       (s.notes ? '<ul>' + s.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>' : '') +
@@ -201,11 +202,14 @@ var SECTIONS = [
   function stageUp() { return Date.now() - stageSeen < 7000; }
   function talkUp() { return Date.now() - talkSeen < 600000 && (stageUp() || talkSeen); }
   function send(m) { if (bc) bc.postMessage(m); }
+  /* sites that refuse to appear inside another page always open in a laptop tab */
+  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|sam)\.html/i];
+  function frameable(u) { return !TAB_ONLY.some(function (r) { return r.test(u); }); }
   var pStat = document.getElementById('pStat'), nowbox = document.getElementById('nowbox');
   function status() {
     var ok = stageUp();
     pStat.classList.toggle('ok', ok);
-    pStat.lastChild.textContent = ok ? (showing === 'waiting' ? 'Projector open: click its full-screen button' : 'Projector showing: ' + ({ talk: 'talk', live: 'live screen', black: 'blank' }[showing] || '…')) : (bc ? 'Projector not open' : 'This browser cannot link windows');
+    pStat.lastChild.textContent = ok ? (showing === 'waiting' ? 'Projector open: click its full-screen button' : 'Projector showing: ' + ({ talk: 'talk', live: 'live screen', black: 'blank', web: 'web page' }[showing] || '…')) : (bc ? 'Projector not open' : 'This browser cannot link windows');
     ['pTalk', 'pLive', 'pBlack'].forEach(function (id, k) { document.getElementById(id).classList.toggle('on', ok && showing === ['talk', 'live', 'black'][k]); });
   }
   setInterval(status, 1500); status();
@@ -270,6 +274,8 @@ var SECTIONS = [
     var a = e.target.closest && e.target.closest('a'); if (!a) return;
     if (a.classList.contains('talk') && (stageUp() || talkSeen)) { e.preventDefault(); send({ show: 'talk' }); send({ talk: 'go', n: +a.dataset.n }); }
     else if (a.classList.contains('pres') && stageUp()) { send({ show: 'live' }); } /* controls open here on the laptop, results go to the projector */
+    /* web pages show on the projector when it is open (Ctrl/Shift-click or ↗ opens a laptop tab instead) */
+    else if (a.classList.contains('web') && stageUp() && !e.ctrlKey && !e.shiftKey && !e.metaKey && frameable(a.href)) { e.preventDefault(); send({ show: 'web', url: a.href }); }
   });
   document.addEventListener('keydown', function (e) {
     if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
