@@ -6,6 +6,7 @@
 <title>Club Leaders' Toolkit · District 9815</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="app/toolkit.css">
+<style>@media print{.onlyprint{display:block!important}}</style>
 </head>
 <body>
 <header class="topbar"><div class="in">
@@ -260,20 +261,34 @@
   function plan() {
     setNav('plan');
     var me = st.me;
-    view.innerHTML = warnings() + '<div class="card"><div class="row noprint" style="justify-content:space-between"><h1 style="margin:0">My Presidential Plan</h1>' +
+    view.innerHTML = warnings() + '<div class="card"><div class="row noprint" style="justify-content:space-between"><h1 style="margin:0" id="planTitle">My Presidential Plan</h1>' +
       '<div class="row"><button class="btn pri" id="print" type="button">Print / save as PDF</button><button class="btn" id="exp" type="button">Save a backup file</button><button class="btn" id="imp" type="button">Load a backup file</button></div></div>' +
       '<p class="muted noprint">Everything you write in the Reflect pages lands here, grouped into the parts of a plan. Edit it here too. Take it to your first board meeting, your Assistant Governor, or into Rotary Club Central.</p>' +
       '<div class="row" style="gap:16px"><label class="field" style="flex:1;min-width:200px"><span>Your name</span><input id="nm" value="' + esc(me.name || '') + '"></label>' +
       '<label class="field" style="flex:1;min-width:200px"><span>Club</span><input id="cl" value="' + esc(me.club || '') + '"></label>' +
-      '<label class="field" style="width:160px"><span>Rotary year</span><input id="yr" value="' + esc(me.year || '2027–28') + '"></label></div><div id="secs"></div></div>';
+      '<label class="field" style="width:160px"><span>Rotary year</span><input id="yr" value="' + esc(me.year || '2027–28') + '"></label></div><div class="row noprint" id="planKinds" style="gap:8px;margin:6px 0 4px"></div><h2 class="onlyprint" id="planPrintTitle" style="display:none;margin:4px 0"></h2><div id="secs"></div></div>';
     ['nm:name', 'cl:club', 'yr:year'].forEach(function (p) { var a = p.split(':'), i = $('#' + a[0]); i.oninput = function () { st.me[a[1]] = i.value; save(); }; });
     var groups = {};
     PE.modules.forEach(function (m) { m.items.forEach(function (it) { if (it.type !== 'reflect') return; var g = it.plan || 'Notes'; (groups[g] = groups[g] || []).push({ m: m, it: it }); }); });
     var order = PE.planSections.concat(Object.keys(groups).filter(function (g) { return PE.planSections.indexOf(g) < 0; }));
+    /* Two plans can live here: the Presidential Plan and the Membership Plan (sections starting "Membership plan · ").
+       Show one at a time, so each prints on its own; Membership Chairs see theirs first. */
+    var MEMP = 'Membership plan · ', isMemG = function (g) { return g.indexOf(MEMP) === 0; };
+    var hasMem = order.some(function (g) { return groups[g] && isMemG(g); }), hasPres = order.some(function (g) { return groups[g] && !isMemG(g); });
+    var kind = st.me.planKind || (me.role === 'mc' && hasMem ? 'mem' : 'pres');
+    if (kind === 'mem' && !hasMem) kind = 'pres'; if (kind === 'pres' && !hasPres) kind = 'mem';
+    var TITLES = { pres: 'My Presidential Plan', mem: 'My Membership Plan', all: 'My Plan' };
+    $('#planTitle').textContent = TITLES[kind]; $('#planPrintTitle').textContent = TITLES[kind];
+    if (hasMem && hasPres) {
+      $('#planKinds').innerHTML = [['pres', 'Presidential plan'], ['mem', 'Membership plan'], ['all', 'Everything']].map(function (k) {
+        return '<button type="button" class="btn sm' + (k[0] === kind ? ' pri' : '') + '" data-kind="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+      $('#planKinds').onclick = function (e) { var b = e.target.closest('[data-kind]'); if (!b) return; st.me.planKind = b.dataset.kind; save(); plan(); };
+    }
+    order = order.filter(function (g) { return kind === 'all' || (kind === 'mem') === isMemG(g); });
     var secs = $('#secs'), any = false;
     order.forEach(function (g) {
       if (!groups[g]) return; any = true;
-      var sec = el('div', 'plansec'); sec.appendChild(el('h3', null, esc(g)));
+      var sec = el('div', 'plansec'); sec.appendChild(el('h3', null, esc(kind === 'mem' ? g.slice(MEMP.length) : g)));
       groups[g].forEach(function (x) {
         var key = PE.k(x.m, x.it), val = st.answers[key] || '';
         sec.appendChild(el('div', 'planq', esc(x.it.title) + ' <small>· ' + esc(x.m.title) + '</small>'));
