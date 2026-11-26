@@ -13,6 +13,9 @@
   #start p{max-width:46ch;line-height:1.5;margin:0;opacity:.9}
   #start button{font:inherit;font-size:1.2rem;font-weight:700;background:#F7A81B;color:#0B2A5C;border:0;border-radius:999px;padding:14px 30px;cursor:pointer}
   #start.gone{display:none}
+  #back{position:fixed;left:14px;bottom:14px;z-index:7;display:none;font:700 15px/1 "Hanken Grotesk",system-ui,sans-serif;background:#0B2A5C;color:#fff;border:2px solid #F7A81B;border-radius:999px;padding:10px 16px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3);opacity:.85}
+  #back:hover{opacity:1}
+  #back.on{display:block}
   .bar{position:fixed;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#F7A81B,#00A2E0,#0067C8,#17458F);z-index:6}
 </style>
 </head>
@@ -26,18 +29,22 @@
 </div>
 <iframe id="talk" src="about:blank" allow="autoplay; fullscreen" title="Talk"></iframe>
 <iframe id="live" src="presenter.html?view=audience" title="Live screen"></iframe>
+<button id="back" type="button" title="Return to the talk">◀ Back to the talk</button>
+<iframe id="web" src="about:blank" allow="fullscreen" title="Web page" style="background:#fff"></iframe>
 <script>
 (function () {
   /* stage.html?talk=sam.html shows another talk (default: talk.html) */
   var TALK = (/[?&]talk=([\w.-]+\.html)/.exec(location.search) || [])[1] || 'talk.html';
   document.getElementById('talk').src = TALK + '?embed=1';
-  var talk = document.getElementById('talk'), live = document.getElementById('live'), start = document.getElementById('start');
+  var talk = document.getElementById('talk'), live = document.getElementById('live'), web = document.getElementById('web'), start = document.getElementById('start');
   var bc = null; try { bc = new BroadcastChannel('pe-stage'); } catch (e) {}
   var showing = 'talk';
   function show(w) {
     showing = w;
     talk.classList.toggle('on', w === 'talk');
     live.classList.toggle('on', w === 'live');
+    web.classList.toggle('on', w === 'web');
+    document.getElementById('back').classList.toggle('on', w === 'web');
     if (w === 'live') { try { live.contentWindow.location.reload(); } catch (e) {} } /* picks up a fresh sign-in */
     if (bc) bc.postMessage({ stage: 'alive', showing: w });
   }
@@ -52,6 +59,7 @@
     var r = document.documentElement.requestFullscreen(opts || {});
     return r && r.then ? r : Promise.resolve();
   }
+  document.getElementById('back').onclick = function () { show('talk'); };
   var goBtn = document.getElementById('go');
   goBtn.onclick = function () {
     function done() { start.classList.add('gone'); show('talk'); }
@@ -71,6 +79,8 @@
   });
   if (bc) bc.onmessage = function (e) {
     var m = e.data || {};
+    /* run sheet web links: { show: 'web', url } shows a web page here instead of a laptop tab */
+    if (m.show === 'web' && m.url && /^https?:\/\//i.test(m.url)) { if (web.getAttribute('src') !== m.url) web.src = m.url; }
     if (m.show) { if (!start.classList.contains('gone')) start.classList.add('gone'); show(m.show); }
     if (m.ping) bc.postMessage({ stage: 'alive', showing: start.classList.contains('gone') ? showing : 'waiting' });
   };
