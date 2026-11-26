@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Club membership snapshot · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app/kit.css">
+<style>
+.inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.inputs .card{margin:0}
+.res{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+.res .card{margin:0;border-top:6px solid var(--line)}
+.res .card.good{border-top-color:#2f8a57}.res .card.watch{border-top-color:#c98000}.res .card.bad{border-top-color:#c2423a}
+.res small{display:block;color:var(--ink2);font-size:.85rem;margin-top:6px}
+.bar{height:12px;background:#eef1f6;border-radius:999px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--gold);border-radius:999px;transition:width .5s}
+@media (max-width:760px){.inputs,.res{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.inputs,.res{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="hero"><div class="in">
+  <div class="brand"><div class="mark">9815</div><div>Rotary District 9815 · Membership drivers</div></div>
+  <h1>Your club's membership <em>snapshot</em></h1>
+  <p>Five minutes, eight numbers, and your Board is talking about the real picture instead of a feeling. Nothing you type leaves this page; it's saved on this device only.</p>
+  <div class="crumbs"><a href="im-in.html">← Drivers' kit</a></div>
+</div></div>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+
+<main>
+  <div class="card"><label class="h" for="club">Club</label><input type="text" id="club" placeholder="e.g. Rotary Club of Anytown" autocomplete="off"></div>
+
+  <h2>1 · The numbers</h2>
+  <p class="sub">Over the last 12 months. Rough is fine; the Secretary will know most of them.</p>
+  <div class="inputs" id="inputs"></div>
+
+  <h2>2 · What they say</h2>
+  <div class="res" id="res"></div>
+  <div class="card" id="story" style="margin-top:12px"></div>
+
+  <h2>3 · Where to start</h2>
+  <div id="start" class="list"></div>
+
+  <div class="btns noprint"><button class="btn pri" onclick="window.print()">Print for the Board</button><button class="btn" id="copy">Copy as text</button><button class="btn" id="clear">Clear</button></div>
+  <div class="ok" id="ok"></div>
+
+  <h2 class="noprint">Where to find the numbers</h2>
+  <div class="grid3 noprint">
+    <div class="card"><b>Your Club Secretary</b><br>Usually knows them all, and keeps join and leave dates up to date.</div>
+    <div class="card"><b>ClubRunner</b><br>Membership reports list members, join dates and terminations for the year.</div>
+    <div class="card"><b>My Rotary</b><br>Rotary Club Central and the club membership reports show trends over several years.</div>
+  </div>
+
+  <footer><em>Know your numbers. Then talk about them.</em>Rotary District 9815 · District targets from the Membership Growth Strategy 2026–2029</footer>
+</main>
+<script>
+(function () {
+  var F = [
+    ['start', 'Members 12 months ago', 30, 'On or around 1 July last year'],
+    ['now', 'Members today', 30, ''],
+    ['joined', 'New members in the last 12 months', 3, 'Including returning members'],
+    ['left', 'Members who left in the last 12 months', 3, 'Resigned, moved or lapsed'],
+    ['leftnew', '…of those, how many had been members under two years?', 1, 'Early leavers'],
+    ['guests', 'Guests at projects or meetings in the last 6 months', 6, 'People who aren\'t members'],
+    ['friends', 'People on a Friends of the Club or contact list', 0, 'Leave at 0 if you don\'t keep one'],
+    ['under45', 'Members under 45', 4, 'Optional: a quick count']];
+  var KEY = 'd9815-club-snapshot', S = {};
+  try { S = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { S = {}; }
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  document.getElementById('inputs').innerHTML = F.map(function (f) {
+    return '<div class="card"><label class="h" for="f-' + f[0] + '">' + f[1] + '</label><input type="number" min="0" step="1" inputmode="numeric" id="f-' + f[0] + '" value="' + (S[f[0]] != null ? esc(S[f[0]]) : f[2]) + '">' + (f[3] ? '<div class="hint">' + f[3] + '</div>' : '') + '</div>';
+  }).join('');
+  var club = document.getElementById('club'); club.value = S.club || '';
+  function v(k) { var x = parseFloat(document.getElementById('f-' + k).value); return isNaN(x) || x < 0 ? 0 : x; }
+  function pct(x) { return (Math.round(x * 10) / 10) + '%'; }
+  var out = {};
+  function calc() {
+    var st = v('start'), now = v('now'), jo = v('joined'), le = v('left'), ln = Math.min(v('leftnew'), le), gu = v('guests'), fr = v('friends'), u45 = v('under45');
+    var ret = st ? Math.max(0, (st - le) / st * 100) : 0;
+    var growth = st ? (now - st) / st * 100 : 0;
+    var lossYear = Math.round(now * (1 - ret / 100));
+    var target = Math.ceil(now * 0.05);
+    var needed = lossYear + target;
+    var earlyShare = le ? ln / le * 100 : 0;
+    var conv = gu ? jo / gu * 100 : 0;
+    out = { st: st, now: now, ret: ret, growth: growth, lossYear: lossYear, needed: needed, earlyShare: earlyShare, gu: gu, fr: fr, u45: u45, jo: jo, le: le };
+    var R = [
+      [pct(ret), 'Retention', 'District aim: above 90%', ret >= 90 ? 'good' : ret >= 85 ? 'watch' : 'bad', ret],
+      [(growth >= 0 ? '+' : '') + pct(growth), 'Net growth', 'District aim: about 5% a year', growth >= 5 ? 'good' : growth >= 0 ? 'watch' : 'bad', Math.max(0, Math.min(100, growth * 10))],
+      [String(needed), 'New members needed next year', 'To replace ' + lossYear + ' likely leavers and grow 5%', needed <= jo ? 'good' : needed <= jo + 2 ? 'watch' : 'bad', jo ? Math.min(100, jo / Math.max(needed, 1) * 100) : 0],
+      [le ? pct(earlyShare) : '–', 'Leavers in their first two years', 'New members leave fastest. The District aims to cut first-year resignations by 25%', !le ? 'good' : earlyShare <= 25 ? 'good' : earlyShare <= 50 ? 'watch' : 'bad', earlyShare]];
+    document.getElementById('res').innerHTML = R.map(function (r) { return '<div class="card ' + r[3] + '"><div class="big">' + r[0] + '</div><b>' + r[1] + '</b><div class="bar"><i style="width:' + Math.max(2, Math.min(100, r[4])) + '%"></i></div><small>' + r[2] + '</small></div>'; }).join('');
+    var name = club.value.trim() || 'Our club';
+    document.getElementById('story').innerHTML = '<p style="margin:0;font-size:1.05rem"><b>' + esc(name) + '</b> kept <b>' + pct(ret) + '</b> of its members last year and ' + (growth >= 0 ? 'grew by ' : 'shrank by ') + '<b>' + pct(Math.abs(growth)) + '</b>. ' +
+      'At this rate we\'ll lose about <b>' + lossYear + '</b> members in a typical year, so we need about <b>' + needed + '</b> new members next year just to reach the District\'s 5%. ' +
+      (gu ? 'We had <b>' + gu + '</b> guests in six months' + (jo ? ' and <b>' + jo + '</b> joined in a year.' : ', and nobody joined.') : 'We haven\'t had guests in the last six months.') + '</p>' +
+      '<p class="hint" style="margin-top:8px">Board question: <b>Is this the picture we expected? What surprises us?</b></p>';
+    var A = [];
+    if (ret < 90 || earlyShare > 25) A.push(['ONB', 'New members are leaving early', 'Start with onboarding: a named contact and a real role within 90 days, and check-ins at 3, 6 and 12 months.', 'https://www.rotary9815.org.au/page/membership-flow', 'Membership Hub: Onboard, Engage & Retain', 1]);
+    if (gu < Math.max(3, needed)) A.push(['ASK', 'Not enough people are coming through the door', 'Invite people to a project, not a meeting. Run a 90-day One Ask Sprint: every member invites one person to one thing.', 'membership-explorer.html', 'Pathways Explorer: Attract', 0]);
+    if (gu >= Math.max(3, needed) && jo < needed) A.push(['FRIEND', 'Guests come, but don\'t join', 'Keep them close with a Friends of the Club list, and look at what a first visit feels like.', 'board-pack.html', 'Board pack: conversation cards', 0]);
+    if (!fr) A.push(['LIST', 'No list of friends and supporters', 'Start a simple no-strings list of people who\'ve helped or come along. They\'re your warmest invitations.', 'https://www.rotary9815.org.au/page/membership-flow', 'Membership Hub: Attract', 1]);
+    if (now && u45 / now < 0.2) A.push(['NEW', 'Few members under 45', 'Lead with growth: Rotary as a place to learn to lead. Change the invitation, not just the guest list.', 'grow-with-us.html', '“Grow with us” invitation kit', 0]);
+    if (!A.length) A.push(['WELL', 'Your numbers look healthy', 'Share what\'s working so other clubs can borrow it.', 'share-a-story.html', 'Share your club\'s story', 0]);
+    A.push(['TALK', 'Whatever the numbers say', 'Put ten minutes on the next Board agenda and talk about this snapshot.', 'board-pack.html', 'Board pack: ten-minute agenda item', 0]);
+    document.getElementById('start').innerHTML = A.map(function (a) { return '<a class="item' + (a[5] ? ' ext' : '') + '" href="' + a[3] + '"' + (a[5] ? ' target="_blank" rel="noopener"' : '') + '><div class="ic">' + a[0] + '</div><div><b>' + a[1] + '</b><span>' + a[2] + ' <i>' + a[4] + '</i></span></div><span class="go">' + (a[5] ? 'Open ↗' : 'Open →') + '</span></a>'; }).join('');
+    S = { club: club.value }; F.forEach(function (f) { S[f[0]] = document.getElementById('f-' + f[0]).value; });
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { }
+  }
+  document.querySelectorAll('input').forEach(function (i) { i.addEventListener('input', calc); });
+  document.getElementById('copy').onclick = function () {
+    var t = (club.value.trim() || 'Our club') + ': membership snapshot\n' + document.getElementById('story').innerText + '\n\nRetention ' + pct(out.ret) + ' · Net growth ' + pct(out.growth) + ' · New members needed next year ' + out.needed + ' · Leavers under two years ' + pct(out.earlyShare);
+    var ok = document.getElementById('ok');
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { ok.textContent = 'Copied. Paste it into your Board papers.'; }, function () { ok.textContent = 'Copy didn\'t work here; use Print instead.'; });
+  };
+  document.getElementById('clear').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) { } club.value = ''; F.forEach(function (f) { document.getElementById('f-' + f[0]).value = f[2]; }); calc(); document.getElementById('ok').textContent = 'Cleared. The example numbers are back.'; };
+  calc();
+})();
+</script>
+</body>
+</html>

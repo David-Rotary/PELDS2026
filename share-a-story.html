@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Share your club's story · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app/kit.css">
+<style>
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.opt{font:inherit;font-weight:700;border:2px solid var(--line);background:#fff;border-radius:12px;padding:12px;cursor:pointer;min-height:48px;color:var(--ink)}
+.opt.on{border-color:var(--gold);background:var(--goldsoft)}
+.count{float:right;color:var(--ink2);font-size:.82rem;font-weight:600}
+</style>
+</head>
+<body>
+<div class="hero"><div class="in">
+  <div class="brand"><div class="mark">9815</div><div>Rotary District 9815 · Membership drivers</div></div>
+  <h1>Share your club's <em>story</em></h1>
+  <p>Everyone's waiting for someone else to go first. Your story, even a small one, shows them it can be done. Three questions, about two minutes.</p>
+  <div class="crumbs"><a href="im-in.html">← Drivers' kit</a></div>
+</div></div>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+
+<main>
+<div id="form">
+  <div class="card"><label class="h" for="tried">1 · What did your club try? <span class="count" id="c1"></span></label>
+    <input type="text" id="tried" maxlength="200" placeholder="e.g. Invited guests to our tree planting instead of a dinner meeting"></div>
+  <div class="card"><label class="h">How did it go?</label>
+    <div class="opts"><button class="opt" data-s="done">🎉 It worked</button><button class="opt" data-s="partly">🌱 Partly worked</button></div></div>
+  <div class="card"><label class="h" for="happened">2 · What happened? <span class="count" id="c2"></span></label>
+    <textarea id="happened" maxlength="380" placeholder="Who came, what changed, any numbers you're proud of. No names of people please."></textarea></div>
+  <div class="card"><label class="h" for="tip">3 · What would you tell another club trying it? <span class="count" id="c3"></span></label>
+    <textarea id="tip" maxlength="300" style="min-height:80px" placeholder="One tip. What would you do differently?"></textarea></div>
+  <div class="card"><label class="h" for="role">I'm a…</label>
+    <select id="role"><option value="">Prefer not to say</option><option value="pres">President</option><option value="pe">President-Elect</option><option value="mc">Membership Chair</option><option value="mentor">Mentor / Past President</option><option value="other">Something else</option></select>
+    <div id="codebox" class="hidden" style="margin-top:12px"><label class="h" for="code">District access code</label><input type="text" id="code" autocomplete="off" placeholder="From your session QR code or email"><div class="hint">Only needed once on this device.</div></div>
+  </div>
+  <div class="note">Your story goes to the District anonymously, the same way as a report-back. It appears on <b>What clubs are trying</b> and may be used in the District's monthly roundup. Want your club named in the newsletter? Use <b>Copy for the newsletter</b> below and email it yourself.</div>
+  <div class="btns"><button class="btn gold" id="send">Send my story</button><button class="btn" id="copy">Copy for the newsletter</button></div>
+  <div class="err" id="err"></div><div class="ok" id="ok"></div>
+</div>
+
+<div id="thanks" class="card hidden" style="text-align:center;padding:26px">
+  <div style="font-size:2.4rem">🙏</div>
+  <h2 style="margin:.2em 0">Thank you</h2>
+  <p>Somebody in another club just got permission to try it too.</p>
+  <div class="btns" style="justify-content:center"><a class="btn pri" href="im-in.html">Drivers' kit</a><a class="btn" href="membership-explorer.html">Find your next idea</a></div>
+</div>
+</main>
+
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script>
+(function () {
+  var ai = PE.ai, status = '', $ = function (id) { return document.getElementById(id); };
+  var KEY = 'd9815-story-draft';
+  try { var d = JSON.parse(localStorage.getItem(KEY) || '{}'); ['tried', 'happened', 'tip'].forEach(function (k) { if (d[k]) $(k).value = d[k]; }); } catch (e) { }
+  function counts() { $('c1').textContent = $('tried').value.length + '/200'; $('c2').textContent = $('happened').value.length + '/380'; $('c3').textContent = $('tip').value.length + '/300';
+    try { localStorage.setItem(KEY, JSON.stringify({ tried: $('tried').value, happened: $('happened').value, tip: $('tip').value })); } catch (e) { } }
+  ['tried', 'happened', 'tip'].forEach(function (k) { $(k).addEventListener('input', counts); }); counts();
+  if (!ai || !ai.code()) $('codebox').classList.remove('hidden');
+  document.querySelectorAll('.opt').forEach(function (b) { b.onclick = function () { status = b.dataset.s; document.querySelectorAll('.opt').forEach(function (x) { x.classList.toggle('on', x === b); }); }; });
+  function body() { return 'What happened: ' + $('happened').value.trim() + ($('tip').value.trim() ? '\nTip for another club: ' + $('tip').value.trim() : ''); }
+  $('copy').onclick = function () {
+    var t = 'Club story for the District newsletter\n\nClub: [your club]\nWhat we tried: ' + $('tried').value.trim() + '\n' + body() + '\nContact: [your name and email]';
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { $('ok').textContent = 'Copied. Add your club and name, then email it to the District.'; }, function () { $('ok').textContent = 'Copy didn\'t work here.'; });
+  };
+  $('send').onclick = function () {
+    var err = $('err'); err.textContent = '';
+    if (!$('tried').value.trim()) { err.textContent = 'Tell us what your club tried (question 1).'; return; }
+    if (!status) { err.textContent = 'Tap one: it worked, or partly worked.'; return; }
+    if (!$('happened').value.trim()) { err.textContent = 'Tell us what happened (question 2).'; return; }
+    var code = (ai && ai.code()) || $('code').value.trim();
+    if (!ai || !ai.url) { err.textContent = 'This page needs the online version of the toolkit. Use Copy for the newsletter instead.'; return; }
+    if (!code) { err.textContent = 'Please enter the District access code.'; $('codebox').classList.remove('hidden'); return; }
+    var btn = $('send'); btn.disabled = true; btn.textContent = 'Sending…';
+    ai.post('/api/live/report', { code: code, device: ai.device(), status: status, idea: $('tried').value.trim(), text: body().slice(0, 800), role: $('role').value, source: 'story' })
+      .then(function (r) {
+        if (r && r.ok) {
+          try { localStorage.setItem('pe-code', code); localStorage.removeItem(KEY); } catch (e) { }
+          $('form').classList.add('hidden'); $('thanks').classList.remove('hidden'); window.scrollTo(0, 0);
+        } else {
+          btn.disabled = false; btn.textContent = 'Send my story';
+          err.textContent = r && r.error === 'bad_code' ? 'That access code didn\'t work. Check it and try again.' : r && r.error === 'too_many' ? 'Lots sent today already. Please try again tomorrow.' : 'Something went wrong. Please try again in a minute.';
+          if (r && r.error === 'bad_code') $('codebox').classList.remove('hidden');
+        }
+      }).catch(function () { btn.disabled = false; btn.textContent = 'Send my story'; err.textContent = 'Could not reach the District service. Check your internet and try again.'; });
+  };
+})();
+</script>
+</body>
+</html>

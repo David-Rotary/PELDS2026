@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Grow with us invitation kit · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app/kit.css">
+<style>
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form .card{margin:0}
+.flyer{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(11,42,92,.15);max-width:720px;margin:14px auto}
+.fh{background:radial-gradient(circle at 88% 10%,rgba(0,162,224,.4),transparent 45%),linear-gradient(135deg,#0B2A5C,#17458F 60%,#0067C8);color:#fff;padding:30px 32px 26px}
+.fh .k{color:var(--gold);font-weight:800;font-size:.9rem}
+.fh h3{font-family:var(--display);font-weight:600;font-size:2.6rem;line-height:1.05;margin:8px 0 10px;color:#fff}
+.fh p{margin:0;font-size:1.08rem;opacity:.95}
+.fb{padding:22px 32px 26px}
+.fb .skills{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.fb .skills span{background:var(--goldsoft);color:var(--navy);border-radius:999px;padding:4px 11px;font-size:.86rem;font-weight:700}
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 16px}
+.why div{border-left:4px solid var(--gold);padding:2px 0 2px 10px;font-size:.95rem}
+.why b{display:block;color:var(--royal)}
+.come{display:flex;gap:18px;align-items:center;background:#f4f6fa;border-radius:12px;padding:14px 16px}
+.come .qr{width:110px;flex:none}.come .qr svg{width:100%;height:auto;display:block}
+.come b.big2{font-family:var(--display);font-size:1.35rem;color:var(--navy);display:block;line-height:1.2}
+.ff{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--ink2);padding:10px 32px;border-top:1px solid var(--line)}
+.copyblock{position:relative}.copyblock textarea{min-height:130px}
+@media (max-width:640px){.form,.why{grid-template-columns:1fr}.fh h3{font-size:2rem}.come{flex-direction:column;align-items:flex-start}}
+@media print{@page{size:A4;margin:10mm}body{background:#fff}.hero,.rb,footer,main>*:not(.flyer){display:none!important}main{padding:0;max-width:none}.flyer{width:100%;max-width:none;box-shadow:none;margin:0;font-size:13pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}.fh{padding:40px 36px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.fh h3{font-size:3.4rem}.fb{padding:28px 36px}.come .qr{width:130px}}
+</style>
+</head>
+<body>
+<div class="hero"><div class="in">
+  <div class="brand"><div class="mark">9815</div><div>Rotary District 9815 · Membership drivers</div></div>
+  <h1>“Grow with us” <em>invitation kit</em></h1>
+  <p>Rotary is a leadership school; we just forgot to put it in the brochure. Fill in your club's details and get a flyer to print, plus words for your website, socials and a personal message.</p>
+  <div class="crumbs"><a href="im-in.html">← Drivers' kit</a></div>
+</div></div>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+
+<main>
+  <h2>1 · Your club</h2>
+  <p class="sub">Saved on this device only. The invitation is to a real project or event, not a meeting.</p>
+  <div class="form">
+    <div class="card"><label class="h" for="club">Club name</label><input type="text" id="club" placeholder="Rotary Club of Anytown"></div>
+    <div class="card"><label class="h" for="area">Your area</label><input type="text" id="area" placeholder="e.g. Anytown and surrounds"></div>
+    <div class="card"><label class="h" for="what">The next thing people can join</label><input type="text" id="what" placeholder="e.g. Planting day at Cardinia Creek"></div>
+    <div class="card"><label class="h" for="when">When and where</label><input type="text" id="when" placeholder="e.g. Saturday 14 March, 9 to 11 am, Creek Rd car park"></div>
+    <div class="card"><label class="h" for="who">Contact name</label><input type="text" id="who" placeholder="e.g. Alex"></div>
+    <div class="card"><label class="h" for="how">Phone or email</label><input type="text" id="how" placeholder="e.g. 0400 000 000"></div>
+    <div class="card" style="grid-column:1/-1"><label class="h" for="url">Club website or contact page (for the QR code)</label><input type="text" id="url" placeholder="https://..."><div class="hint">Test the QR code with your phone before printing a pile.</div></div>
+  </div>
+
+  <h2>2 · Your flyer</h2>
+  <div class="flyer" id="flyer">
+    <div class="fh"><div class="k" id="fk">Rotary · Anytown and surrounds</div><h3>Grow with us.</h3><p>Real projects, real responsibility, good people, and a safety net while you learn to lead.</p></div>
+    <div class="fb">
+      <div class="why">
+        <div><b>Lead</b>Run a project, chair a meeting, manage a budget. Skills that travel to work and home.</div>
+        <div><b>Connect</b>Meet people across your community you'd never otherwise meet.</div>
+        <div><b>Make a difference</b>Close to home, with a team behind you.</div>
+      </div>
+      <div style="font-weight:800;color:var(--navy)">What our members say they've learned through Rotary</div>
+      <div class="skills" id="skills"></div>
+      <div class="come"><div class="qr" id="qr"></div><div><div style="font-weight:800;color:var(--ink2);font-size:.9rem">Come and try it. No strings.</div><b class="big2" id="fw">Our next project</b><span id="fwhen"></span><div style="margin-top:6px" id="fcontact"></div></div></div>
+    </div>
+    <div class="ff"><span id="fclub">Rotary Club of Anytown</span><span>Part of Rotary District 9815</span></div>
+  </div>
+  <div class="btns noprint" style="justify-content:center"><button class="btn pri" onclick="window.print()">Print or save the flyer as PDF</button></div>
+
+  <h2>3 · Words to use</h2>
+  <div class="grid2">
+    <div class="card copyblock"><label class="h" for="t1">For your website (Become a member)</label><textarea id="t1"></textarea><div class="btns"><button class="btn" data-copy="t1">Copy</button></div></div>
+    <div class="card copyblock"><label class="h" for="t2">For Facebook or Instagram</label><textarea id="t2"></textarea><div class="btns"><button class="btn" data-copy="t2">Copy</button></div></div>
+    <div class="card copyblock" style="grid-column:1/-1"><label class="h" for="t3">A personal message to one person (the one that works best)</label><textarea id="t3" style="min-height:100px"></textarea><div class="btns"><button class="btn" data-copy="t3">Copy</button></div></div>
+  </div>
+  <div class="ok" id="ok"></div>
+  <div class="note">Want more? The <a href="https://portal.clubrunner.ca/50387/Documents/en-au/17747d62-98fc-42cc-9b4b-7ba790088db5/1/" target="_blank" rel="noopener">One-Minute Invite card</a> and <a href="https://portal.clubrunner.ca/50387/Documents/en-au/48923a44-7680-4285-8102-1c0970f18ce8/1/" target="_blank" rel="noopener">Prove the Invitation</a> help make sure what people find online matches what you promised.</div>
+
+  <footer><em>Come and grow with us.</em>Rotary District 9815 · Membership Growth Strategy 2026–2029</footer>
+</main>
+<script src="app/qrcode.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); }, KEY = 'd9815-grow-with-us', F = ['club', 'area', 'what', 'when', 'who', 'how', 'url'];
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var SK = ['Chairing a meeting', 'Public speaking', 'Project management', 'Leading volunteers', 'Budgeting', 'Fundraising', 'Mentoring', 'Strategic planning', 'Running an event', 'Handling conflict'];
+  $('skills').innerHTML = SK.map(function (s) { return '<span>' + s + '</span>'; }).join('');
+  try { var S = JSON.parse(localStorage.getItem(KEY) || '{}'); F.forEach(function (k) { if (S[k]) $(k).value = S[k]; }); } catch (e) { }
+  function val(k, d) { return $(k).value.trim() || d; }
+  function upd() {
+    var club = val('club', 'Rotary Club of Anytown'), area = val('area', 'Anytown and surrounds'), what = val('what', 'our next community project'), when = val('when', ''), who = val('who', ''), how = val('how', ''), url = $('url').value.trim();
+    $('fk').textContent = 'Rotary · ' + area; $('fclub').textContent = club; $('fw').textContent = what; $('fwhen').textContent = when;
+    $('fcontact').textContent = who || how ? 'Ask for ' + (who || 'us') + (how ? ': ' + how : '') : (url ? 'Find us: ' + url.replace(/^https?:\/\//, '') : '');
+    var q = $('qr'); q.innerHTML = '';
+    if (/^https?:\/\/\S+\.\S+/.test(url)) { try { var c = qrcode(0, 'M'); c.addData(url); c.make(); q.innerHTML = c.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) { } }
+    q.style.display = q.innerHTML ? '' : 'none';
+    $('t1').value = 'Grow with us.\n\n' + club + ' is a group of people in ' + area + ' who get things done together, and learn a lot along the way. Members run real projects, chair meetings, manage budgets and lead volunteers, with friendly people behind them while they learn.\n\nYou don\'t need to join to start. Come along to ' + what + (when ? ' (' + when + ')' : '') + ' and see if it\'s for you.' + (who || how ? '\n\nTalk to ' + (who || 'us') + (how ? ' on ' + how : '') + '.' : '');
+    $('t2').value = 'Looking for a way to make a difference close to home, and grow as a leader while you do it? 🌱\n\nJoin ' + club + ' for ' + what + (when ? ', ' + when : '') + '. No strings, no meetings, just good people doing something useful.' + (url ? '\n\n' + url : '') + '\n\n#Rotary #' + area.split(/[ ,]/)[0].replace(/[^A-Za-z]/g, '') + ' #GrowWithUs';
+    $('t3').value = 'Hi [name], a few of us from Rotary are ' + what.replace(/^our /, 'doing our ') + (when ? ' on ' + when.split(',')[0] : '') + '. I thought of you because [the reason, e.g. you care about the creek]. Want to come for an hour? No strings. I\'ll introduce you around.';
+    var S = {}; F.forEach(function (k) { S[k] = $(k).value; }); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { }
+  }
+  F.forEach(function (k) { $(k).addEventListener('input', upd); }); upd();
+  document.querySelectorAll('[data-copy]').forEach(function (b) { b.onclick = function () { var t = $(b.dataset.copy).value; if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { $('ok').textContent = 'Copied.'; }, function () { $('ok').textContent = 'Select the text and copy it.'; }); }; });
+})();
+</script>
+</body>
+</html>

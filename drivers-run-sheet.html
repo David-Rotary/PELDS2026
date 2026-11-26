@@ -121,10 +121,10 @@ var SECTIONS = [
 
   { id: 'tools', t: 4, d: 5.5, title: 'You already have the tools', talk: [4, 5, 6, 7],
     notes: ['Slide 4: the three doors. Don\'t open them yet',
-      'Slide 5: Membership Hub. Show it, click Start Guided Flow, step once, open the Year Planner. Back to the talk',
+      'Slide 5: Membership Hub. Click "Play the Hub tour" on the slide: the District website can\'t appear on the projector, so this plays your screen recording. Want it live? Open the green Hub link (it opens a laptop tab) and share that tab in Zoom for a minute',
       'Slide 6: Club Leaders\' Toolkit. Open "Membership: you and your Membership Chair", then Board mode',
       'Slide 7 (optional): which had you opened? "None yet" is the most useful answer'],
-    links: [['talk', 4, 'Three doors'], ['talk', 5, 'Hub'], ['web', 'https://www.rotary9815.org.au/page/membership-flow', 'Membership Hub (live)'], ['talk', 6, 'Toolkit'], ['web', 'START%20HERE.html', 'Club Leaders\' Toolkit'], ['web', 'launchpad.html', 'Launchpad'], ['talk', 7, 'Opened? (vote)']] },
+    links: [['talk', 4, 'Three doors'], ['talk', 5, 'Hub'], ['web', 'https://www.rotary9815.org.au/page/membership-flow', 'Membership Hub (laptop tab)'], ['talk', 6, 'Toolkit'], ['web', 'START%20HERE.html', 'Club Leaders\' Toolkit'], ['web', 'launchpad.html', 'Launchpad'], ['talk', 7, 'Opened? (vote)']] },
 
   { id: 'board', t: 9.5, d: 3.5, title: 'The Board behind the Chair', talk: [8, 9],
     notes: ['Slide 8: President, Membership Chair, together. Ask Presidents: "Which of your four is hardest?"',
@@ -223,8 +223,8 @@ var SECTIONS = [
   function stageUp() { return Date.now() - stageSeen < 7000; }
   function talkUp() { return Date.now() - talkSeen < 600000 && (stageUp() || talkSeen); }
   function send(m) { if (bc) bc.postMessage(m); }
-  /* sites that refuse to appear inside another page always open in a laptop tab */
-  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|sam|drivers)\.html/i];
+  /* sites that refuse to appear inside another page always open in a laptop tab (My Rotary, and ClubRunner sites such as the District website) */
+  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|sam|drivers)\.html/i, /rotary9815\.org\.au/i, /rotarysouthpacific\.org/i, /clubrunner/i];
   function frameable(u) { return !TAB_ONLY.some(function (r) { return r.test(u); }); }
   var pStat = document.getElementById('pStat'), nowbox = document.getElementById('nowbox');
   function status() {

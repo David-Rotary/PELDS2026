@@ -202,8 +202,8 @@ var SECTIONS = [
   function stageUp() { return Date.now() - stageSeen < 7000; }
   function talkUp() { return Date.now() - talkSeen < 600000 && (stageUp() || talkSeen); }
   function send(m) { if (bc) bc.postMessage(m); }
-  /* sites that refuse to appear inside another page always open in a laptop tab */
-  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|sam)\.html/i];
+  /* sites that refuse to appear inside another page always open in a laptop tab (My Rotary, and ClubRunner sites such as the District website) */
+  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|sam)\.html/i, /rotary9815\.org\.au/i, /rotarysouthpacific\.org/i, /clubrunner/i];
   function frameable(u) { return !TAB_ONLY.some(function (r) { return r.test(u); }); }
   var pStat = document.getElementById('pStat'), nowbox = document.getElementById('nowbox');
   function status() {

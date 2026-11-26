@@ -124,9 +124,13 @@
       '<h3>Go to (opens in its own tab)</h3><div class="goto">' + gotoLinks(P) + '</div>' +
       '<h3>Screens</h3><button class="ctl' + on(act.type === 'idle') + '" data-a="idle">Welcome &amp; QR code<div class="sub">People scan to join</div></button>';
     if (isMem()) {
-      h += '<h3>Meet Sam: walls</h3>' + SAM_WALLS.map(function (w) { return '<button class="ctl' + on(act.type === 'wall' && act.id === w[0]) + '" data-sw="' + w[0] + '">' + esc(w[1]) + '<div class="sub">Wall · opens by itself on its slide</div></button>'; }).join('') +
-        '<h3>Meet Sam: votes</h3>' + SAM_POLLS.map(function (q) { return '<button class="ctl' + on(act.type === 'poll' && act.id === q.id) + '" data-sp="' + q.id + '">' + esc(q.title) + '<div class="sub">Vote</div></button>'; }).join('') +
-        '<h3>To finish</h3><button class="ctl gold' + on(act.type === 'summary') + '" data-a="summary">AI summary &amp; ideas<div class="sub">Reads every Meet Sam wall and vote. People then tap the one idea they\'ll try</div></button>' +
+      h += '<h3>' + memSet().name + ': walls</h3>' + memSet().walls.map(function (w) { return '<button class="ctl' + on(act.type === 'wall' && act.id === w[0]) + '" data-sw="' + w[0] + '">' + esc(w[1]) + '<div class="sub">Wall · opens by itself on its slide</div></button>'; }).join('') +
+        '<h3>' + memSet().name + ': votes</h3>' + memSet().polls.map(function (q) { return '<button class="ctl' + on(act.type === 'poll' && act.id === q.id) + '" data-sp="' + q.id + '">' + esc(q.title) + '<div class="sub">Vote</div></button>'; }).join('') +
+        '<h3>Report-backs</h3><button class="ctl' + on(act.type === 'reports') + '" data-a="reports">What clubs are trying<div class="sub">Report-backs from every club, anonymous</div></button>' +
+        '<button class="ctl' + on(act.type === 'poll' && act.id === TRIED.id) + '" data-a="tried">Did you try it? (vote)<div class="sub">Open the next session with last session\'s promises</div></button>' +
+        '<button class="ctl' + on(act.type === 'roundup') + '" data-a="roundup">Monthly AI roundup<div class="sub">From the last 31 days of report-backs</div></button>' +
+        (lastRoundup ? '<button class="ctl" data-a="saveround">Save the roundup<div class="sub">Downloads it as a text file</div></button>' : '') +
+        '<h3>To finish</h3><button class="ctl gold' + on(act.type === 'summary') + '" data-a="summary">AI summary &amp; ideas<div class="sub">Reads every wall and vote in this session. People then tap the one idea they\'ll try</div></button>' +
         (lastSummary ? '<button class="ctl" data-a="savesum">Save the summary<div class="sub">Downloads it as a text file</div></button>' : '');
       if (act.type === 'poll') h += '<h3>This vote</h3><button class="ctl" data-a="toggle">' + (act.open ? 'Close voting' : 'Re-open voting') + '</button>';
       if (act.type === 'wall') h += '<h3>Wall</h3><button class="ctl" data-a="themes">Find themes with AI<div class="sub">Also appears on everyone\'s phone</div></button>';
@@ -167,8 +171,8 @@
   }
   function sideDone(s, h) {
     s.innerHTML = h;
-    s.querySelectorAll('[data-sw]').forEach(function (b) { b.onclick = function () { var w = SAM_WALLS.filter(function (x) { return x[0] === b.dataset.sw; })[0]; setAct({ type: 'wall', id: w[0], title: w[1], open: true }); }; });
-    s.querySelectorAll('[data-sp]').forEach(function (b) { b.onclick = function () { var q = SAM_POLLS.filter(function (x) { return x.id === b.dataset.sp; })[0]; setAct({ type: 'poll', id: q.id, title: q.title, ask: q.ask, options: q.options, open: true, reveal: false }); }; });
+    s.querySelectorAll('[data-sw]').forEach(function (b) { b.onclick = function () { var w = memSet().walls.filter(function (x) { return x[0] === b.dataset.sw; })[0]; setAct({ type: 'wall', id: w[0], title: w[1], open: true }); }; });
+    s.querySelectorAll('[data-sp]').forEach(function (b) { b.onclick = function () { var q = memSet().polls.filter(function (x) { return x.id === b.dataset.sp; })[0]; setAct({ type: 'poll', id: q.id, title: q.title, ask: q.ask, options: q.options, open: true, reveal: false }); }; });
     document.getElementById('sess').onchange = function () { room = this.value; ls('pe-room', room); act = { type: 'idle' }; themes = ''; lastSummary = ''; clearTimeout(timer); connect(); };
     s.querySelectorAll('[data-a]').forEach(function (b) { b.onclick = function () { action(b.dataset.a); }; });
     s.querySelectorAll('[data-s]').forEach(function (b) { b.onclick = function () { startPoll(scenarios[+b.dataset.s]); }; });
@@ -185,7 +189,7 @@
   var TRIED = { id: 'did-you-try', title: 'Last time, you picked one thing to try. How did it go?', ask: 'Be honest. Tap one.', options: ['Done it', 'Started, still going', 'Not yet', 'I wasn\'t here last time'] };
   var STAT = { done: '🎉 Done', partly: '🌱 Partly done', notyet: '⏳ Not yet', changed: '🔀 Changed plan' };
   /* sessions: each keeps its own votes and walls. Rooms starting with "presidents" get the Presidents meeting screens */
-  var SESSIONS = [['prepelds', 'Pre-PELDS (7 Nov)'], ['gippsland', 'Pre-PELDS Gippsland'], ['presidents', 'Presidents meeting'], ['membership', 'Membership: Meet Sam']];
+  var SESSIONS = [['prepelds', 'Pre-PELDS (7 Nov)'], ['gippsland', 'Pre-PELDS Gippsland'], ['presidents', 'Presidents meeting'], ['membership', 'Membership: Meet Sam'], ['membership-drivers', 'Membership: It\'s in your hands']];
   function isPres() { return /^presidents/i.test(room); }
   /* rooms starting with "membership" get the Meet Sam screens (sam.html talk) */
   function isMem() { return /^membership/i.test(room); }
@@ -195,7 +199,14 @@
     { id: 'sam-guess', title: 'How much has Australian Rotary membership fallen over twenty years?', ask: 'Take a guess. Tap one.', options: ['12%', '24%', 'About 36%'] },
     { id: 'sam-google', title: 'Run the Google test on your own club. How many of the 5 can you tick?', ask: 'Be honest. Tap one.', options: ['All 5', '3 or 4', '1 or 2', 'Not sure: I\'ll check tonight'] },
     { id: 'sam-lost', title: 'At your club, where does Sam usually get lost?', ask: 'Tap the hardest one for your club.', options: ['Notice: we rarely meet anyone new', 'Invite: members don\'t ask', 'Welcome: first visits feel awkward', 'Belong: new members drift away', 'Ask: we ask too soon, or never'] }];
-  SAM_WALLS.forEach(function (w) { WALLS[w[0]] = w[1]; });
+  /* "It's in your hands" (drivers.html): rooms starting "membership-drivers" */
+  var DRV_WALLS = [['drv-skill', 'One thing Rotary taught you that you\'ve used at work, at home or in your community'], ['drv-breakout', 'Breakout: your group\'s best insight']];
+  var DRV_POLLS = [
+    { id: 'drv-holdback', title: 'Honestly: what\'s really holding your club back from growing?', ask: 'Tap one.', options: ['We rarely invite anyone', 'People visit but don\'t come back', 'New members drift away', 'We\'re all stretched too thin', 'We\'ve never really talked about it as a club'] },
+    { id: 'drv-opened', title: 'Before today, which of these had you opened?', ask: 'Tap one.', options: ['The Membership Hub', 'The Club Leaders\' Toolkit', 'The Pathways Explorer', 'More than one', 'None of them yet'] },
+    { id: 'drv-in', title: 'Will you start the membership conversation in your club?', ask: 'Tap one.', options: ['I\'m in', 'I\'m in, with some help', 'I\'ll take it to my Board first', 'Not this year'] }];
+  function memSet() { return /^membership-?drivers/i.test(room) ? { name: 'It\'s in your hands', walls: DRV_WALLS, polls: DRV_POLLS } : { name: 'Meet Sam', walls: SAM_WALLS, polls: SAM_POLLS }; }
+  SAM_WALLS.concat(DRV_WALLS).forEach(function (w) { WALLS[w[0]] = w[1]; });
   /* deep links into the toolkit: #/m/<module>/<page> */
   function tk(mid, iid) {
     var m = (PE.modules || []).filter(function (x) { return x.id === mid; })[0]; if (!m) return '';
@@ -203,6 +214,8 @@
     return 'START%20HERE.html#/m/' + mid + '/' + Math.max(0, i);
   }
   function gotoLinks(P) {
+    if (isMem() && /drivers/i.test(room)) return [['drivers-run-sheet.html', 'Run sheet', 'pe-runsheet'], ['drivers.html', 'It\'s in your hands talk', 'pe-talk'], ['membership-explorer.html', 'Membership Explorer'], ['START%20HERE.html', 'Club Leaders\' Toolkit']]
+      .map(function (x) { return '<a href="' + x[0] + '" target="' + (x[2] || 'pe-toolkit') + '">' + esc(x[1]) + ' ↗</a>'; }).join('');
     if (isMem()) return [['sam-run-sheet.html', 'Run sheet', 'pe-runsheet'], ['sam.html', 'Meet Sam talk', 'pe-talk'], ['membership-explorer.html', 'Membership Explorer'], ['launchpad.html', 'Launchpad']]
       .map(function (x) { return '<a href="' + x[0] + '" target="' + (x[2] || 'pe-toolkit') + '">' + esc(x[1]) + ' ↗</a>'; }).join('');
     var L = P ? [['START%20HERE.html', 'Toolkit home'], [tk('next-president'), 'Growing your next President'], [tk('next-president', 'askjo'), 'AI demo: practise the ask'],
@@ -294,14 +307,14 @@
     var s = document.getElementById('stage'); if (!s) return;
     s.innerHTML = '<div class="kind">AI summary</div><h1>Reading everything the room said…</h1>'; s.appendChild(ai.thinking());
     var M = isMem();
-    var polls = (M ? SAM_POLLS : [QUICK, FIVE]).map(function (q) { return { id: q.id, title: q.title, options: q.options }; });
+    var polls = (M ? memSet().polls : [QUICK, FIVE]).map(function (q) { return { id: q.id, title: q.title, options: q.options }; });
     if (!M) scenarios.forEach(function (x) { polls.push({ id: x.id, title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) }); });
     if (!isPres() && !M) polls.push({ id: 'talk-said-yes', title: TALK['talk-said-yes'].title, options: TALK['talk-said-yes'].options });
     Promise.all(polls.map(function (q) { return api('results', { poll: q.id }).then(function (r) { q.counts = r.counts || {}; return q; }).catch(function () { q.counts = {}; return q; }); }))
       .then(function (list) {
         list = list.filter(function (q) { return Object.keys(q.counts).length; });
-        return ai.post('/api/coach', { mode: 'summary', admin: admin, payload: { room: room, polls: list, walls: M ? SAM_WALLS.reduce(function (o, w) { o[w[0]] = w[1]; return o; }, {}) : WALLS,
-          context: M ? 'A District 9815 membership session on Zoom ("Meet Sam"): club Presidents, Presidents-Elect, Membership Chairs and interested members, learning a five-moment approach to growing membership (Notice, Invite, Welcome, Belong, Ask) and the District toolkit behind it. Ideas should be small, practical things a club could try in the next 90 days to attract, welcome and keep members.' : isPres() ? 'A District Presidents meeting: current club Presidents talking about succession and membership.' : 'A Pre-PELDS training session (' + room + '): incoming club Presidents-Elect and club Membership Chairs preparing for their year. Ideas should help them start their year well, as well as grow and keep members.' } });
+        return ai.post('/api/coach', { mode: 'summary', admin: admin, payload: { room: room, polls: list, walls: M ? memSet().walls.reduce(function (o, w) { o[w[0]] = w[1]; return o; }, {}) : WALLS,
+          context: M && /drivers/i.test(room) ? 'A District 9815 membership launch session on Zoom ("It\'s in your hands"): club Presidents, Presidents-Elect and Membership Chairs being invited to drive membership growth in their own clubs. It introduced the Membership Hub, the Club Leaders\' Toolkit and the Pathways Explorer, the Board backing the Membership Chair, Rotary as a leadership school in a changing world, and short small-group conversations. Ideas should be small, practical first steps a club leader could take in the next 30 to 90 days to start a membership conversation in their club and act on it.' : M ? 'A District 9815 membership session on Zoom ("Meet Sam"): club Presidents, Presidents-Elect, Membership Chairs and interested members, learning a five-moment approach to growing membership (Notice, Invite, Welcome, Belong, Ask) and the District toolkit behind it. Ideas should be small, practical things a club could try in the next 90 days to attract, welcome and keep members.' : isPres() ? 'A District Presidents meeting: current club Presidents talking about succession and membership.' : 'A Pre-PELDS training session (' + room + '): incoming club Presidents-Elect and club Membership Chairs preparing for their year. Ideas should help them start their year well, as well as grow and keep members.' } });
       }).then(function (r) {
         if (!r || !r.text) {
           var why = r && r.error === 'bad_mode' ? 'The online service needs the 20 Nov update (paste the new worker.js into Cloudflare and Deploy). Until then, use Find themes with AI on each wall.' : 'Could not get the summary: ' + ((r && (r.message || r.error)) || 'no answer');
@@ -335,7 +348,7 @@
       if (!r || r.error) { PE.toast('Could not download: ' + ((r && r.error) || 'error')); return; }
       var q = function (v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
       var line = function (a) { return a.map(q).join(','); };
-      var info = function (id) { var x = scenarios.find(function (s) { return s.id === id; }); return x ? { title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) } : (TALK[id] || ({ 'next-pres-2028': QUICK, 'club-five-years': FIVE, 'did-you-try': TRIED })[id] || SAM_POLLS.filter(function (q) { return q.id === id; })[0] || { title: id, options: [] }); };
+      var info = function (id) { var x = scenarios.find(function (s) { return s.id === id; }); return x ? { title: x.it.title, options: (x.it.choices || []).map(function (c) { return c.text; }) } : (TALK[id] || ({ 'next-pres-2028': QUICK, 'club-five-years': FIVE, 'did-you-try': TRIED })[id] || SAM_POLLS.concat(DRV_POLLS).filter(function (q) { return q.id === id; })[0] || { title: id, options: [] }); };
       var out = [line(['District 9815 · ' + room + ' · downloaded ' + new Date().toLocaleString('en-AU')]), ''];
       /* 1. summary */
       out.push(line(['VOTE SUMMARY']), line(['Question', 'Option', 'Presidents-Elect', 'Membership Chairs', 'Other / not given', 'Total']));

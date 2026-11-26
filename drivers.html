@@ -288,6 +288,11 @@ ul.dl{margin:4px 0 6px;padding-left:20px;font-size:17px;color:var(--muted)}ul.dl
 .loop4 div:not(:last-child)::after{content:"→";position:absolute;right:-14px;top:40%;font-size:22px;color:var(--muted)}
 body.flow .loop4{grid-template-columns:minmax(0,1fr)!important}body.flow .loop4 div::after{display:none}
 #wall .wall{top:236px}
+.vid{position:absolute;inset:0;z-index:20;background:rgba(6,20,45,.94);display:flex;align-items:center;justify-content:center;padding:36px}
+.vid[hidden]{display:none}
+.vbox{width:100%;max-width:1400px}
+.vbox video{width:100%;max-height:760px;border-radius:14px;background:#000;display:block}
+.vbar{display:flex;justify-content:space-between;align-items:center;margin-top:14px;color:#fff;font-size:20px;gap:16px}
 .signup{margin-top:auto;display:flex;gap:16px;align-items:center;background:rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff}
 .signup .sqr{width:120px;flex:none;background:#fff;border-radius:10px;padding:6px}.signup .sqr svg{width:100%;height:auto;display:block}
 .signup b{display:block;font-size:22px}.signup span{font-size:16px;opacity:.9}
@@ -348,7 +353,7 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
     <div class="kicker">You already have the tools</div>
     <h2>Three doors. One for each person who drives growth.</h2>
     <div class="doors">
-      <div class="door" style="--c:var(--m1)"><div class="who">Membership Chairs</div><h3>Membership Hub</h3><p>Your job, already mapped: the year in seven topic areas, a nine-step guided flow, a quarter-by-quarter planner and 45+ resources.</p><ul class="dl"><li>Guided flow: nine steps, about 20 minutes</li><li>Onboarding checklist and early-warning signs</li><li>Year planner, quarter by quarter</li></ul><button class="show" data-show="hub">Show me</button></div>
+      <div class="door" style="--c:var(--m1)"><div class="who">Membership Chairs</div><h3>Membership Hub</h3><p>Your job, already mapped: the year in seven topic areas, a nine-step guided flow, a quarter-by-quarter planner and 30+ resources.</p><ul class="dl"><li>Guided flow: nine steps, about 20 minutes</li><li>Onboarding checklist and early-warning signs</li><li>Year planner, quarter by quarter</li></ul><button class="show" data-show="hub">Show me (video)</button></div>
       <div class="door" style="--c:var(--m3)"><div class="who">Presidents &amp; Presidents-Elect</div><h3>Club Leaders' Toolkit</h3><p>Your plan, your modules, and Board mode for running the conversation with your Board. Plus the Launchpad on your phone.</p><ul class="dl"><li>Module: you and your Membership Chair</li><li>Board mode: full-screen for the Board table</li><li>Launchpad: the essentials on your phone</li></ul><button class="show" data-show="toolkit">Show me</button></div>
       <div class="door" style="--c:var(--m5)"><div class="who">The Board and the whole club</div><h3>Pathways Explorer</h3><p>The District plan as a playground of ideas: conversation cards, experiments, an invite builder and AI prompts.</p><ul class="dl"><li>Talk it over: conversation cards</li><li>The engagement ladder and one-minute invite</li><li>Ask your AI about your own community</li></ul><button class="show" data-show="explorer">Show me</button></div>
     </div>
@@ -365,9 +370,9 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
       <div class="mline">“I've been made Membership Chair. Now what?” It's all here, in order.</div>
       <div class="statgrid">
         <div><b>7</b><span>topic areas</span></div><div><b>9</b><span>guided steps</span></div>
-        <div><b>4</b><span>quarters planned</span></div><div><b>45+</b><span>resources linked</span></div>
+        <div><b>4</b><span>quarters planned</span></div><div><b>30+</b><span>resources linked</span></div>
       </div>
-      <button class="show light" data-show="hub" style="margin-top:auto">Show the Hub</button>
+      <button class="show light" data-show="hub" style="margin-top:auto">Play the Hub tour</button>
     </div>
     <div class="main">
       <h2 style="font-size:44px">A structure for the year, so nobody starts from a blank page.</h2>
@@ -627,6 +632,7 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
   <aside class="n">Finish on the four steps, not the library. Thank everyone, and remind the "I'm in" people they'll hear from you within a week.</aside>
 </section>
 
+<div id="vid" class="vid" hidden><div class="vbox"><video id="vidEl" controls playsinline preload="none"></video><div class="vbar"><span id="vidCap"></span><button class="btn" id="vidClose">Close video</button></div></div></div>
 </div></div>
 
 <div id="notes" aria-live="polite"></div>
@@ -685,12 +691,20 @@ const RES={
   circle:{t:"The drivers' circle",d:'Monthly 30 minutes on Zoom',u:GH+'drivers-circle.html',g:'Drivers'},
   story:{t:"Share your club's story",d:'One minute, anonymous',u:GH+'share-a-story.html',g:'Drivers'}
 };
-const SHOW={hub:RES.hub.u,toolkit:RES.toolkit.u,explorer:RES.explorer.u,growclub:RES.growclub.u};
+const SHOW={toolkit:RES.toolkit.u,explorer:RES.explorer.u,growclub:RES.growclub.u};
+/* the District website (ClubRunner) refuses to appear inside another page, so the Hub plays its screen recording instead */
+const VIDEOS={hub:['videos/membership-hub.mp4','The Membership Hub, then Club Assist. Live site: rotary9815.org.au → Your Role → Membership Hub']};
 const chip=k=>{const r=RES[k];return `<a class="res" href="${esc(r.u)}" target="_blank" rel="noopener"><b>${esc(r.t)}</b><span>${esc(r.d)}</span></a>`};
 document.querySelectorAll('[data-res]').forEach(el=>{el.outerHTML=chip(el.dataset.res)});
 /* "Show me" buttons: on the projector the page replaces the talk (Back to the talk returns); elsewhere a new tab */
 let showBC=null;try{showBC=new BroadcastChannel('pe-stage')}catch(e){}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(!b)return;const u=SHOW[b.dataset.show];if(!u)return;
+const vid=document.getElementById('vid'),vidEl=document.getElementById('vidEl');
+function closeVid(){try{vidEl.pause()}catch(e){}vid.hidden=true}
+function playVid(k){const v=VIDEOS[k];vidEl.src=v[0];document.getElementById('vidCap').textContent=v[1];vid.hidden=false;const p=vidEl.play();if(p&&p.catch)p.catch(()=>{})}
+document.getElementById('vidClose').addEventListener('click',closeVid);
+vidEl.addEventListener('error',()=>{document.getElementById('vidCap').textContent='The recording didn’t load. Open the Hub in a laptop tab and share that tab in Zoom instead.'});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!vid.hidden)closeVid()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(!b)return;if(VIDEOS[b.dataset.show]){playVid(b.dataset.show);return}const u=SHOW[b.dataset.show];if(!u)return;
   if(/[?&]embed=1/.test(location.search)&&showBC){showBC.postMessage({show:'web',url:u})}else{const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}});
 
 const WALLS=[
@@ -829,7 +843,7 @@ function go(i,push=true){
   const s=slides[cur];where.textContent=(cur+1)+' / '+slides.length+' · '+s.dataset.t;
   notes.innerHTML=`<h4>${esc(s.dataset.t)} · about ${s.dataset.mins} min</h4>${s.querySelector('aside.n').innerHTML}`;
   if(push&&!document.body.classList.contains('flow')){try{history.replaceState(null,'','#'+(cur+1))}catch(e){}}
-  report();live.enter(s);
+  report();live.enter(s);if(typeof closeVid==='function')closeVid();
 }
 prog.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)go(+b.dataset.i)});
 document.getElementById('prev').onclick=()=>go(cur-1);

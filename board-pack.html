@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Board conversation pack · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app/kit.css">
+<style>
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qc{background:#fff;border:1.5px dashed #b9c3d3;border-radius:14px;padding:16px 18px 14px;min-height:190px;display:flex;flex-direction:column;border-top:8px solid var(--c)}
+.qc .p{font-size:.8rem;font-weight:800;color:var(--c)}
+.qc .q{font-family:var(--display);font-weight:600;font-size:1.32rem;line-height:1.25;color:var(--navy);margin:8px 0;flex:1}
+.qc .f{font-size:.75rem;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 8px}
+.qc.blank .q{border-bottom:1px solid var(--line);min-height:90px}
+.agenda .tl .t{min-width:70px}
+.filter{display:flex;max-width:100%;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.filter button{font:inherit;font-weight:700;font-size:.9rem;border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;min-height:40px}
+.filter button.on{border-color:var(--royal);background:var(--royal);color:#fff}
+@media (max-width:640px){.cards{grid-template-columns:1fr}.agenda .tl .t{min-width:0}}
+body{overflow-x:clip}
+@media print{
+  @page{size:A4;margin:12mm}
+  .agenda{break-after:page}
+  .cards{grid-template-columns:1fr 1fr;gap:6mm}
+  .qc{min-height:62mm;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .qc:nth-child(8n){break-after:page}
+  .filter,h2.cardsh,.noprint{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="hero"><div class="in">
+  <div class="brand"><div class="mark">9815</div><div>Rotary District 9815 · Membership drivers</div></div>
+  <h1>Board conversation <em>pack</em></h1>
+  <p>Ten minutes of membership at every Board meeting, no screen needed. Print page one for the agenda, and the cards to cut out and keep in a box at the Board table.</p>
+  <div class="crumbs"><a href="im-in.html">← Drivers' kit</a> · <a href="membership-explorer.html">The same cards in the Explorer</a></div>
+</div></div>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+
+<main>
+  <div class="btns noprint"><button class="btn pri" onclick="window.print()">Print the pack</button><span class="hint" style="align-self:center">Page one is the agenda item, then three pages of cards (eight per page).</span></div>
+
+  <section class="agenda">
+    <h2>Agenda item: ten minutes of membership</h2>
+    <p class="sub">A standing item, near the top of the agenda, every meeting. The Membership Chair leads; the President protects the time.</p>
+    <div class="card tl">
+      <div class="t">1 min</div><div class="d"><b>The numbers</b>Members today, joins and leavers since last meeting, anyone at risk. Once a year, bring the <a href="club-snapshot.html">club snapshot</a>.</div>
+      <div class="t">6 min</div><div class="d"><b>One card</b>Someone draws a card and reads it aloud. Hear from everyone before anyone suggests a fix. No right answers, only honest ones.</div>
+      <div class="t">2 min</div><div class="d"><b>One thing to try</b>What's one small thing we could try before the next meeting? Who'll do it, and by when?</div>
+      <div class="t">1 min</div><div class="d"><b>Last time's thing</b>Did we try it? What happened? “Not yet” is a fine answer.</div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:2px">For the minutes</h3>
+      <p>Card discussed: ______________________________________________</p>
+      <p>What we noticed: ____________________________________________</p>
+      <p>One thing to try: _____________________ Who: __________ By: __________</p>
+    </div>
+    <p class="hint">From the District 9815 Membership Growth Strategy 2026–2029: clubs choose their own way forward. This is one simple way to start.</p>
+  </section>
+
+  <h2 class="cardsh">The cards</h2>
+  <div class="filter" id="filter"></div>
+  <div class="cards" id="cards"></div>
+
+  <footer class="noprint"><em>No right answers, only honest ones.</em>Rotary District 9815 · Cards from the Membership Pathways Explorer</footer>
+</main>
+<script>
+(function () {
+  var P = [
+    [0, 'The big picture', '#F7A81B', ['Are we trying to save the club, or trying to be useful to our community?', 'If our club disappeared tomorrow, who in the community would notice first?', 'What would make you proud to bring a friend along next week?']],
+    [1, 'Pathway 1 · Attract', '#0067C8', ['If a capable 38-year-old visited next week, what would we offer them in their first month?', 'When someone searches for our club this week, what will they find?', 'Which of our projects would a non-member love to help with for a morning?', 'Who is one person each of us already talks to who’d enjoy our next project?']],
+    [2, 'Pathway 2 · Retain', '#D41367', ['What does someone who joined us six months ago actually do each month?', 'When did we last ask a member who left why, and really listen to the answer?', 'Who in our club owns a new member’s first 90 days?', 'Is there a way to step back for a while without stepping away completely?']],
+    [3, 'Pathway 3 · Diversity & flexibility', '#901F93', ['Which of our “rules” are really our purpose, and which are just habit?', 'What’s the one format change we’re most nervous about, and is that nerves about the mission or about our own comfort?', 'Who in our community would we love to see here, and what might be stopping them?', 'How would someone with a young family take part in our club?']],
+    [4, 'Pathway 4 · Club experience', '#FF7600', ['What’s the most vivid thing we did this year, and is it the first thing people see about us?', 'If we could say only one sentence to our community, what would it be?', 'Which part of our meeting would a first-timer find most confusing?', 'What would we stop doing tomorrow if nobody’s feelings were hurt?']],
+    [5, 'Pathway 5 · Programs & community', '#00A39E', ['Which Rotaractors or Interactors near us are about to age out, and has anyone asked them?', 'Who did we lose touch with in the last five years who might come back for the right project?', 'Which ten local organisations do our members already have a link with?', 'Where does our community need a hand that nobody else is giving?']]];
+  var C = []; P.forEach(function (p) { p[3].forEach(function (q) { C.push({ g: p[0], p: p[1], c: p[2], q: q }); }); });
+  C.push({ g: -1, p: 'Our own question', c: '#17458F', q: '', blank: true });
+  var cur = 'all';
+  function draw() {
+    document.getElementById('cards').innerHTML = C.filter(function (x) { return cur === 'all' || x.g === +cur || x.blank; }).map(function (x, i) {
+      return '<div class="qc' + (x.blank ? ' blank' : '') + '" style="--c:' + x.c + '"><div class="p">' + x.p + '</div><div class="q">' + x.q + '</div><div class="f"><span>District 9815 · Talk it over</span><span>Ten minutes. Hear from everyone.</span></div></div>';
+    }).join('');
+  }
+  document.getElementById('filter').innerHTML = '<button class="on" data-g="all">All ' + (C.length - 1) + ' cards</button>' + P.map(function (p) { return '<button data-g="' + p[0] + '">' + p[1] + '</button>'; }).join('');
+  document.getElementById('filter').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; cur = b.dataset.g; this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); draw(); };
+  draw();
+})();
+</script>
+</body>
+</html>
