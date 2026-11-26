@@ -82,7 +82,8 @@ window.PE_PATHS = {
         ['The District strategy', '+15% in three years, with engagement and retention moving together.', 'membership-partnership/strategy'],
         ['The Membership Pathways Explorer', 'The District plan in one picture: five pathways, ideas to borrow and experiments to try.', 'membership-explorer.html'],
         ['Who does what', 'The President and Membership Chair partnership.', 'membership-partnership/partnership'],
-        ['Club experience health check', 'Rate it separately from your President, then compare.', 'membership-partnership/health'] ] },
+        ['Club experience health check', 'Rate it separately from your President, then compare.', 'membership-partnership/health'],
+        ['Write your membership plan', 'Your numbers, goals and first three moves, printed for your Board.', 'membership-plan'] ] },
       { when: 'Keep the members you have', steps: [
         ['The new member who went quiet', 'What works when someone drifts.', 'membership-partnership/quiet'],
         ['The first year: 90 days, then 3, 6 and 12 months', 'Onboarding that keeps people.', 'membership-partnership/firstyear'],
