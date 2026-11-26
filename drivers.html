@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>It's in your hands · Membership · District 9815</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, conversational, a story told to fellow Rotarians — not a lecture.
+   IDEA: a journey map. Sam travels the toolkit's own One Ask loop; resources are "tools for this moment".
+   PICTURE: the five-stop loop with Sam's marker, drawn large on every moment slide and as the progress bar.
+   COLOUR & TYPE: Rotary royal blue + gold, one pathway colour per moment; Fraunces titles, Hanken Grotesk body.
+   LAYOUT: fixed 16:9 stage scaled for Zoom screen-share; under 760px it becomes a scrolling page for the website. */
+:root{color-scheme:light;
+  --royal:#17458F;--deep:#0B2A5C;--azure:#0067C8;--sky:#00A2E0;--gold:#F7A81B;--goldsoft:#FEF1D6;
+  --ink:#16243D;--muted:#56637A;--line:#DCE3EE;--wash:#F3F6FB;--paper:#fff;
+  --m1:#0067C8;--m2:#D41367;--m3:#901F93;--m4:#E86A00;--m5:#00A39E;
+  --serif:'Fraunces',Georgia,serif;--sans:'Hanken Grotesk',Arial,sans-serif}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%}
+body{background:var(--deep);color:var(--ink);font:17px/1.5 var(--sans);overflow:hidden}
+a{color:var(--azure)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 56px 0;display:grid;place-items:center;overflow:hidden}
+#stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center center;transform:translate(-50%,-50%)}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:6px;overflow:hidden;display:none;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.slide.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.pad{position:absolute;inset:0;padding:64px 80px 56px}
+h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.05;margin:0;text-wrap:balance;color:var(--deep)}
+h1{font-size:92px}
+h2{font-size:56px}
+h3{font-size:26px;font-weight:600}
+.kicker{font-weight:700;color:var(--azure);font-size:20px;margin-bottom:14px}
+.lead{font-size:26px;line-height:1.4;color:var(--muted);max-width:30em;margin:18px 0 0}
+p{margin:0 0 12px}
+.big{font-family:var(--serif);font-weight:800;font-size:150px;line-height:1;color:var(--royal)}
+.foot{position:absolute;left:80px;right:80px;bottom:26px;display:flex;justify-content:space-between;color:var(--muted);font-size:15px}
+
+/* split slides for the five moments */
+.split{display:grid;grid-template-columns:560px 1fr;height:100%}
+.side{color:#fff;padding:56px 56px 40px;display:flex;flex-direction:column;position:relative}
+.side .mnum{font-size:20px;font-weight:700;opacity:.85}
+.side .mword{font-family:var(--serif);font-weight:800;font-size:96px;line-height:1;margin:6px 0 10px}
+.side .mline{font-size:24px;line-height:1.35;opacity:.95}
+.side .loopwrap{margin-top:auto;height:400px}
+.side .loopwrap svg{width:100%;height:100%}
+.main{padding:50px 64px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden}
+
+/* resource chips */
+.res-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:auto}
+.main>.res-label{margin-top:auto}
+body.flow .main>.res-label{margin-top:8px}
+.res{display:flex;flex-direction:column;gap:2px;padding:12px 18px 12px 16px;border:2px solid var(--line);border-radius:12px;background:#fff;text-decoration:none;color:var(--ink);min-width:220px;max-width:340px;transition:border-color .15s,transform .15s}
+.res:hover{border-color:var(--azure);transform:translateY(-2px)}
+.res b{font-size:18px;color:var(--deep)}
+.res span{font-size:14px;color:var(--muted)}
+#rolePanels .res{max-width:none}
+.res-label{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:-4px}
+
+/* chat capture */
+.chat{background:var(--goldsoft);border:2px solid var(--gold);border-radius:16px;padding:18px 22px}
+.chat .q{font-size:24px;font-weight:700;color:var(--deep);display:flex;gap:12px;align-items:flex-start}
+.chat .q i{flex:none;font-style:normal;background:var(--gold);color:var(--deep);border-radius:8px;padding:2px 10px;font-size:15px;white-space:nowrap;margin-top:4px}
+.cap{display:flex;gap:10px;margin-top:12px}
+.cap input{flex:1;font:inherit;font-size:18px;padding:10px 14px;border:2px solid #e8cf98;border-radius:10px;background:#fff}
+.cap button,.btn{font-weight:700;font-size:17px;padding:10px 18px;border-radius:10px;border:0;background:var(--royal);color:#fff;min-height:44px}
+.btn.ghost{background:#fff;color:var(--royal);border:2px solid var(--royal)}
+.notes-mini{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;max-height:120px;overflow:auto}
+.sticky{background:#fff;border-radius:8px;padding:6px 12px;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08);border-left:6px solid var(--gold)}
+
+/* misc components */
+.cards{display:grid;gap:16px}
+.card{background:var(--wash);border-radius:14px;padding:20px 22px}
+.card h3{margin-bottom:6px}
+.stat{font-family:var(--serif);font-weight:800;font-size:64px;line-height:1;color:var(--royal)}
+.pill{display:inline-block;background:var(--wash);border-radius:999px;padding:4px 14px;font-size:15px;font-weight:600;color:var(--royal)}
+.choices{display:flex;gap:16px;margin-top:16px}
+.choice{flex:1;font-family:var(--serif);font-weight:800;font-size:54px;padding:22px;border-radius:16px;border:3px solid var(--line);background:#fff;color:var(--deep)}
+.choice.right{background:var(--royal);border-color:var(--royal);color:#fff}
+.choice.wrong{opacity:.35}
+.reveal{display:none}
+.reveal.show{display:block;animation:fade .4s ease}
+.flip{perspective:900px;height:96px}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.done .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px 18px;backface-visibility:hidden;font-size:22px;font-weight:700}
+.flip .f{background:var(--deep);color:#fff}
+.flip .b{background:var(--goldsoft);color:var(--deep);transform:rotateY(180deg);font-weight:600}
+.flip button{all:unset;position:absolute;inset:0;cursor:pointer;border-radius:14px}
+.check{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;border-radius:12px;background:var(--wash);cursor:pointer;font-size:19px;border:2px solid transparent}
+.check input{width:26px;height:26px;margin-top:2px;accent-color:var(--royal);flex:none}
+.check.on{border-color:var(--royal);background:#e8f0fc}
+.tabs{display:flex;gap:10px;flex-wrap:wrap}
+.tab{padding:12px 20px;border-radius:12px;border:2px solid var(--line);background:#fff;font-weight:700;font-size:18px;color:var(--deep);min-height:44px}
+.tab[aria-selected=true]{background:var(--royal);border-color:var(--royal);color:#fff}
+.panel{display:none}.panel.on{display:grid;animation:fade .3s ease}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-top:6px}
+.timeline:before{content:"";position:absolute;left:4%;right:4%;top:22px;height:4px;background:var(--line)}
+.tl{position:relative;padding:0 10px;text-align:center}
+.tl .dot{width:48px;height:48px;border-radius:50%;background:var(--m4);color:#fff;font-weight:800;display:grid;place-items:center;margin:0 auto 10px;position:relative;font-size:14px}
+.tl b{display:block;font-size:19px;color:var(--deep)}
+.tl span{font-size:16px;color:var(--muted)}
+.lights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.light{border-radius:14px;padding:16px 18px;color:#fff}
+.light b{font-size:20px;display:block;margin-bottom:4px}
+.light span{font-size:16px;line-height:1.35;display:block}
+.house-btn{border:0;border-radius:14px;padding:16px 12px;color:#fff;font-weight:700;font-size:18px;line-height:1.2;text-align:left;min-height:110px;display:flex;flex-direction:column;justify-content:space-between}
+.house-btn .n{font-family:var(--serif);font-size:34px}
+.house-btn[aria-pressed=true]{outline:4px solid var(--gold);outline-offset:3px}
+
+/* ideas wall */
+.wall{position:absolute;left:80px;right:80px;top:200px;bottom:110px;background:#f8f4ea;border-radius:18px;padding:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));grid-auto-rows:min-content;gap:16px;overflow:auto;border:2px dashed #e4d6b4}
+.note{position:relative;padding:16px 16px 34px;border-radius:6px;font-size:19px;line-height:1.3;color:var(--deep);box-shadow:0 6px 14px rgba(0,0,0,.12);transform:rotate(var(--r,0deg));background:#fff6c9}
+.note small{position:absolute;left:16px;bottom:8px;font-size:13px;font-weight:700;opacity:.75}
+.note .vote{position:absolute;right:8px;bottom:4px;border:0;background:rgba(255,255,255,.7);border-radius:999px;padding:2px 10px;font-weight:700;font-size:14px;min-height:28px}
+.note .x{position:absolute;right:4px;top:2px;border:0;background:none;font-size:18px;opacity:.35;padding:2px 6px}
+.note .x:hover{opacity:1}
+.wall-empty{grid-column:1/-1;align-self:center;text-align:center;color:var(--muted);font-size:22px;padding:60px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.legend span{font-size:14px;font-weight:700;padding:3px 10px;border-radius:999px}
+.dialog{position:absolute;inset:0;background:rgba(11,42,92,.55);display:none;place-items:center;z-index:5}
+.dialog.show{display:grid}
+.dialog div{background:#fff;border-radius:16px;padding:28px 32px;max-width:520px;font-size:20px}
+
+/* library */
+.lib{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 18px;margin-top:22px}
+.lib h3{font-size:20px;margin:0 0 8px;color:var(--royal)}
+.lib a{display:block;font-size:16px;padding:5px 0;text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line)}
+.lib a:hover{color:var(--azure)}
+
+/* bottom bar */
+#bar{position:fixed;left:0;right:0;bottom:0;height:56px;background:var(--deep);color:#cfe0ff;display:flex;align-items:center;gap:10px;padding:0 14px;font-size:15px}
+#bar button{background:rgba(255,255,255,.08);color:#fff;border:0;border-radius:8px;padding:8px 12px;min-height:40px}
+#bar button:hover{background:rgba(255,255,255,.18)}
+#prog{flex:1;display:flex;gap:4px;align-items:center;height:100%}
+#prog button{flex:1;height:10px;min-height:0;padding:0;border-radius:5px;background:rgba(255,255,255,.18)}
+#prog button.done{background:rgba(247,168,27,.55)}
+#prog button.cur{background:var(--gold)}
+#clock{font-variant-numeric:tabular-nums;min-width:118px;text-align:right}
+#notes{position:fixed;left:12px;right:12px;bottom:66px;max-height:38vh;overflow:auto;background:#fff;border-radius:14px;padding:18px 22px;box-shadow:0 20px 50px rgba(0,0,0,.4);display:none;font-size:17px;z-index:10}
+#notes.show{display:block}
+#notes h4{margin:0 0 6px;font-family:var(--serif);font-size:20px;color:var(--royal)}
+aside.n{display:none}
+#help{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;place-items:center;z-index:20}
+#help.show{display:grid}
+#help div{background:#fff;border-radius:16px;padding:26px 32px;max-width:560px;font-size:17px}
+#help kbd{background:var(--wash);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:inherit;font-weight:700}
+
+/* script view (#script) for a second screen */
+#script{display:none;background:#fff;max-width:860px;margin:0 auto;padding:40px 24px 80px}
+body.scriptmode{overflow:auto;background:#fff}
+body.scriptmode #script{display:block}
+body.scriptmode #viewport,body.scriptmode #bar{display:none}
+#script section{border-top:1px solid var(--line);padding:16px 0}
+#script h2{font-size:24px}
+
+/* flow mode: website / phone reading */
+body.flow{overflow-y:auto;overflow-x:clip;background:var(--wash)}
+body.flow [style*="grid-template-columns"]{grid-template-columns:minmax(0,1fr)!important}
+body.flow #jargon{grid-template-columns:1fr 1fr!important}
+body.flow .check{margin-left:0!important}
+body.flow #viewport{position:static;display:block}
+body.flow #stage{position:static;width:auto;height:auto;transform:none!important}
+body.flow .slide{display:block;position:relative;inset:auto;margin:0 0 14px;border-radius:0;box-shadow:none;animation:none}
+body.flow .pad,body.flow .wall{position:relative;inset:auto;left:auto;right:auto;top:auto;bottom:auto}
+body.flow .pad{padding:36px 20px}
+body.flow .wall{margin-top:16px;min-height:200px}
+body.flow .split{display:block}
+body.flow .side{padding:32px 20px}
+body.flow .side .loopwrap{height:220px;margin-top:16px}
+body.flow .main{padding:24px 20px}
+body.flow h1{font-size:44px}body.flow h2{font-size:32px}body.flow h3{font-size:21px}
+body.flow .big{font-size:80px}body.flow .side .mword{font-size:54px}
+body.flow .lead{font-size:19px}
+body.flow .thanks{position:static!important;flex-wrap:wrap;gap:8px;padding:20px!important}
+body.flow .foot{position:static;margin-top:20px;flex-wrap:wrap;gap:6px}
+body.flow .g2,body.flow .g3,body.flow .g5,body.flow .lib,body.flow .lights,body.flow .timeline{grid-template-columns:minmax(0,1fr)!important}
+body.flow .timeline:before{display:none}
+body.flow .choices{flex-direction:column}
+body.flow .choice{font-size:34px}
+body.flow #bar,body.flow .presenter-only{display:none}
+body.flow .res{max-width:none;width:100%}
+
+/* ---------- live (phones) ---------- */
+.livejoin{display:none;flex:none;width:150px;text-align:center;font-size:13px;line-height:1.3;color:var(--muted)}
+.livejoin .qr{background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px;margin-bottom:4px}
+.livejoin .qr svg{width:100%;height:auto;display:block}
+body.live .livejoin{display:block}
+.chat{display:flex;gap:18px;align-items:flex-start}
+.chat .cbody{flex:1}
+.chat .livejoin{width:118px}
+body.live.embed .cap,body.live .chat .cap{display:none}
+body.embed .presenter-only{display:none!important}
+.choice{position:relative;overflow:hidden}
+.choice .cnt{display:block;font-family:var(--sans);font-size:18px;font-weight:700;margin-top:6px;min-height:22px;opacity:.8}
+.lpoll{display:flex;gap:18px;align-items:flex-start}
+.lpoll .rows{flex:1;display:grid;gap:9px}
+.prow{position:relative;overflow:hidden;display:flex;gap:14px;align-items:center;text-align:left;width:100%;padding:12px 16px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);font-size:19px;min-height:48px}
+.prow .pfill{position:absolute;inset:0 auto 0 0;width:0;background:rgba(247,168,27,.32);transition:width .6s}
+.prow b{position:relative;color:var(--royal);font-family:var(--serif);font-size:22px}
+.prow span{position:relative}
+.prow .cnt{margin-left:auto;font-weight:700;white-space:nowrap}
+.prow.top{border-color:var(--gold)}
+.lpoll .ptot{font-size:15px;color:var(--muted);margin-top:4px}
+.note.live{border-top:4px solid rgba(0,0,0,.12)}
+#livestat{font-size:13px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.1);white-space:nowrap}
+#livestat.on{background:#2f8a57;color:#fff}
+body.embed #viewport{inset:0}
+body.embed #bar,body.embed #notes{display:none!important}
+body.live #wall .livejoin{position:absolute;right:80px;top:200px;width:160px}
+body.live #wall .wall{right:270px}
+#google .main{gap:12px}#google .check{padding:6px 14px!important;font-size:17px!important}#google .prow{padding:6px 14px;min-height:38px;font-size:17px}#google .lpoll .rows{grid-template-columns:1fr 1fr}#google #gscore{font-size:19px}
+body.embed #wall .wall{bottom:40px}
+
+/* ---------- It's in your hands ---------- */
+.hero{position:absolute;inset:0;padding:100px 90px;background:radial-gradient(circle at 85% 15%,rgba(0,162,224,.35),transparent 45%),linear-gradient(135deg,#0B2A5C,#17458F 60%,#0067C8)}
+.hcard{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:20px 22px;color:#fff;display:flex;flex-direction:column;gap:6px}
+.hcard b{font-size:22px}.hcard span{font-size:17px;opacity:.9}
+.shifts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.shifts div{background:var(--wash);border-radius:16px;padding:22px 24px}
+.shifts span{display:block;font-size:19px;color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(0,0,0,.35)}
+.shifts b{display:block;font-family:var(--serif);font-size:36px;line-height:1.1;color:var(--royal);margin:6px 0 10px}
+.shifts p{font-size:18px;margin:0}
+.doors{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px}
+.door{border-radius:18px;padding:26px;background:#fff;border:3px solid var(--c);display:flex;flex-direction:column;gap:10px;min-height:380px}
+.door .who{font-weight:700;color:var(--c);font-size:18px}
+.door h3{font-size:36px;font-weight:800}
+.door p{font-size:19px;margin:0;flex:1}
+.show{align-self:flex-start;font-weight:700;font-size:18px;padding:12px 22px;border-radius:999px;border:0;background:var(--royal);color:#fff;min-height:44px}
+.door .show{background:var(--c)}
+.show.light{background:#fff;color:var(--deep)}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px}
+.statgrid div{background:rgba(255,255,255,.14);border-radius:12px;padding:12px 16px}
+.statgrid b{display:block;font-family:var(--serif);font-size:44px;line-height:1}
+.statgrid span{font-size:16px;opacity:.9}
+.flowline{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.flowline div{background:var(--wash);border-radius:12px;padding:12px 12px;border-top:5px solid var(--m1)}
+.flowline b{display:block;font-size:17px;color:var(--deep);line-height:1.2}
+.flowline span{display:block;font-size:14px;color:var(--muted);margin-top:4px;line-height:1.3}
+ul.tl2{margin:10px 0 0;padding-left:20px;font-size:18px}ul.tl2 li{margin:6px 0}
+.skills{display:flex;flex-wrap:wrap;gap:10px}
+.skill{border:2px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;font-size:18px;font-weight:600;color:var(--deep);min-height:44px}
+.skill.on{background:var(--gold);border-color:var(--gold)}
+#school .chat{display:flex}
+#school .chat .cbody{width:100%}
+#school .notes-mini{max-height:260px}
+.cvroles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bigcard{background:var(--deep);color:#fff;border-radius:20px;padding:34px 38px;font-family:var(--serif);font-weight:800;font-size:44px;line-height:1.15;min-height:220px;display:flex;flex-direction:column;justify-content:center;border-left:14px solid var(--gold)}
+.bigcard small{font-family:var(--sans);font-weight:600;font-size:18px;opacity:.8;margin-top:16px}
+.timer{font-family:var(--serif);font-weight:800;font-size:110px;line-height:1;color:var(--royal);margin:10px 0 16px;font-variant-numeric:tabular-nums}
+.timer.low{color:#c2423a}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+.levels>div{border-radius:18px;padding:24px;background:var(--wash);border-top:8px solid var(--c);display:flex;flex-direction:column;gap:10px}
+.levels .mins{font-family:var(--serif);font-weight:800;font-size:40px;color:var(--c)}
+.levels h3{font-size:26px}.levels p{font-size:18px;margin:0;flex:1}
+.levels .res{max-width:none}
+.cycle{display:flex;gap:14px;align-items:center;margin-top:26px;font-size:20px;flex-wrap:wrap;color:var(--muted)}
+.cycle span{background:var(--goldsoft);color:var(--deep);border-radius:999px;padding:8px 18px;font-weight:700}
+ol.drv{margin:20px 0 0;padding-left:26px;color:#fff;font-size:21px;line-height:1.4}ol.drv li{margin:0 0 16px}
+ol.next30{font-size:24px;margin:18px 0 0;padding-left:30px;line-height:1.5;color:var(--ink)}
+body.flow .hero{position:relative;padding:40px 20px}body.flow .hero h1{font-size:46px!important}
+body.flow .shifts,body.flow .doors,body.flow .levels,body.flow .flowline,body.flow .cvroles,body.flow .statgrid{grid-template-columns:minmax(0,1fr)!important}
+body.flow .door{min-height:0}body.flow .bigcard{font-size:28px}body.flow .shifts b{font-size:28px}
+.road{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:70px;color:#cfe0ff;font-size:19px}
+.road span{border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 16px;color:#fff;font-weight:600}
+.road i{font-style:normal;opacity:.6}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px;border-top:2px solid var(--line);padding-top:22px}
+.facts b{display:block;font-family:var(--serif);font-size:44px;color:var(--royal);line-height:1}
+.facts span{font-size:17px;color:var(--muted)}
+ul.dl{margin:4px 0 6px;padding-left:20px;font-size:17px;color:var(--muted)}ul.dl li{margin:4px 0}
+.door p{flex:none}.door ul.dl{flex:1}
+.quarters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.quarters div{border-left:5px solid var(--gold);padding:4px 12px}
+.quarters b{display:block;font-size:18px;color:var(--deep)}.quarters span{font-size:15px;color:var(--muted);line-height:1.35;display:block}
+.loop4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}
+.loop4 div{position:relative;background:var(--wash);border-radius:16px;padding:22px 22px 20px;border-top:6px solid var(--c,var(--royal))}
+.loop4 .n{font-family:var(--serif);font-weight:800;font-size:40px;color:var(--royal);line-height:1}
+.loop4 b{display:block;font-size:22px;color:var(--deep);margin:8px 0 6px}
+.loop4 p{font-size:17px;margin:0;color:var(--ink)}
+.loop4 div:not(:last-child)::after{content:"→";position:absolute;right:-14px;top:40%;font-size:22px;color:var(--muted)}
+body.flow .loop4{grid-template-columns:minmax(0,1fr)!important}body.flow .loop4 div::after{display:none}
+#wall .wall{top:236px}
+.signup{margin-top:auto;display:flex;gap:16px;align-items:center;background:rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff}
+.signup .sqr{width:120px;flex:none;background:#fff;border-radius:10px;padding:6px}.signup .sqr svg{width:100%;height:auto;display:block}
+.signup b{display:block;font-size:22px}.signup span{font-size:16px;opacity:.9}
+#library .lib{grid-template-columns:repeat(5,1fr)}
+body.flow .side .mword{font-size:44px!important;overflow-wrap:anywhere}
+body.flow #stage{width:100%!important;overflow-x:clip}
+body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!important}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- 1 TITLE -->
+<section class="slide" id="start" data-t="It's in your hands" data-mins="0.5">
+  <div class="hero">
+    <div class="kicker" style="color:var(--gold)">District 9815 · Growing Rotary, our way</div>
+    <h1 style="color:#fff;font-size:110px">It's in your hands.</h1>
+    <p class="lead" style="color:#dfe8f7;font-size:30px;max-width:24em">We already have the tools. Today is about picking them up, and finding the people who'll run with them.</p>
+    <div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px;max-width:1240px">
+      <div class="hcard"><b>Grab your phone</b><span>Scan the code or click the link in the chat. No app, no name.</span></div>
+      <div class="hcard"><b>You'll talk, not just listen</b><span>A short small-group conversation is part of today.</span></div>
+      <div class="hcard"><b>No need to take notes</b><span>Every tool is linked on the last slide, and you'll have this page.</span></div>
+    </div>
+    <div class="road"><span>The tools you already have</span><i>→</i><span>The Board behind the Chair</span><i>→</i><span>Our hidden selling point</span><i>→</i><span>The power of a conversation</span><i>→</i><span>Who's in?</span></div>
+  </div>
+  <aside class="n">Welcome everyone. Be direct about why we're here: "This isn't another membership campaign. Whatever has been tried before hasn't turned things around in our District. Today is about a different approach, and about finding the people who want to drive it." Paste the join link into the Zoom chat now.</aside>
+</section>
+
+<!-- 2 VOTE: WHAT'S HOLDING US BACK -->
+<section class="slide" id="holdback" data-t="What's holding us back?" data-mins="1.5">
+  <div class="pad">
+    <div class="kicker">Let's start with you</div>
+    <h2 style="max-width:1150px">Honestly: what's really holding your club back from growing?</h2>
+    <div class="lpoll" data-poll="drv-holdback" data-q="Honestly: what's really holding your club back from growing?" data-opts='["We rarely invite anyone","People visit but don&#39;t come back","New members drift away","We&#39;re all stretched too thin","We&#39;ve never really talked about it as a club"]' style="margin-top:30px"></div>
+  </div>
+  <aside class="n">The vote opens on phones by itself. While the bars fill, say: "Every one of these has a tool, and every one of them gets better when the club talks about it." If "never really talked about it" scores well, that's your whole session in one bar. Read out the top two.</aside>
+</section>
+
+<!-- 3 A NEW APPROACH -->
+<section class="slide" id="shift" data-t="A new approach" data-mins="2">
+  <div class="pad">
+    <div class="kicker">Why a new approach</div>
+    <h2 style="max-width:1300px">Campaigns, targets and membership drives haven't turned it around here. People didn't stop caring. The way they give their time changed, and our invitation didn't.</h2>
+    <div class="shifts">
+      <div><span>From recruiting</span><b>to connecting</b><p>Invite people to a project, not a meeting. Growth happens one relationship at a time.</p></div>
+      <div><span>From the Membership Chair's job</span><b>to the whole Board's job</b><p>A Membership Chair on their own burns out. A Board behind them changes the club.</p></div>
+      <div><span>From “join our club”</span><b>to “grow with us”</b><p>Rotary is a place to learn to lead in a changing world. That's our hidden selling point.</p></div>
+    </div>
+    <p class="lead" style="font-size:22px;margin-top:26px"><b style="color:var(--ink)">One principle runs through all of it:</b> each club chooses its own way forward. The District's job is to put the tools in your hands.</p>
+    <div class="facts"><div><b>about 36%</b><span>fall in Australian Rotary membership over twenty years</span></div><div><b>36% → 27%</b><span>adults formally volunteering, 2019 to 2024</span></div><div><b>91%</b><span>of our region's members stay to serve their local community</span></div></div>
+  </div>
+  <aside class="n">Keep the numbers light; they know the story. Australian Rotary is down about 36% over twenty years, and formal volunteering has fallen across the country. Then land the three shifts slowly; they're the spine of the next 25 minutes. "Resources first, then the Board, then the selling point, then the conversation that ties it together."</aside>
+</section>
+
+<!-- 4 THE THREE DOORS -->
+<section class="slide" id="tools" data-t="You already have the tools" data-mins="1.5">
+  <div class="pad">
+    <div class="kicker">You already have the tools</div>
+    <h2>Three doors. One for each person who drives growth.</h2>
+    <div class="doors">
+      <div class="door" style="--c:var(--m1)"><div class="who">Membership Chairs</div><h3>Membership Hub</h3><p>Your job, already mapped: the year in seven topic areas, a nine-step guided flow, a quarter-by-quarter planner and 45+ resources.</p><ul class="dl"><li>Guided flow: nine steps, about 20 minutes</li><li>Onboarding checklist and early-warning signs</li><li>Year planner, quarter by quarter</li></ul><button class="show" data-show="hub">Show me</button></div>
+      <div class="door" style="--c:var(--m3)"><div class="who">Presidents &amp; Presidents-Elect</div><h3>Club Leaders' Toolkit</h3><p>Your plan, your modules, and Board mode for running the conversation with your Board. Plus the Launchpad on your phone.</p><ul class="dl"><li>Module: you and your Membership Chair</li><li>Board mode: full-screen for the Board table</li><li>Launchpad: the essentials on your phone</li></ul><button class="show" data-show="toolkit">Show me</button></div>
+      <div class="door" style="--c:var(--m5)"><div class="who">The Board and the whole club</div><h3>Pathways Explorer</h3><p>The District plan as a playground of ideas: conversation cards, experiments, an invite builder and AI prompts.</p><ul class="dl"><li>Talk it over: conversation cards</li><li>The engagement ladder and one-minute invite</li><li>Ask your AI about your own community</li></ul><button class="show" data-show="explorer">Show me</button></div>
+    </div>
+    <p style="margin-top:22px;font-size:19px;color:var(--muted)">Most people in your club don't know these exist. That's the first thing we can fix, today.</p>
+  </div>
+  <aside class="n">This is the map for the next section. Don't open the tools yet; each gets its own slide. The "Show me" buttons put the real page on screen (it comes back here with the "Back to the talk" button, or Show talk on the run sheet).</aside>
+</section>
+
+<!-- 5 HUB SPOTLIGHT -->
+<section class="slide" id="hub" data-t="Membership Hub" data-mins="2">
+  <div class="split" style="grid-template-columns:520px 1fr">
+    <div class="side" style="background:var(--m1)">
+      <div class="mnum">For Membership Chairs</div><div class="mword" style="font-size:76px">Membership Hub</div>
+      <div class="mline">“I've been made Membership Chair. Now what?” It's all here, in order.</div>
+      <div class="statgrid">
+        <div><b>7</b><span>topic areas</span></div><div><b>9</b><span>guided steps</span></div>
+        <div><b>4</b><span>quarters planned</span></div><div><b>45+</b><span>resources linked</span></div>
+      </div>
+      <button class="show light" data-show="hub" style="margin-top:auto">Show the Hub</button>
+    </div>
+    <div class="main">
+      <h2 style="font-size:44px">A structure for the year, so nobody starts from a blank page.</h2>
+      <div class="flowline">
+        <div><b>Overview</b><span>Your role, membership health check</span></div>
+        <div><b>Attract</b><span>Personal invitation pipeline, guest events</span></div>
+        <div><b>Onboard</b><span>The first 90 days checklist</span></div>
+        <div><b>Engage &amp; retain</b><span>Engagement ideas, early-warning signs</span></div>
+        <div><b>Diversity &amp; models</b><span>New club formats, broader reach</span></div>
+        <div><b>Alumni</b><span>Win back former members</span></div>
+        <div><b>Year planner</b><span>What to do, quarter by quarter</span></div>
+      </div>
+      <div class="quarters">
+        <div><b>Jul–Sep</b><span>Confirm goals with the President; write and present the annual membership plan</span></div>
+        <div><b>Oct–Dec</b><span>First open event; check in with new members; mid-year report to the Board</span></div>
+        <div><b>Jan–Mar</b><span>Peak invitation period; reach out to at-risk members; member survey</span></div>
+        <div><b>Apr–Jun</b><span>Net growth report; document it all; onboard the incoming Chair</span></div>
+      </div>
+      <div class="card" style="background:var(--goldsoft)"><h3>Start here</h3><p style="font-size:19px;margin:6px 0 0">Click <b>Start Guided Flow</b> at the top of the Hub. Nine steps, about 20 minutes, and you'll know your role better than most Membership Chairs ever have.</p></div>
+      <div class="res-label">Find it any time · District website → Your Role → Membership Hub</div>
+      <div class="res-row" style="margin-top:0"><span data-res="hub"></span></div>
+    </div>
+  </div>
+  <aside class="n">Click "Show the Hub" and spend 60 seconds on the live page: click Start Guided Flow, step once, then open the Year Planner. Come back with "Back to the talk". Message: the Membership Chair has a job description and a year plan already written. Nobody has to invent this.</aside>
+</section>
+
+<!-- 6 TOOLKIT SPOTLIGHT -->
+<section class="slide" id="toolkit" data-t="Club Leaders' Toolkit" data-mins="1.5">
+  <div class="split" style="grid-template-columns:520px 1fr">
+    <div class="side" style="background:var(--m3)">
+      <div class="mnum">For Presidents &amp; Presidents-Elect</div><div class="mword" style="font-size:72px">Club Leaders' Toolkit</div>
+      <div class="mline">Learn, question, plan. Built at PELDS, open to every President.</div>
+      <button class="show light" data-show="toolkit" style="margin-top:auto">Show the Toolkit</button>
+    </div>
+    <div class="main">
+      <h2 style="font-size:44px">The President's job is to make sure the Membership Chair is never alone.</h2>
+      <div class="cards" style="grid-template-columns:1fr 1fr">
+        <div class="card"><h3>Membership: you and your Membership Chair</h3><p style="font-size:18px;margin-top:6px">A 40-minute module on the partnership: who does what, a club experience health check and a shared plan.</p></div>
+        <div class="card"><h3>Board mode</h3><p style="font-size:18px;margin-top:6px">Shows any module full-screen with big text, so you can run the questions with your Board, not just read them.</p></div>
+        <div class="card"><h3>Club health</h3><p style="font-size:18px;margin-top:6px">What motivates your members, reading your community, and using AI to map local opportunities.</p></div>
+        <div class="card"><h3>Launchpad</h3><p style="font-size:18px;margin-top:6px">The best of it on your phone: getting ready, running the year, bringing someone in, help any time.</p></div>
+      </div>
+      <div class="res-row"><span data-res="toolkit"></span><span data-res="launchpad"></span></div>
+    </div>
+  </div>
+  <aside class="n">Show the Toolkit, open "Membership: you and your Membership Chair", then click Board mode to show how big and readable it goes. That's the bridge to the next section: the toolkit is built for doing this together.</aside>
+</section>
+
+<!-- 7 VOTE: OPENED -->
+<section class="slide" id="opened" data-t="Had you opened them?" data-mins="0.5">
+  <div class="pad">
+    <div class="kicker">Quick and honest</div>
+    <h2>Before today, which of these had you opened?</h2>
+    <div class="lpoll" data-poll="drv-opened" data-q="Before today, which of these had you opened?" data-opts='["The Membership Hub","The Club Leaders&#39; Toolkit","The Pathways Explorer","More than one","None of them yet"]' style="margin-top:30px"></div>
+  </div>
+  <aside class="n">Optional if short on time. No judgement: "None yet" is the most useful answer for the District, because it tells us where to put our effort. "If you haven't opened them, you now know they're there, and what's in each one."</aside>
+</section>
+
+<!-- 8 BOARD BEHIND THE CHAIR -->
+<section class="slide" id="board" data-t="The Board behind the Chair" data-mins="1.5">
+  <div class="pad">
+    <div class="kicker">The Board behind the Chair</div>
+    <h2>Membership grows when the President and the Membership Chair work as a team, and the Board backs them.</h2>
+    <div class="cards" style="grid-template-columns:repeat(3,1fr);margin-top:26px">
+      <div class="card"><h3 style="color:var(--m3)">The President</h3><ul class="tl2"><li>Membership near the top of every Board agenda</li><li>Personally invites two people to a project this year</li><li>Protects time and budget for the plan</li><li>Models the culture: notices people, thanks people</li></ul></div>
+      <div class="card"><h3 style="color:var(--m1)">The Membership Chair</h3><ul class="tl2"><li>Leads the club's annual membership plan</li><li>Runs onboarding: a contact and induction within 90 days</li><li>Check-ins at 3, 6 and 12 months</li><li>Keeps the numbers: joins, departures, members at risk</li></ul></div>
+      <div class="card"><h3 style="color:var(--m5)">Together, with the Board</h3><ul class="tl2"><li>One plan and one goal in Rotary Club Central</li><li>A quarterly review at the Board</li><li>Ten minutes of membership conversation every meeting</li><li>A shared answer: what will members say about this club on 30 June?</li></ul></div>
+    </div>
+    <div class="foot" style="justify-content:flex-start;gap:12px;align-items:flex-end"><span class="res-label" style="margin:0 6px 12px 0">Go deeper</span><span data-res="partnership"></span><span data-res="clearing"></span></div>
+  </div>
+  <aside class="n">This comes straight from the Toolkit's partnership module. Ask the Presidents in the room: "Which of your four is hardest?" Then: "And the Board's job is to clear the way." Clearing the Way is the one-page Board briefing: agenda time, a small budget line, formal authority, sprint dates in the calendar.</aside>
+</section>
+
+<!-- 9 EXPLORER: OPPORTUNITIES + DISCUSSION -->
+<section class="slide" id="explorer" data-t="Pathways Explorer" data-mins="2">
+  <div class="split" style="grid-template-columns:1fr 520px">
+    <div class="main" style="padding-left:80px">
+      <div class="kicker" style="margin-bottom:0">For the Board and the whole club</div>
+      <h2 style="font-size:46px">Where are the opportunities to grow? Ask your club, not the District.</h2>
+      <div class="cards" style="grid-template-columns:1fr 1fr">
+        <div class="card"><h3>The Strategy House</h3><p style="font-size:17px;margin-top:6px">Five pathways. Each one opens with experiments to try, ideas other clubs have used and questions for your Board.</p></div>
+        <div class="card"><h3>The engagement ladder</h3><p style="font-size:17px;margin-top:6px">Stranger, participant, friend, member. Fit the ask to the rung, and see where your recruiting opportunities really are.</p></div>
+        <div class="card"><h3>Say it well</h3><p style="font-size:17px;margin-top:6px">Build a one-minute invite and swap insider words for plain ones.</p></div>
+        <div class="card" style="background:var(--goldsoft)"><h3>Talk it over</h3><p style="font-size:17px;margin-top:6px">Draw a conversation card at the start of a Board meeting. Ten minutes, no right answers, only honest ones.</p></div>
+        <div class="card"><h3>Ask your AI</h3><p style="font-size:17px;margin-top:6px">Ready-made prompts to research your own community.</p></div>
+        <div class="card"><h3>Our next steps</h3><p style="font-size:17px;margin-top:6px">Collect what the group decides and take it away.</p></div>
+      </div>
+    </div>
+    <div class="side" style="background:var(--m5)">
+      <div class="mnum">Pathways Explorer</div><div class="mword" style="font-size:64px">Ideas to explore, not rules to follow</div>
+      <div class="mline">Built to be opened on a big screen at a Board meeting, or on a phone at home.</div>
+      <button class="show light" data-show="explorer" style="margin-top:auto">Show the Explorer</button>
+    </div>
+  </div>
+  <aside class="n">Show the Explorer and go straight to "Talk it over": draw a card live. "This is the cheapest, fastest membership tool we have: ten minutes at the top of a Board meeting." Then come back: we're about to do exactly this, together.</aside>
+</section>
+
+<!-- 10 LEADERSHIP SCHOOL -->
+<section class="slide" id="school" data-t="Rotary is a leadership school" data-mins="2">
+  <div class="pad">
+    <div class="kicker">Our hidden selling point</div>
+    <h2 style="font-size:62px;max-width:1250px">Rotary is a leadership school. We just forgot to put it in the brochure.</h2>
+    <div style="display:grid;grid-template-columns:1fr 520px;gap:36px;margin-top:22px;align-items:start">
+      <div>
+        <div class="res-label" style="margin-bottom:10px">Tap each one somebody here has learned through Rotary</div>
+        <div class="skills" id="skills"></div>
+        <p id="skillN" style="font-size:20px;font-weight:700;color:var(--deep);margin-top:12px"></p>
+      </div>
+      <div class="chat" data-wall="drv-skill" style="flex-direction:column">
+        <div class="q"><i>Phone or chat</i>One thing Rotary taught you that you've used at work, at home or in your community.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="n">The heart of the session. Ask people to send their answer; tick the skills as the answers come in. Read two or three aloud. Then: "People pay thousands for courses that teach this. We give it away, and we never mention it when we invite someone."</aside>
+</section>
+
+<!-- 11 CHANGING WORLD -->
+<section class="slide" id="world" data-t="Leadership in a changing world" data-mins="1.5">
+  <div class="pad">
+    <div class="kicker">Leadership in a changing world</div>
+    <h2 style="max-width:1300px">Work is less certain, more remote and changing fast. People are looking for somewhere to belong, to matter, and to grow.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:24px">
+      <div>
+        <div class="res-label" style="margin-bottom:10px">Every club role is a training ground. Click a role to see how it reads on a CV.</div>
+        <div id="cvRoles" class="cvroles"></div>
+      </div>
+      <div>
+        <div id="cvOut" class="card" style="background:var(--deep);color:#fff;min-height:250px;font-size:20px"></div>
+        <div class="card" style="margin-top:16px;background:var(--goldsoft)"><h3>So change the invitation</h3><p style="font-size:19px;margin:6px 0 0">Not “come to our meeting”, but <b>“come and grow with us”</b>: real projects, real responsibility, and a safety net while you learn.</p></div>
+      </div>
+    </div>
+    <div class="foot" style="justify-content:flex-start;gap:12px;align-items:flex-end"><span class="res-label" style="margin:0 6px 12px 0">The full club-night version</span><span data-res="growclub"></span></div>
+  </div>
+  <aside class="n">Optional if short on time. Click two roles, ideally ones held by people on the call. Provocation: "Would a capable 35-year-old project manager join for this? Do we ever invite people this way?" This is the thinking behind "Grow your club, grow your people", which you can run as a club night.</aside>
+</section>
+
+<!-- 12 BREAKOUT -->
+<section class="slide" id="breakout" data-t="Breakout: try it now" data-mins="5.5">
+  <div class="pad">
+    <div class="kicker">Let's prove it. The power of a conversation.</div>
+    <h2 style="max-width:1300px">Five minutes, groups of three or four. One card, one honest conversation.</h2>
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:36px;margin-top:22px;align-items:start">
+      <div>
+        <div id="bkCard" class="bigcard"></div>
+        <div class="res-label" style="margin:16px 0 8px">Or choose another card</div>
+        <div id="bkPick" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="res-label">Breakout timer</div>
+        <div id="bkTime" class="timer">5:00</div>
+        <div style="display:flex;gap:8px;justify-content:center"><button class="btn" id="bkGo">Start</button><button class="btn ghost" id="bkReset">Reset</button></div>
+        <p style="font-size:16px;color:var(--muted);margin:14px 0 0">Before the rooms close, <b>one person in each group</b> sends your best insight from their phone.</p>
+      </div>
+    </div>
+    <span data-wallbox="drv-breakout" id="bkMarker" hidden></span>
+  </div>
+  <aside class="n">Open Zoom breakout rooms (automatic, 3 or 4 per room, 5 minutes, close automatically). Before you open them, click "Copy breakout card" on the run sheet and use Zoom's "Broadcast message to all rooms" in the first minute, because people in rooms can't see your shared screen. The card question also shows on their phones. Say: "Hear from everyone before anyone suggests a fix."</aside>
+</section>
+
+<!-- 13 WHAT WE DISCOVERED -->
+<section class="slide" id="wall" data-t="What we discovered" data-mins="2">
+  <div class="pad">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:24px">
+      <div>
+        <div class="kicker">What did your group discover?</div>
+        <h2 style="font-size:38px;max-width:1000px" id="wallTitle">Five minutes. That's all it took.</h2>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="livejoin" data-join style="margin-left:auto"></div>
+      <div class="presenter-only" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:420px">
+        <button class="btn ghost" id="copyWall">Copy all ideas</button>
+        <button class="btn ghost" id="clearWall">Clear wall</button>
+      </div>
+    </div>
+    <div class="cap presenter-only" style="position:absolute;left:80px;right:80px;top:auto;bottom:40px">
+      <input id="wallIn" placeholder="Paste a group's insight from the chat, then press Enter" aria-label="Add an idea">
+      <button id="wallAdd">Add to wall</button>
+    </div>
+    <div class="wall" id="wallBox" data-wallbox="drv-breakout"></div>
+    <div class="dialog" id="clearDlg"><div><p><b>Clear every idea from the wall?</b></p><p style="font-size:17px;color:var(--muted)">Copy them first if you want to keep them. This can't be undone.</p><div style="display:flex;gap:10px;margin-top:16px"><button class="btn" id="clearYes">Clear wall</button><button class="btn ghost" id="clearNo">Keep them</button></div></div></div>
+  </div>
+  <aside class="n">Insights land here as groups send them, alongside the skills from earlier. Ask one or two groups to say more out loud. Then the point: "That was five minutes, with strangers. Imagine your own Board doing that every month. That's the approach."</aside>
+</section>
+
+<!-- 14 THREE WAYS TO RUN IT -->
+<section class="slide" id="levels" data-t="Run it in your club" data-mins="2">
+  <div class="pad">
+    <div class="kicker">Take it home</div>
+    <h2>Three ways to start the conversation in your club. Pick one.</h2>
+    <div class="levels">
+      <div style="--c:var(--m1)"><div class="mins">10 minutes</div><h3>A card at every Board meeting</h3><p>Draw a conversation card on screen or from the printed pack, talk for ten minutes. Note one thing to try.</p><span data-res="boardpack"></span></div>
+      <div style="--c:var(--m3)"><div class="mins">40 minutes</div><h3>President and Membership Chair, together</h3><p>Work through the partnership module, then show it to your Board in Board mode.</p><span data-res="partnership"></span></div>
+      <div style="--c:var(--m4)"><div class="mins">90 minutes</div><h3>A club night: Grow your club, grow your people</h3><p>The whole club votes, talks at tables and writes its own one-page plan on the night.</p><span data-res="nightguide"></span></div>
+    </div>
+    <div class="cycle"><b>Then:</b><span>Try one small thing for 90 days</span>→<span>Review it at the Board</span>→<span>Share what you learned with other clubs</span></div>
+  </div>
+  <aside class="n">Make the choice feel small. The 10-minute card is enough to start. The club night is the big one: it ends with the club's own plan, written by its own members, which is the opposite of a District target. "Meet Sam" is also there as a 20-minute talk for a club meeting.</aside>
+</section>
+
+<!-- 15 NOBODY GOES FIRST ALONE -->
+<section class="slide" id="loop" data-t="Someone has to go first" data-mins="1.5">
+  <div class="pad">
+    <div class="kicker">Someone has to go first</div>
+    <h2 style="max-width:1350px">Everyone's waiting for someone else to make a start. Here's how you'll know you're not the only one.</h2>
+    <div class="loop4">
+      <div><span class="n">1</span><b>Pick your one thing</b><p>On your phone at the end of today: the one idea you'll try in your club.</p></div>
+      <div><span class="n">2</span><b>Set the reminder</b><p>A calendar reminder for 30 days' time. No sign-up, no email, and it stays on your device.</p></div>
+      <div><span class="n">3</span><b>Tell us how it went</b><p>One minute, anonymous: done it, partly, not yet, or changed my plan.</p></div>
+      <div style="--c:var(--gold)"><span class="n">4</span><b>See what other clubs are trying</b><p>Every report-back, from every club, shared across the District.</p></div>
+    </div>
+    <div style="display:flex;gap:24px;align-items:center;margin-top:30px;flex-wrap:wrap">
+      <div class="card" style="background:var(--goldsoft);flex:1;min-width:0"><h3>“Not yet” is a perfectly good answer.</h3><p style="font-size:19px;margin:6px 0 0">It tells the District where clubs need a hand. The only answer that doesn't help is no answer.</p></div>
+      <button class="show" data-live-reports style="font-size:20px;padding:16px 26px">Show what clubs are trying</button>
+    </div>
+  </div>
+  <aside class="n">Say it plainly: "Everyone is looking for someone else to make a start. This is how you'll see who already has." Click "Show what clubs are trying" to put the live report-backs on screen (it needs the presenter sign-in; otherwise use the presenter screen's "What clubs are trying" and Show live screen). Then Show talk and go to the ask.</aside>
+</section>
+
+<!-- 16 THE ASK -->
+<section class="slide" id="ask" data-t="Who's in?" data-mins="1.5">
+  <div class="split" style="grid-template-columns:1fr 600px">
+    <div class="pad" style="position:relative;padding:60px 40px 0 80px">
+      <div class="kicker">The ask</div>
+      <h2 style="font-size:58px">We're looking for people to drive this in their club.</h2>
+      <p class="lead" style="font-size:22px">Not a committee. Not a title. Just someone who'll start the conversation and keep it going.</p>
+      <div class="lpoll" data-poll="drv-in" data-q="Will you start the membership conversation in your club?" data-opts='["I&#39;m in","I&#39;m in, with some help","I&#39;ll take it to my Board first","Not this year"]' style="margin-top:20px"></div>
+    </div>
+    <div class="side" style="background:var(--deep)">
+      <div class="mnum">What a driver does</div>
+      <ol class="drv">
+        <li><b>Starts one conversation</b> in your club before the end of March: a card, the module or a club night</li>
+        <li><b>Tries one small thing</b> for 90 days and notices what changes</li>
+        <li><b>Joins the drivers' circle:</b> 30 minutes on Zoom, once a month, to swap what's working</li>
+        <li><b>Reports back</b> in a minute when the reminder pops up, so the next club can borrow what worked</li>
+      </ol>
+      <div class="signup"><div class="sqr" id="signupQR"></div><div><b>Put your name down</b><span>Scan, or click the link in the chat: the drivers' kit and sign-up.</span></div></div>
+      <p class="mline" style="margin-top:14px;font-size:20px">You won't be on your own. That's the point.</p>
+    </div>
+  </div>
+  <aside class="n">Pause before the vote. Then the AI summary on the presenter screen (it reads every vote and wall from today) and everyone taps the one idea they'll try. Collect names of "I'm in" people via the Zoom chat or a follow-up email; the vote itself is anonymous.</aside>
+</section>
+
+<!-- 17 CLOSE -->
+<section class="slide" id="library" data-t="It's in your hands" data-mins="0.5">
+  <div class="pad" style="padding-top:52px">
+    <div style="display:grid;grid-template-columns:1fr 520px;gap:40px;align-items:end">
+      <div>
+        <div class="kicker">Your next 30 days</div>
+        <h1 style="font-size:80px">It's in your hands.</h1>
+        <ol class="next30"><li>Open your door: the Hub or the Toolkit</li><li>Put ten minutes of membership on your next Board agenda, with a card</li><li>Book a “Grow your club” night</li><li>Tell us you're in, on the drivers' kit page</li></ol>
+      </div>
+      <div class="card" style="background:var(--royal);color:#fff;font-size:18px"><b style="font-size:21px">Every tool, in one place.</b><br>Bookmark this page and share it with your Board. Questions go to the District Membership Team.</div>
+    </div>
+    <div class="lib" id="lib"></div>
+  </div>
+  <div class="thanks" style="position:absolute;left:0;right:0;bottom:0;background:var(--royal);color:#fff;padding:20px 80px;display:flex;justify-content:space-between;align-items:center;font-size:19px"><b style="font-family:var(--serif);font-size:30px">Thank you.</b><span>Rotary District 9815 · Membership Growth Strategy 2026–2029</span></div>
+  <aside class="n">Finish on the four steps, not the library. Thank everyone, and remind the "I'm in" people they'll hear from you within a week.</aside>
+</section>
+
+</div></div>
+
+<div id="notes" aria-live="polite"></div>
+<div id="help"><div>
+  <h3 style="margin-bottom:10px">Presenter controls</h3>
+  <p><kbd>→</kbd> <kbd>Space</kbd> next · <kbd>←</kbd> back · <kbd>Home</kbd> first slide</p>
+  <p><kbd>N</kbd> speaker notes (visible to Zoom if open, so use them for rehearsal)</p>
+  <p><kbd>F</kbd> full screen · <kbd>T</kbd> start/pause the timer · <kbd>?</kbd> this help</p>
+  <p>Second screen or phone: open this page with <b>#script</b> on the end of the address for the full speaking script with timings.</p>
+  <p><b>Live on phones:</b> sign in once on <b>presenter.html</b> on this computer and choose the <b>Membership: Meet Sam</b> session. Walls and votes then open on phones automatically as you reach each slide. Without that, the talk works as before: paste chat answers into the boxes.</p><p style="color:var(--muted);font-size:15px">Pasted answers are kept in this browser only. Use “Copy all ideas” to keep them.</p>
+  <button class="btn" id="helpClose">Got it</button>
+</div></div>
+<div id="bar">
+  <button id="prev" aria-label="Previous slide">◀</button>
+  <button id="next" aria-label="Next slide">▶</button>
+  <span id="where" style="min-width:210px"></span>
+  <div id="prog"></div>
+  <span id="livestat">Phones: off</span>
+  <span id="clock" title="Elapsed / planned">0:00 / 20:00</span>
+  <button id="timerBtn">Timer</button>
+  <button id="notesBtn">Notes</button>
+  <button id="fsBtn">Full screen</button>
+  <button id="helpBtn" aria-label="Help">?</button>
+</div>
+<div id="script"></div>
+
+<script src="app/engine.js"></script>
+<script src="app/config.js"></script>
+<script src="app/ai.js"></script>
+<script src="app/qrcode.js"></script>
+<script>
+{
+const LIVE={on:false,admin:'',room:'membership-drivers',join:'',qr:''};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* ---------- resource links: edit here ---------- */
+const GH='https://david-rotary.github.io/PELDS2026/';
+const CR='https://portal.clubrunner.ca/50387/Documents/en-au/';
+const RES={
+  hub:{t:'Membership Hub',d:'For Membership Chairs · District website',u:'https://www.rotary9815.org.au/page/membership-flow',g:'Membership Chairs'},
+  sprint:{t:'The One Ask Sprint',d:'Membership Chair playbook · 90 days',u:CR+'a49726ca-7157-4e2b-b45d-cd869bf0e077/1/',g:'Membership Chairs'},
+  stranger:{t:'From Stranger to Family',d:'New member action plan',u:CR+'aa1644f0-f79a-425e-960b-0893f7b8149c/1/',g:'Membership Chairs'},
+  toolkit:{t:"Club Leaders' Toolkit",d:'For Presidents & Presidents-Elect',u:GH+'START%20HERE.html',g:'Presidents & PEs'},
+  launchpad:{t:"Club Leaders' Launchpad",d:'The toolkit on your phone',u:GH+'launchpad.html',g:'Presidents & PEs'},
+  partnership:{t:'You and your Membership Chair',d:'Toolkit module · 40 minutes',u:GH+'START%20HERE.html',g:'Presidents & PEs'},
+  clearing:{t:'Clearing the Way',d:'Board briefing · one page',u:CR+'3a597594-a37f-4b66-b4b5-ddbea0df6873/1/',g:'The Board'},
+  whyarent:{t:"Why Aren't We Growing?",d:'Board discussion paper',u:CR+'db6581b1-43ce-42f3-8db1-5c583fc2627a/1/',g:'The Board'},
+  explorer:{t:'Membership Pathways Explorer',d:'Conversation cards, ideas, AI prompts',u:GH+'membership-explorer.html',g:'The Board'},
+  growclub:{t:'Grow Your Club, Grow Your People',d:'90-minute club night',u:GH+'grow-your-club.html',g:'The whole club'},
+  sam:{t:'Meet Sam',d:'20-minute talk for a club meeting',u:GH+'sam.html',g:'The whole club'},
+  growthplan:{t:'You Are the Growth Plan',d:'Guide for every member',u:CR+'dfc8b529-31d0-48d6-8427-82489c3b1300/1/',g:'The whole club'},
+  nightguide:{t:'Club night facilitator guide',d:'How to run Grow your club',u:GH+'club-night-guide.html',g:'The whole club'},
+  growwithus:{t:'“Grow with us” invitation kit',d:'Flyer and words for prospects',u:GH+'grow-with-us.html',g:'The whole club'},
+  snapshot:{t:'Club membership snapshot',d:'Your numbers in five minutes',u:GH+'club-snapshot.html',g:'The Board'},
+  boardpack:{t:'Board conversation pack',d:'Agenda item and printable cards',u:GH+'board-pack.html',g:'The Board'},
+  imin:{t:"Membership drivers' kit",d:'Sign up and everything you need',u:GH+'im-in.html',g:'Drivers'},
+  circle:{t:"The drivers' circle",d:'Monthly 30 minutes on Zoom',u:GH+'drivers-circle.html',g:'Drivers'},
+  story:{t:"Share your club's story",d:'One minute, anonymous',u:GH+'share-a-story.html',g:'Drivers'}
+};
+const SHOW={hub:RES.hub.u,toolkit:RES.toolkit.u,explorer:RES.explorer.u,growclub:RES.growclub.u};
+const chip=k=>{const r=RES[k];return `<a class="res" href="${esc(r.u)}" target="_blank" rel="noopener"><b>${esc(r.t)}</b><span>${esc(r.d)}</span></a>`};
+document.querySelectorAll('[data-res]').forEach(el=>{el.outerHTML=chip(el.dataset.res)});
+/* "Show me" buttons: on the projector the page replaces the talk (Back to the talk returns); elsewhere a new tab */
+let showBC=null;try{showBC=new BroadcastChannel('pe-stage')}catch(e){}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(!b)return;const u=SHOW[b.dataset.show];if(!u)return;
+  if(/[?&]embed=1/.test(location.search)&&showBC){showBC.postMessage({show:'web',url:u})}else{const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}});
+
+const WALLS=[
+  {id:'drv-skill',topic:'What Rotary taught us',col:'#fff6c9'},
+  {id:'drv-breakout',topic:'What our groups discovered',col:'#dcebff'}];
+const WBY={};WALLS.forEach(w=>WBY[w.id]=w);
+const KEY='d9815-meet-sam-ideas';
+let ideas=[];const liveNotes={};
+try{ideas=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){ideas=[]}
+ideas=ideas.filter(i=>WBY[i.wall]);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ideas))}catch(e){}};
+const rot=()=>(Math.random()*4-2).toFixed(1);
+function addIdea(text,wall){text=text.trim();if(!text)return;ideas.push({id:Date.now()+''+Math.random().toString(36).slice(2,6),text,wall,votes:0,r:rot()});save();renderAll()}
+document.querySelectorAll('.chat[data-wall]').forEach(box=>{
+  const wall=box.dataset.wall;
+  const q=box.querySelector('.q');const body=document.createElement('div');body.className='cbody';box.insertBefore(body,q);body.appendChild(q);
+  body.insertAdjacentHTML('beforeend',`<div class="cap presenter-only"><input aria-label="Add a chat answer" placeholder="Paste a chat answer and press Enter"><button>Add</button></div><div class="notes-mini" data-mini="${wall}"></div>`);
+  box.insertAdjacentHTML('beforeend','<div class="livejoin" data-join></div>');
+  const inp=body.querySelector('input'),btn=body.querySelector('button');
+  const go=()=>{addIdea(inp.value,wall);inp.value='';inp.focus()};
+  btn.addEventListener('click',go);inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go()}e.stopPropagation()});
+});
+const wallIn=document.getElementById('wallIn');
+const wallGo=()=>{addIdea(wallIn.value,'drv-breakout');wallIn.value='';wallIn.focus()};
+document.getElementById('wallAdd').addEventListener('click',wallGo);
+wallIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();wallGo()}e.stopPropagation()});
+function allNotes(){
+  const out=ideas.map(i=>({...i,live:false}));
+  Object.keys(liveNotes).forEach(w=>liveNotes[w].forEach((t,k)=>out.push({id:'L'+w+k,text:t.text,wall:w,votes:0,r:t.r,live:true})));
+  return out;
+}
+function renderAll(){
+  const all=allNotes();
+  document.querySelectorAll('[data-mini]').forEach(el=>{
+    const t=el.dataset.mini;
+    el.innerHTML=all.filter(i=>i.wall===t).map(i=>`<span class="sticky">${esc(i.text)}</span>`).join('');
+    el.scrollTop=el.scrollHeight;
+  });
+  const box=document.getElementById('wallBox');
+  const sorted=all.slice().sort((a,b)=>(b.wall==='drv-breakout')-(a.wall==='drv-breakout')||b.votes-a.votes);
+  box.innerHTML=sorted.length?sorted.map(i=>`<div class="note${i.live?' live':''}" style="--r:${esc(i.r)}deg;background:${WBY[i.wall].col}">${esc(i.text)}<small>${esc(WBY[i.wall].topic)}</small>${i.live?'':`<button class="vote" data-v="${esc(i.id)}" aria-label="Plus one">+1${i.votes?' · '+i.votes:''}</button><button class="x" data-x="${esc(i.id)}" aria-label="Remove idea">×</button>`}</div>`).join('')
+    :`<div class="wall-empty">Ideas land here as people send them from their phones, or as you paste them from the chat.<br><span style="font-size:17px">Answers from the earlier questions appear here too.</span></div>`;
+}
+document.getElementById('wallBox').addEventListener('click',e=>{
+  const v=e.target.closest('[data-v]'),x=e.target.closest('[data-x]');
+  if(v){const i=ideas.find(i=>i.id===v.dataset.v);if(i){i.votes++;save();renderAll()}}
+  if(x){ideas=ideas.filter(i=>i.id!==x.dataset.x);save();renderAll()}
+});
+document.getElementById('legend').innerHTML=WALLS.map(w=>`<span style="background:${w.col}">${esc(w.topic)}</span>`).join('');
+document.getElementById('copyWall').addEventListener('click',async e=>{
+  const groups={};allNotes().forEach(i=>(groups[i.wall]=groups[i.wall]||[]).push(i));
+  const txt='It\'s in your hands: ideas from the session ('+new Date().toLocaleDateString('en-AU')+')\n\n'+WALLS.filter(w=>groups[w.id]).map(w=>w.topic+'\n'+groups[w.id].map(i=>'- '+i.text+(i.votes?' (+'+i.votes+')':'')).join('\n')).join('\n\n');
+  try{await navigator.clipboard.writeText(txt);e.target.textContent='Copied ✓'}catch(err){e.target.textContent='Copy blocked: select and copy manually'}
+  setTimeout(()=>e.target.textContent='Copy all ideas',2200);
+});
+const dlg=document.getElementById('clearDlg');
+document.getElementById('clearWall').addEventListener('click',()=>dlg.classList.add('show'));
+document.getElementById('clearNo').addEventListener('click',()=>dlg.classList.remove('show'));
+document.getElementById('clearYes').addEventListener('click',()=>{ideas=[];save();renderAll();dlg.classList.remove('show')});
+renderAll();
+
+/* ---------- polls: phones when live, hands-up counting when not ---------- */
+const POLLS={};
+document.querySelectorAll('[data-poll]').forEach(el=>{
+  const id=el.dataset.poll,opts=JSON.parse(el.dataset.opts);
+  if(el.classList.contains('lpoll')){
+    el.innerHTML=`<div><div class="rows">${opts.map((o,k)=>`<button class="prow" data-opt="${k}"><span class="pfill"></span><b>${String.fromCharCode(65+k)}</b><span>${esc(o)}</span><span class="cnt"></span></button>`).join('')}</div><div class="ptot"></div></div><div class="livejoin" data-join></div>`;
+    el.firstElementChild.style.flex='1';
+  }
+  POLLS[id]={el,opts,q:el.dataset.q,counts:opts.map(()=>0),live:false};
+  el.querySelectorAll('.prow').forEach(b=>b.addEventListener('click',()=>{const P=POLLS[id];if(P.live)return;P.counts[+b.dataset.opt]++;drawPoll(id)}));
+});
+function drawPoll(id){
+  const P=POLLS[id],tot=P.counts.reduce((a,b)=>a+b,0),mx=Math.max(...P.counts);
+  P.el.querySelectorAll('[data-opt]').forEach(b=>{const k=+b.dataset.opt,n=P.counts[k],c=b.querySelector('.cnt'),f=b.querySelector('.pfill');
+    if(c)c.textContent=tot?n+' · '+Math.round(100*n/tot)+'%':'';if(f)f.style.width=(tot?100*n/tot:0)+'%';b.classList.toggle('top',tot>0&&n===mx)});
+  const t=P.el.querySelector('.ptot');if(t)t.textContent=tot?tot+(tot===1?' vote':' votes')+(P.live?' · live from phones':' · counted by hand'):(LIVE.on?'Votes appear here as phones answer.':'Click a row to count hands, or tally the chat.');
+}
+Object.keys(POLLS).forEach(drawPoll);
+
+/* ---------- leadership skills ---------- */
+const SKILLS=["Chairing a meeting","Public speaking","Budgeting","Project management","Leading volunteers","Negotiating with partners","Fundraising","Writing & storytelling","Running an event","Mentoring others","Strategic planning","Working across cultures","Handling conflict","Governance & boards","Digital & social media"];
+const skBox=document.getElementById('skills'),skN=document.getElementById('skillN');
+skBox.innerHTML=SKILLS.map((k,i)=>`<button class="skill" data-k="${i}" aria-pressed="false">${esc(k)}</button>`).join('');
+const skUpd=()=>{const n=skBox.querySelectorAll('.on').length;skN.textContent=n+' of '+SKILLS.length+' leadership skills learned by people on this call, without paying a cent in course fees.'};
+skBox.addEventListener('click',e=>{const b=e.target.closest('.skill');if(!b)return;b.classList.toggle('on');b.setAttribute('aria-pressed',b.classList.contains('on'));skUpd()});skUpd();
+
+/* ---------- every role is a training ground ---------- */
+const CV=[["Project lead","Take a community project from idea to done: scope it, recruit helpers, manage a budget, report back.","Led a 25-volunteer community project from concept to delivery, on time and on budget."],
+ ["President","Set direction, chair the Board, represent the club, grow the next leaders.","Chaired the board of a not-for-profit and led its annual strategy and community program."],
+ ["Membership Chair","Attract, welcome and keep members: invitations, onboarding, noticing when someone drifts.","Led recruitment and retention for a volunteer organisation, designing its onboarding program."],
+ ["Treasurer","Manage budgets, audit and compliance, and explain the numbers to non-finance people.","Managed finances, audit and compliance for a community not-for-profit and its charitable trust."],
+ ["Communications","Tell the club's story: social media, website, local media.","Ran communications and social media for a community organisation, growing its local profile."],
+ ["Partnerships","Build relationships with businesses and councils; pitch for sponsorship and grants.","Secured sponsorship and grants from local business and government partners."]];
+const cvR=document.getElementById('cvRoles'),cvO=document.getElementById('cvOut');
+cvR.innerHTML=CV.map((c,i)=>`<button class="tab" style="text-align:left" aria-selected="false" data-cv="${i}">${esc(c[0])}</button>`).join('');
+const cvShow=i=>{cvR.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.cv==i));const c=CV[i];cvO.innerHTML=`<div style="font-size:15px;font-weight:700;color:var(--gold)">${esc(c[0])}</div><p style="margin:8px 0 16px;opacity:.9">${esc(c[1])}</p><div style="font-size:15px;font-weight:700;color:var(--gold)">How it reads on a CV</div><p style="font-family:var(--serif);font-size:28px;line-height:1.2;margin:8px 0 0">“${esc(c[2])}”</p>`};
+cvR.addEventListener('click',e=>{const b=e.target.closest('[data-cv]');if(b)cvShow(b.dataset.cv)});
+cvO.innerHTML='<div style="font-size:15px;font-weight:700;color:var(--gold)">Every club role</div><p style="font-family:var(--serif);font-size:30px;line-height:1.2;margin:10px 0 0">…is real leadership practice, with real stakes and a safety net.</p><p style="opacity:.85;margin-top:14px">Pick a role on the left.</p>';
+
+/* ---------- breakout card and timer ---------- */
+const CARDS=[["If a capable 38-year-old visited our club next week, what would we offer them in their first month?","Pathway 1 · Attract"],
+ ["If our club disappeared tomorrow, who in the community would notice first?","The big picture"],
+ ["What does someone who joined us six months ago actually do each month?","Pathway 2 · Retain"],
+ ["Which of our “rules” are really our purpose, and which are just habit?","Pathway 3 · Diversity"]];
+let cardI=0;
+const bkCard=document.getElementById('bkCard'),bkPick=document.getElementById('bkPick'),bkMarker=document.getElementById('bkMarker'),wallTitle=document.getElementById('wallTitle');
+function setCard(i){cardI=i;const c=CARDS[i];bkCard.innerHTML=`${esc(c[0])}<small>${esc(c[1])} · from the Pathways Explorer's Talk it over cards</small>`;
+  bkPick.innerHTML=CARDS.map((x,k)=>k===i?'':`<button class="tab" style="font-weight:600;font-size:16px;max-width:420px;text-align:left" data-card="${k}">${esc(x[0])}</button>`).join('');
+  const q=c[0]+' (one person per group: send your best insight)';bkMarker.dataset.q=q;document.getElementById('wallBox').dataset.q=q;
+  wallTitle.textContent='“'+c[0]+'”';
+  if(typeof live!=='undefined'&&slides[cur]&&slides[cur].id==='breakout')live.enter(slides[cur],true);
+  if(typeof report==='function'&&typeof bc!=='undefined')report();}
+bkPick.addEventListener('click',e=>{const b=e.target.closest('[data-card]');if(b)setCard(+b.dataset.card)});
+let bkLeft=300,bkT=null;const bkTime=document.getElementById('bkTime'),bkGo=document.getElementById('bkGo');
+const bkDraw=()=>{bkTime.textContent=Math.floor(bkLeft/60)+':'+String(bkLeft%60).padStart(2,'0');bkTime.classList.toggle('low',bkLeft<=60)};
+function bkToggle(){if(bkT){clearInterval(bkT);bkT=null;bkGo.textContent='Start'}else{bkT=setInterval(()=>{bkLeft=Math.max(0,bkLeft-1);bkDraw();if(!bkLeft){clearInterval(bkT);bkT=null;bkGo.textContent='Start'}},1000);bkGo.textContent='Pause'}}
+bkGo.addEventListener('click',bkToggle);
+document.getElementById('bkReset').addEventListener('click',()=>{if(bkT){clearInterval(bkT);bkT=null;bkGo.textContent='Start'}bkLeft=300;bkDraw()});
+bkDraw();
+
+/* ---------- library ---------- */
+const groups={};Object.entries(RES).forEach(([k,r])=>(groups[r.g]=groups[r.g]||[]).push(r));
+document.getElementById('lib').innerHTML=Object.entries(groups).map(([g,l])=>`<div><h3>${esc(g)}</h3>${l.map(r=>`<a href="${esc(r.u)}" target="_blank" rel="noopener">${esc(r.t)}</a>`).join('')}</div>`).join('');
+
+/* ---------- deck engine ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+const total=slides.reduce((s,x)=>s+(+x.dataset.mins||0),0);
+let cur=0;
+const prog=document.getElementById('prog'),where=document.getElementById('where'),notes=document.getElementById('notes');
+prog.innerHTML=slides.map((s,i)=>`<button title="${esc(s.dataset.t)}" aria-label="Go to slide ${i+1}: ${esc(s.dataset.t)}" data-i="${i}"></button>`).join('');
+function go(i,push=true){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,j)=>s.classList.toggle('on',j===cur));
+  prog.querySelectorAll('button').forEach((b,j)=>{b.className=j<cur?'done':j===cur?'cur':''});
+  const s=slides[cur];where.textContent=(cur+1)+' / '+slides.length+' · '+s.dataset.t;
+  notes.innerHTML=`<h4>${esc(s.dataset.t)} · about ${s.dataset.mins} min</h4>${s.querySelector('aside.n').innerHTML}`;
+  if(push&&!document.body.classList.contains('flow')){try{history.replaceState(null,'','#'+(cur+1))}catch(e){}}
+  report();live.enter(s);
+}
+prog.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)go(+b.dataset.i)});
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+document.getElementById('notesBtn').onclick=()=>notes.classList.toggle('show');
+const help=document.getElementById('help');
+document.getElementById('helpBtn').onclick=()=>help.classList.add('show');
+document.getElementById('helpClose').onclick=()=>help.classList.remove('show');
+document.getElementById('fsBtn').onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}};
+/* timer */
+let t0=null,acc=0,tick=null;const clock=document.getElementById('clock');
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+const showClock=()=>{const el=acc+(t0?(Date.now()-t0)/1000:0);clock.textContent=fmt(el)+' / '+fmt(total*60);clock.style.color=el>total*60?'#ff9b8f':''};
+const toggleTimer=()=>{if(t0){acc+=(Date.now()-t0)/1000;t0=null;clearInterval(tick);document.getElementById('timerBtn').textContent='Timer'}else{t0=Date.now();tick=setInterval(showClock,1000);document.getElementById('timerBtn').textContent='Pause'}showClock()};
+document.getElementById('timerBtn').onclick=toggleTimer;showClock();
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea'))return;
+  if(document.body.classList.contains('flow'))return;
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1)}
+  else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(cur-1)}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(slides.length-1);
+  else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+  else if(e.key==='f'||e.key==='F')document.getElementById('fsBtn').click();
+  else if(e.key==='t'||e.key==='T')toggleTimer();
+  else if(e.key==='?')help.classList.toggle('show');
+  else if(e.key==='Escape'){help.classList.remove('show');notes.classList.remove('show');dlg.classList.remove('show')}
+});
+/* swipe */
+let sx=null;document.getElementById('viewport').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+document.getElementById('viewport').addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)go(cur+(dx<0?1:-1));sx=null});
+/* scaling and flow mode */
+const stage=document.getElementById('stage'),vp=document.getElementById('viewport');
+function fit(){
+  const flow=window.innerWidth<760;document.body.classList.toggle('flow',flow);
+  if(flow){stage.style.transform='';return}
+  const s=Math.min(vp.clientWidth/1600,vp.clientHeight/900)*0.98;stage.style.transform='translate(-50%,-50%) scale('+s+')';
+}
+const ro=new ResizeObserver(fit);ro.observe(document.body);
+/* script view */
+document.getElementById('script').innerHTML=`<h1 style="font-size:40px">Meet Sam · speaking script</h1><p style="color:var(--muted)">About ${total} minutes across ${slides.length} slides. Keep this open on a second screen or phone.</p>`+slides.map((s,i)=>`<section><h2>${i+1}. ${esc(s.dataset.t)} <span style="font-family:var(--sans);font-size:16px;color:var(--muted);font-weight:500">· ${s.dataset.mins} min</span></h2><p>${s.querySelector('aside.n').innerHTML}</p></section>`).join('');
+function route(){
+  const h=location.hash.slice(1);
+  document.body.classList.toggle('scriptmode',h==='script');
+  let i=parseInt(h,10)-1;if(isNaN(i))i=slides.findIndex(s=>s.id===h);
+  if(i!==cur||!started){started=true;go(i<0?0:i,false)}
+}
+let started=false;
+window.addEventListener('hashchange',route);
+/* ---------- projector mode: the run sheet on the laptop drives this talk (same protocol as talk.html) ---------- */
+const EMBED=/[?&]embed=1/.test(location.search);
+if(EMBED)document.body.classList.add('embed');
+let bc=null;try{bc=new BroadcastChannel('pe-stage')}catch(e){}
+function report(){if(!bc)return;const s=slides[cur];bc.postMessage({talkAt:cur+1,total:slides.length,title:s.dataset.t,notes:s.querySelector('aside.n').textContent,isPoll:!!s.querySelector('[data-poll],[data-wall],[data-wallbox]'),hasReveal:false,card:CARDS[cardI][0],isBreakout:s.id==='breakout',phones:LIVE.on?'live · '+LIVE.room:(livestat.textContent||'').replace(/^Phones: /,'')})}
+if(bc)bc.onmessage=e=>{const m=e.data||{};
+  if(m.talk==='go')go(m.n-1);else if(m.talk==='step')go(cur+m.d);else if(m.talk==='ask')report();
+  else if(m.talk==='openPoll')live.enter(slides[cur],true);
+  else if(m.talk==='timer'){bkToggle()}};
+
+/* ---------- live on phones: uses the presenter sign-in saved on this computer ---------- */
+const livestat=document.getElementById('livestat');
+const live=(()=>{
+  let timer=null,curSlide=null;
+  const api=(a,b)=>{b=b||{};b.admin=LIVE.admin;b.room=LIVE.room;return PE.ai.post('/api/live/'+a,b)};
+  function qrSVG(url){try{const q=qrcode(0,'M');q.addData(url);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){return ''}}
+  function init(){
+    try{LIVE.admin=localStorage.getItem('pe-admin')||'';LIVE.room=localStorage.getItem('pe-room')||'membership-drivers'}catch(e){}
+    if(!window.PE||!PE.ai||!PE.ai.url||!LIVE.admin){livestat.textContent=window.PE&&PE.ai&&PE.ai.url?'Phones: sign in on presenter.html':'Phones: off (chat mode)';return}
+    if(!/^membership-?drivers/i.test(LIVE.room)){livestat.textContent="Phones: switch presenter session to It's in your hands";}
+    api('whoami').then(r=>{
+      if(!r.ok){livestat.textContent='Phones: presenter sign-in needed';report();return}
+      const base=(window.PE_CONFIG&&PE_CONFIG.SITE_URL)||'';
+      LIVE.join=base+'join.html?code='+encodeURIComponent(r.accessCode)+(LIVE.room!=='prepelds'?'&room='+encodeURIComponent(LIVE.room):'');
+      LIVE.qr=base?qrSVG(LIVE.join):'';
+      LIVE.on=true;document.body.classList.add('live');
+      livestat.textContent='Phones: live · '+LIVE.room;livestat.classList.add('on');
+      document.querySelectorAll('[data-join]').forEach(j=>j.innerHTML=(LIVE.qr?`<div class="qr">${LIVE.qr}</div>`:'')+'Scan with your phone, or use the link in the chat');
+      Object.keys(POLLS).forEach(drawPoll);renderAll();
+      enter(slides[cur],true);report();
+    }).catch(()=>{livestat.textContent='Phones: offline (chat mode)'});
+  }
+  function enter(s,force){
+    curSlide=s;clearTimeout(timer);
+    if(!LIVE.on)return;
+    const p=s.querySelector('[data-poll]'),w=s.querySelector('[data-wall],[data-wallbox]');
+    let act=null;
+    if(p){const P=POLLS[p.dataset.poll];act={type:'poll',id:p.dataset.poll,title:P.q,options:P.opts,open:true,reveal:false}}
+    else if(w){const id=w.dataset.wall||w.dataset.wallbox;const q=w.dataset.q?w.dataset.q:(w.querySelector('.q')?w.querySelector('.q').textContent.replace(/^Phone or chat/,'').trim():WBY[id].topic);act={type:'wall',id,title:q,open:true}}
+    if(!act){/* no live element: leave phones on the last question */return}
+    if(force||s.dataset.opened!=='1'||true){api('set',{activity:act}).then(()=>{s.dataset.opened='1'}).catch(()=>{})}
+    poll();
+  }
+  function poll(){
+    clearTimeout(timer);const s=curSlide;if(!LIVE.on||!s)return;
+    const jobs=[];
+    s.querySelectorAll('[data-poll]').forEach(p=>{const id=p.dataset.poll;jobs.push(api('results',{poll:id}).then(r=>{const c=r.counts||{},P=POLLS[id];P.live=true;P.counts=P.opts.map((_,k)=>c[k]||0);drawPoll(id)}))});
+    s.querySelectorAll('[data-wall],[data-wallbox]').forEach(w=>{const id=w.dataset.wall||w.dataset.wallbox;jobs.push(api('worries',{topic:id}).then(r=>{const L=(r.worries||[]);const old=liveNotes[id]||[];liveNotes[id]=L.map((x,k)=>({text:x.text,r:(old[k]&&old[k].r)||rot()}));renderAll()}))});
+    Promise.all(jobs).catch(()=>{}).then(()=>{timer=setTimeout(poll,2500)});
+  }
+  /* walls answered earlier: fetch once at the end so the ideas wall shows everything */
+  function fetchAll(){if(!LIVE.on)return;WALLS.forEach(w=>api('worries',{topic:w.id}).then(r=>{const L=r.worries||[];liveNotes[w.id]=L.map(x=>({text:x.text,r:rot()}));renderAll()}).catch(()=>{}))}
+  return{init,set:a=>api('set',{activity:a}),enter:(s,f)=>{enter(s,f);if(s&&s.id==='wall')fetchAll()}};
+})();
+document.addEventListener('click',e=>{if(!e.target.closest('[data-live-reports]'))return;
+  if(!LIVE.on){const b=e.target.closest('[data-live-reports]');b.textContent='Use the presenter screen: What clubs are trying';return}
+  live.set({type:'reports',title:'What clubs are trying'}).then(()=>{if(showBC)showBC.postMessage({show:'live'})}).catch(()=>{})});
+try{const q=qrcode(0,'M');q.addData(RES.imin.u);q.make();document.getElementById('signupQR').innerHTML=q.createSvgTag({cellSize:4,margin:1,scalable:true})}catch(e){}
+setCard(0);fit();route();live.init();
+}
+</script>
+</body>
+</html>

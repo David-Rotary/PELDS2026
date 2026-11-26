@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The drivers' circle · District 9815</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app/kit.css">
+</head>
+<body>
+<div class="hero"><div class="in">
+  <div class="brand"><div class="mark">9815</div><div>Rotary District 9815 · Membership drivers</div></div>
+  <h1>The drivers' <em>circle</em></h1>
+  <p>Thirty minutes on Zoom, once a month. Nobody presents. Two clubs share what they tried, we talk over one card, and everyone leaves with one small next step.</p>
+  <div class="crumbs"><a href="im-in.html">← Drivers' kit</a></div>
+</div></div>
+<div class="rb"><i style="background:#F7A81B"></i><i style="background:#D41367"></i><i style="background:#901F93"></i><i style="background:#0067C8"></i><i style="background:#00A2E0"></i><i style="background:#009739"></i></div>
+
+<main>
+  <h2>How 30 minutes runs</h2>
+  <div class="card tl">
+    <div class="t">0–5</div><div class="d"><b>Did you try it?</b>Open the presenter screen, session "Membership: It's in your hands", and run the vote <i>Did you try it?</i> Then show <i>What clubs are trying</i> for a minute. "Not yet" is a perfectly good answer.</div>
+    <div class="t">5–15</div><div class="d"><b>Two stories, five minutes each</b>Ask two drivers in advance. Three questions only: what did you try, what happened, what would you tell another club? Others ask one question each, no advice yet.</div>
+    <div class="t">15–25</div><div class="d"><b>One conversation card</b>Draw a card from the <a href="board-pack.html">Board pack</a> or the <a href="membership-explorer.html">Explorer</a> and use this month's theme (below). Small breakout rooms of three if there are more than eight people. Hear from everyone before anyone suggests a fix.</div>
+    <div class="t">25–30</div><div class="d"><b>One small next step each</b>Everyone types theirs in the chat. Encourage them to make it a commitment with a reminder on the <a href="im-in.html">drivers' kit</a> page, so the reminder brings them back to report.</div>
+  </div>
+
+  <h2>This month's theme</h2>
+  <p class="sub">Follows the Membership Hub's year planner, so the circle talks about what Membership Chairs are doing anyway.</p>
+  <div class="card" id="theme"></div>
+  <details class="card"><summary style="cursor:pointer;font-weight:800;color:var(--royal)">All twelve months</summary><div class="tl" id="months" style="margin-top:8px"></div></details>
+
+  <h2>If it's your turn to host</h2>
+  <div class="grid2">
+    <div class="card"><h3>A week before</h3><ul><li>Send the invitation below with the Zoom link</li><li>Ask two drivers to share a story (five minutes each)</li><li>Look at <i>What clubs are trying</i> on the presenter screen, so you know what's come in</li></ul></div>
+    <div class="card"><h3>Afterwards</h3><ul><li>Post the next steps from the chat to the drivers (first names only)</li><li>Encourage the two storytellers to <a href="share-a-story.html">share their story</a> so it reaches the District roundup</li><li>Pick next month's host before you hang up</li></ul></div>
+  </div>
+  <h3>Invitation to copy</h3>
+  <textarea id="inv" aria-label="Invitation text" style="min-height:190px"></textarea>
+  <div class="btns noprint"><button class="btn pri" id="copy">Copy invitation</button><button class="btn" onclick="window.print()">Print this page</button></div>
+  <div class="ok" id="ok"></div>
+
+  <h2>Circle rules</h2>
+  <div class="grid3">
+    <div class="card"><b>Stories, not reports.</b> What happened, not what the Board minuted.</div>
+    <div class="card"><b>No names</b> of members or prospects. First names of drivers are fine.</div>
+    <div class="card"><b>Small is good.</b> "We tried one card at one Board meeting" counts.</div>
+  </div>
+
+  <footer><em>Nobody goes first alone.</em>Rotary District 9815 · Membership Growth Strategy 2026–2029</footer>
+</main>
+<script>
+(function () {
+  var M = [
+    ['July', 'Your club\'s membership plan', 'Confirm goals with the President and write a simple plan. Card: “What would make you proud to bring a friend along next week?”'],
+    ['August', 'Know your numbers', 'Bring your <a href="club-snapshot.html">club snapshot</a>. Card: “When did we last ask a member who left why, and really listen to the answer?”'],
+    ['September', 'Invite to a project, not a meeting', 'Card: “Which of our projects would a non-member love to help with for a morning?”'],
+    ['October', 'The first open event', 'Card: “If a capable 38-year-old visited next week, what would we offer them in their first month?”'],
+    ['November', 'Check in with new members', 'Card: “What does someone who joined us six months ago actually do each month?”'],
+    ['December', 'Fellowship and alumni', 'Card: “Who did we lose touch with in the last five years who might come back for the right project?”'],
+    ['January', 'Peak invitation season', 'Card: “Who is one person each of us already talks to who\'d enjoy our next project?”'],
+    ['February', 'Members at risk', 'Card: “Is there a way to step back for a while without stepping away completely?”'],
+    ['March', 'Rules and habits', 'Card: “Which of our “rules” are really our purpose, and which are just habit?”'],
+    ['April', 'Who\'s missing?', 'Card: “Who in our community would we love to see here, and what might be stopping them?”'],
+    ['May', 'Tell the story', 'Card: “What\'s the most vivid thing we did this year, and is it the first thing people see about us?”'],
+    ['June', 'Hand it on', 'Net growth, milestones, and briefing the incoming Membership Chair. Card: “What would we stop doing tomorrow if nobody\'s feelings were hurt?”']];
+  var now = new Date().getMonth(), idx = (now + 6) % 12; /* July = 0 */
+  var row = function (m) { return '<div class="t">' + m[0] + '</div><div class="d"><b>' + m[1] + '</b>' + m[2] + '</div>'; };
+  document.getElementById('theme').innerHTML = '<div class="tl">' + row(M[idx]) + '</div>';
+  document.getElementById('months').innerHTML = M.map(row).join('');
+  var inv = document.getElementById('inv');
+  inv.value = 'Hi drivers,\n\nOur next drivers\' circle is on [day and date], [time], on Zoom: [link]\n\nThirty minutes, no preparation needed. This month\'s theme: ' + M[idx][1] + '.\n\nBefore we meet: if your calendar reminder has popped up, take one minute to report back on how it went. "Not yet" is a perfectly good answer.\n\nSee you there,\n[your first name]';
+  document.getElementById('copy').onclick = function () {
+    var ok = document.getElementById('ok');
+    if (navigator.clipboard) navigator.clipboard.writeText(inv.value).then(function () { ok.textContent = 'Copied. Paste it into an email.'; }, function () { inv.select(); ok.textContent = 'Select the text and copy it.'; });
+    else { inv.select(); ok.textContent = 'Select the text and copy it.'; }
+  };
+})();
+</script>
+</body>
+</html>
