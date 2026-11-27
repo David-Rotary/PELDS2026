@@ -10,11 +10,11 @@
 </head>
 <body>
 <!-- ============================================================
-     EDIT HERE: paste your Microsoft Form's share link between the quotes,
+     EDIT HERE: the sign-up form link (Jotform) goes between the quotes,
      and the date of the next drivers' circle (leave blank to hide it).
      ============================================================ -->
 <script>
-var FORM_URL = '';
+var FORM_URL = 'https://form.jotform.com/263301872060045';
 var NEXT_CIRCLE = '';            /* e.g. 'Tuesday 3 March, 7.30 to 8.00 pm on Zoom' */
 var CIRCLE_LINK = '';            /* the Zoom link for the circle, if you want it here */
 var CONTACT = 'the District Membership Team';
@@ -84,7 +84,7 @@ var CONTACT = 'the District Membership Team';
   var b = document.getElementById('signupBtns'), n = document.getElementById('signupNote');
   if (/^https:\/\//.test(FORM_URL)) {
     b.innerHTML = '<a class="btn gold" href="' + esc(FORM_URL) + '" target="_blank" rel="noopener">Sign up as a driver ↗</a>';
-    n.textContent = 'Opens a short Microsoft Form: your name, club, role, the best way to reach you, and which conversation you\'ll start.';
+    n.textContent = 'Opens a short sign-up form: your name, club, role, the best way to reach you, and which conversation you\'ll start.';
   } else {
     b.innerHTML = '<span class="btn" aria-disabled="true" style="opacity:.6">Sign-up form coming soon</span>';
     n.textContent = 'Until then, put your name and club in the Zoom chat, or let ' + CONTACT + ' know you\'re in.';
