@@ -222,6 +222,10 @@ body.embed #wall .wall{bottom:40px}
 
 /* ---------- It's in your hands ---------- */
 .hero{position:absolute;inset:0;padding:100px 90px;background:radial-gradient(circle at 85% 15%,rgba(0,162,224,.35),transparent 45%),linear-gradient(135deg,#0B2A5C,#17458F 60%,#0067C8)}
+/* join QR on the title slide (shows once phones are live) */
+.hero .heroqr{position:absolute;top:90px;right:90px;width:300px;color:#dfe8f7;font-size:20px;line-height:1.3}
+.hero .heroqr .qr{border:0;border-radius:18px;padding:14px;margin-bottom:10px}
+body.flow .hero .heroqr{display:none!important}
 .hcard{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:20px 22px;color:#fff;display:flex;flex-direction:column;gap:6px}
 .hcard b{font-size:22px}.hcard span{font-size:17px;opacity:.9}
 .shifts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
@@ -309,9 +313,10 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
 <section class="slide" id="start" data-t="It's in your hands" data-mins="0.5">
   <div class="hero">
     <div class="kicker" style="color:var(--gold)">District 9815 · Growing Rotary, our way</div>
+    <div class="livejoin heroqr" data-join></div>
     <h1 style="color:#fff;font-size:110px">It's in your hands.</h1>
     <p class="lead" style="color:#dfe8f7;font-size:30px;max-width:24em">We already have the tools. Today is about picking them up, and finding the people who'll run with them.</p>
-    <div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px;max-width:1240px">
+    <div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px;max-width:1080px">
       <div class="hcard"><b>Grab your phone</b><span>Scan the code or click the link in the chat. No app, no name.</span></div>
       <div class="hcard"><b>You'll talk, not just listen</b><span>A short small-group conversation is part of today.</span></div>
       <div class="hcard"><b>No need to take notes</b><span>Every tool is linked on the last slide, and you'll have this page.</span></div>
@@ -338,7 +343,7 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
     <h2 style="max-width:1300px">Campaigns, targets and membership drives haven't turned it around here. People didn't stop caring. The way they give their time changed, and our invitation didn't.</h2>
     <div class="shifts">
       <div><span>From recruiting</span><b>to connecting</b><p>Invite people to a project, not a meeting. Growth happens one relationship at a time.</p></div>
-      <div><span>From the Membership Chair's job</span><b>to the whole Board's job</b><p>A Membership Chair on their own burns out. A Board behind them changes the club.</p></div>
+      <div><span>From the Membership Chair's job</span><b>to every member's</b><p>A Membership Chair on their own burns out. A Board behind them, and members who each ask one person, change the club.</p></div>
       <div><span>From “join our club”</span><b>to “grow with us”</b><p>Rotary is a place to learn to lead in a changing world. That's our hidden selling point.</p></div>
     </div>
     <p class="lead" style="font-size:22px;margin-top:26px"><b style="color:var(--ink)">One principle runs through all of it:</b> each club chooses its own way forward. The District's job is to put the tools in your hands.</p>
@@ -351,11 +356,11 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
 <section class="slide" id="tools" data-t="You already have the tools" data-mins="1.5">
   <div class="pad">
     <div class="kicker">You already have the tools</div>
-    <h2>Three doors. One for each person who drives growth.</h2>
+    <h2>Three doors. Whoever you are in your club, one of them is yours.</h2>
     <div class="doors">
       <div class="door" style="--c:var(--m1)"><div class="who">Membership Chairs</div><h3>Membership Hub</h3><p>Your job, already mapped: the year in seven topic areas, a nine-step guided flow, a quarter-by-quarter planner and 30+ resources.</p><ul class="dl"><li>Guided flow: nine steps, about 20 minutes</li><li>Onboarding checklist and early-warning signs</li><li>Year planner, quarter by quarter</li></ul><button class="show" data-show="hub">Show me (video)</button></div>
-      <div class="door" style="--c:var(--m3)"><div class="who">Presidents &amp; Presidents-Elect</div><h3>Club Leaders' Toolkit</h3><p>Your plan, your modules, and Board mode for running the conversation with your Board. Plus the Launchpad on your phone.</p><ul class="dl"><li>Module: you and your Membership Chair</li><li>Board mode: full-screen for the Board table</li><li>Launchpad: the essentials on your phone</li></ul><button class="show" data-show="toolkit">Show me</button></div>
-      <div class="door" style="--c:var(--m5)"><div class="who">The Board and the whole club</div><h3>Pathways Explorer</h3><p>The District plan as a playground of ideas: conversation cards, experiments, an invite builder and AI prompts.</p><ul class="dl"><li>Talk it over: conversation cards</li><li>The engagement ladder and one-minute invite</li><li>Ask your AI about your own community</li></ul><button class="show" data-show="explorer">Show me</button></div>
+      <div class="door" style="--c:var(--m3)"><div class="who">Club leaders, now and next</div><h3>Club Leaders' Toolkit</h3><p>For Presidents, Membership Chairs and anyone who has wondered “could I?”. No title needed: your own path, a plan, and Board mode for the Board table.</p><ul class="dl"><li>A path for every role, future leaders included</li><li>Module: the President and Membership Chair, together</li><li>Launchpad: the essentials on your phone</li></ul><button class="show" data-show="toolkit">Show me</button></div>
+      <div class="door" style="--c:var(--m5)"><div class="who">Every member, Board included</div><h3>Pathways Explorer</h3><p>The District plan as a playground of ideas: conversation cards, experiments, an invite builder and AI prompts.</p><ul class="dl"><li>Talk it over: conversation cards</li><li>The engagement ladder and one-minute invite</li><li>Ask your AI about your own community</li></ul><button class="show" data-show="explorer">Show me</button></div>
     </div>
     <p style="margin-top:22px;font-size:19px;color:var(--muted)">Most people in your club don't know these exist. That's the first thing we can fix, today.</p>
   </div>
@@ -403,8 +408,8 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
 <section class="slide" id="toolkit" data-t="Club Leaders' Toolkit" data-mins="1.5">
   <div class="split" style="grid-template-columns:520px 1fr">
     <div class="side" style="background:var(--m3)">
-      <div class="mnum">For Presidents &amp; Presidents-Elect</div><div class="mword" style="font-size:72px">Club Leaders' Toolkit</div>
-      <div class="mline">Learn, question, plan. Built at PELDS, open to every President.</div>
+      <div class="mnum">For club leaders, now and next</div><div class="mword" style="font-size:72px">Club Leaders' Toolkit</div>
+      <div class="mline">You don't need a title to open it. Presidents, Membership Chairs, and anyone who has wondered “could I?”</div>
       <button class="show light" data-show="toolkit" style="margin-top:auto">Show the Toolkit</button>
     </div>
     <div class="main">
@@ -413,12 +418,12 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
         <div class="card"><h3>Membership: you and your Membership Chair</h3><p style="font-size:18px;margin-top:6px">A 40-minute module on the partnership: who does what, a club experience health check and a shared plan.</p></div>
         <div class="card"><h3>Board mode</h3><p style="font-size:18px;margin-top:6px">Shows any module full-screen with big text, so you can run the questions with your Board, not just read them.</p></div>
         <div class="card"><h3>Club health</h3><p style="font-size:18px;margin-top:6px">What motivates your members, reading your community, and using AI to map local opportunities.</p></div>
-        <div class="card"><h3>Launchpad</h3><p style="font-size:18px;margin-top:6px">The best of it on your phone: getting ready, running the year, bringing someone in, help any time.</p></div>
+        <div class="card"><h3>Launchpad</h3><p style="font-size:18px;margin-top:6px">The best of it on your phone, with a path for President-Elects, Presidents and Membership Chairs, and a welcome page to send a future leader.</p></div>
       </div>
       <div class="res-row"><span data-res="toolkit"></span><span data-res="launchpad"></span></div>
     </div>
   </div>
-  <aside class="n">Show the Toolkit, open "Membership: you and your Membership Chair", then click Board mode to show how big and readable it goes. That's the bridge to the next section: the toolkit is built for doing this together.</aside>
+  <aside class="n">Say: "You don't have to be President to use this. If you've ever thought 'I'm not really a leader', it was built for you too." Show the Toolkit: point out "Who's here?" on the home page (President-Elect, President, Membership Chair, mentor, future leader). Then open "Membership: you and your Membership Chair" and click Board mode to show how big and readable it goes. That's the bridge to the next section: the toolkit is built for doing this together.</aside>
 </section>
 
 <!-- 7 VOTE: OPENED -->
@@ -596,9 +601,9 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
   <div class="split" style="grid-template-columns:1fr 600px">
     <div class="pad" style="position:relative;padding:60px 40px 0 80px">
       <div class="kicker">The ask</div>
-      <h2 style="font-size:58px">We're looking for people to drive this in their club.</h2>
-      <p class="lead" style="font-size:22px">Not a committee. Not a title. Just someone who'll start the conversation and keep it going.</p>
-      <div class="lpoll" data-poll="drv-in" data-q="Will you start the membership conversation in your club?" data-opts='["I&#39;m in","I&#39;m in, with some help","I&#39;ll take it to my Board first","Not this year"]' style="margin-top:20px"></div>
+      <h2 style="font-size:58px">Any member can drive this in their club.</h2>
+      <p class="lead" style="font-size:22px">Not a committee. Not a title. You don't need to be on the Board or to have been in Rotary for years. Just someone who'll start the conversation and keep it going.</p>
+      <div class="lpoll" data-poll="drv-in" data-q="Will you start the membership conversation in your club?" data-opts='["I&#39;m in","I&#39;m in, with some help","I know someone in my club who&#39;d be great at this","I&#39;ll take it to my Board first","Not this year"]' style="margin-top:20px"></div>
     </div>
     <div class="side" style="background:var(--deep)">
       <div class="mnum">What a driver does</div>
@@ -612,7 +617,7 @@ body.flow .facts,body.flow .quarters{grid-template-columns:minmax(0,1fr)!importa
       <p class="mline" style="margin-top:14px;font-size:20px">You won't be on your own. That's the point.</p>
     </div>
   </div>
-  <aside class="n">Pause before the vote. Then the AI summary on the presenter screen (it reads every vote and wall from today) and everyone taps the one idea they'll try. Collect names of "I'm in" people via the Zoom chat or a follow-up email; the vote itself is anonymous.</aside>
+  <aside class="n">Say: "This isn't only for the people in this room. Often the best person is a newer member nobody has thought to ask." If someone taps "I know someone", ask them to send that person the drivers' kit link tonight. Pause before the vote. Then the AI summary on the presenter screen (it reads every vote and wall from today) and everyone taps the one idea they'll try. Collect names of "I'm in" people via the Zoom chat or a follow-up email; the vote itself is anonymous.</aside>
 </section>
 
 <!-- 17 CLOSE -->
@@ -674,9 +679,9 @@ const RES={
   hub:{t:'Membership Hub',d:'For Membership Chairs · District website',u:'https://www.rotary9815.org.au/page/membership-flow',g:'Membership Chairs'},
   sprint:{t:'The One Ask Sprint',d:'Membership Chair playbook · 90 days',u:CR+'a49726ca-7157-4e2b-b45d-cd869bf0e077/1/',g:'Membership Chairs'},
   stranger:{t:'From Stranger to Family',d:'New member action plan',u:CR+'aa1644f0-f79a-425e-960b-0893f7b8149c/1/',g:'Membership Chairs'},
-  toolkit:{t:"Club Leaders' Toolkit",d:'For Presidents & Presidents-Elect',u:GH+'START%20HERE.html',g:'Presidents & PEs'},
-  launchpad:{t:"Club Leaders' Launchpad",d:'The toolkit on your phone',u:GH+'launchpad.html',g:'Presidents & PEs'},
-  partnership:{t:'You and your Membership Chair',d:'Toolkit module · 40 minutes',u:GH+'START%20HERE.html',g:'Presidents & PEs'},
+  toolkit:{t:"Club Leaders' Toolkit",d:'For club leaders, now and next',u:GH+'START%20HERE.html',g:'Club leaders, now and next'},
+  launchpad:{t:"Club Leaders' Launchpad",d:'The toolkit on your phone',u:GH+'launchpad.html',g:'Club leaders, now and next'},
+  partnership:{t:'You and your Membership Chair',d:'Toolkit module · 40 minutes',u:GH+'START%20HERE.html',g:'Club leaders, now and next'},
   clearing:{t:'Clearing the Way',d:'Board briefing · one page',u:CR+'3a597594-a37f-4b66-b4b5-ddbea0df6873/1/',g:'The Board'},
   whyarent:{t:"Why Aren't We Growing?",d:'Board discussion paper',u:CR+'db6581b1-43ce-42f3-8db1-5c583fc2627a/1/',g:'The Board'},
   explorer:{t:'Membership Pathways Explorer',d:'Conversation cards, ideas, AI prompts',u:GH+'membership-explorer.html',g:'The Board'},

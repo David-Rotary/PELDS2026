@@ -204,7 +204,7 @@
   var DRV_POLLS = [
     { id: 'drv-holdback', title: 'Honestly: what\'s really holding your club back from growing?', ask: 'Tap one.', options: ['We rarely invite anyone', 'People visit but don\'t come back', 'New members drift away', 'We\'re all stretched too thin', 'We\'ve never really talked about it as a club'] },
     { id: 'drv-opened', title: 'Before today, which of these had you opened?', ask: 'Tap one.', options: ['The Membership Hub', 'The Club Leaders\' Toolkit', 'The Pathways Explorer', 'More than one', 'None of them yet'] },
-    { id: 'drv-in', title: 'Will you start the membership conversation in your club?', ask: 'Tap one.', options: ['I\'m in', 'I\'m in, with some help', 'I\'ll take it to my Board first', 'Not this year'] }];
+    { id: 'drv-in', title: 'Will you start the membership conversation in your club?', ask: 'Tap one.', options: ['I\'m in', 'I\'m in, with some help', 'I know someone in my club who\'d be great at this', 'I\'ll take it to my Board first', 'Not this year'] }];
   function memSet() { return /^membership-?drivers/i.test(room) ? { name: 'It\'s in your hands', walls: DRV_WALLS, polls: DRV_POLLS } : { name: 'Meet Sam', walls: SAM_WALLS, polls: SAM_POLLS }; }
   SAM_WALLS.concat(DRV_WALLS).forEach(function (w) { WALLS[w[0]] = w[1]; });
   /* deep links into the toolkit: #/m/<module>/<page> */
