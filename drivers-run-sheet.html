@@ -161,9 +161,10 @@ var SECTIONS = [
     links: [['talk', 13, 'What we discovered (wall)']] },
 
   { id: 'runit', t: 24, d: 2, title: 'Three ways to run it in your club', talk: [14],
-    notes: ['10 minutes: a card at every Board meeting · 40 minutes: President and Membership Chair module · 90 minutes: the Grow your club night',
+    notes: ['Green "Meet Sam" button: shows the Sam talk on the projector as a preview. Click through it with its own ◀ ▶ in the projector window (the run sheet arrows still drive this talk). Show talk to come back',
+      '10 minutes: a card at every Board meeting · 40 minutes: President and Membership Chair module · 90 minutes: the Grow your club night',
       'Then: try one small thing for 90 days, review it at the Board, share it'],
-    links: [['talk', 14, 'Three ways'], ['web', 'grow-your-club.html', 'Grow your club'], ['web', 'sam.html', 'Meet Sam (club talk)']] },
+    links: [['talk', 14, 'Three ways'], ['web', 'grow-your-club.html', 'Grow your club'], ['web', 'sam.html?preview=1', 'Meet Sam (club talk)']] },
 
   { id: 'loop', t: 26, d: 1.5, title: 'Someone has to go first', talk: [15],
     say: 'Everyone is looking for someone else to make a start. This is how you\'ll see who already has.',
@@ -244,7 +245,7 @@ var SECTIONS = [
   function talkUp() { return Date.now() - talkSeen < 600000 && (stageUp() || talkSeen); }
   function send(m) { if (bc) bc.postMessage(m); }
   /* sites that refuse to appear inside another page always open in a laptop tab (My Rotary, and ClubRunner sites such as the District website) */
-  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|sam|drivers)\.html/i, /rotary9815\.org\.au/i, /rotarysouthpacific\.org/i, /clubrunner/i];
+  var TAB_ONLY = [/my\.rotary\.org/i, /\.pdf($|[?#])/i, /\/(talk|drivers)\.html/i, /\/sam\.html(?!\?preview=1)/i, /rotary9815\.org\.au/i, /rotarysouthpacific\.org/i, /clubrunner/i];
   function frameable(u) { return !TAB_ONLY.some(function (r) { return r.test(u); }); }
   var pStat = document.getElementById('pStat'), nowbox = document.getElementById('nowbox');
   function status() {

@@ -159,6 +159,8 @@ aside.n{display:none}
 body.scriptmode{overflow:auto;background:#fff}
 body.scriptmode #script{display:block}
 body.scriptmode #viewport,body.scriptmode #bar{display:none}
+/* preview inside another run sheet's projector window: leave room for its "Back to the talk" button, hide presenter-only buttons */
+body.preview #bar{padding-left:200px}body.preview #clock,body.preview #timerBtn,body.preview #notesBtn,body.preview #fsBtn,body.preview #helpBtn{display:none}
 #script section{border-top:1px solid var(--line);padding:16px 0}
 #script h2{font-size:24px}
 
@@ -873,7 +875,10 @@ window.addEventListener('hashchange',route);
 /* ---------- projector mode: the run sheet on the laptop drives this talk (same protocol as talk.html) ---------- */
 const EMBED=/[?&]embed=1/.test(location.search);
 if(EMBED)document.body.classList.add('embed');
-let bc=null;try{bc=new BroadcastChannel('pe-stage')}catch(e){}
+/* ?preview=1: shown inside another run sheet's projector window, so it must not take over that run sheet's controls or the phones */
+const PREVIEW=/[?&]preview=1/.test(location.search);
+if(PREVIEW)document.body.classList.add('preview');
+let bc=null;if(!PREVIEW)try{bc=new BroadcastChannel('pe-stage')}catch(e){}
 function report(){if(!bc)return;const s=slides[cur];bc.postMessage({talkAt:cur+1,total:slides.length,title:s.dataset.t,notes:s.querySelector('aside.n').textContent,isPoll:!!s.querySelector('[data-poll],[data-wall],[data-wallbox]'),hasReveal:!!s.querySelector('#guess'),phones:LIVE.on?'live · '+LIVE.room:(livestat.textContent||'').replace(/^Phones: /,'')})}
 if(bc)bc.onmessage=e=>{const m=e.data||{};
   if(m.talk==='go')go(m.n-1);else if(m.talk==='step')go(cur+m.d);else if(m.talk==='ask')report();
@@ -924,7 +929,7 @@ const live=(()=>{
   function fetchAll(){if(!LIVE.on)return;WALLS.forEach(w=>api('worries',{topic:w.id}).then(r=>{const L=r.worries||[];liveNotes[w.id]=L.map(x=>({text:x.text,r:rot()}));renderAll()}).catch(()=>{}))}
   return{init,enter:(s,f)=>{enter(s,f);if(s&&s.id==='wall')fetchAll()}};
 })();
-fit();route();live.init();
+fit();route();if(PREVIEW)livestat.textContent='Preview: phones off';else live.init();
 }
 </script>
 </body>
