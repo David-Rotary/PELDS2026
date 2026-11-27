@@ -80,6 +80,7 @@ ul{margin:6px 0;padding-left:1.2em} li{margin:3px 0}
     <button class="rbtn" id="pTimer" style="display:none">Start / pause breakout timer</button>
     <button class="rbtn gold" id="pCard" style="display:none">Copy breakout card</button>
     <button class="rbtn gold" id="pJoin" title="Copies the link people click to join from a laptop">Copy join link for Zoom chat</button>
+    <button class="rbtn gold" id="pReport" title="Copies the link where people tell us how their one thing went">Copy report-back link</button>
   </div>
   <div class="nowbox" id="nowbox"></div>
 </header>
@@ -104,7 +105,10 @@ var SECTIONS = [
       'Open projector window → Fill the projector (or a big window on one screen). The slide box at the top of this page should say "Phones: live · membership-drivers"',
       'Zoom: Share screen → the projector window (not your whole desktop)',
       'Click "Copy join link for Zoom chat" (top of this page) and keep it ready',
-      'Open the Membership Hub, the Toolkit and the Explorer once, so they load quickly when you show them'],
+      'Open the Membership Hub, the Toolkit and the Explorer once, so they load quickly when you show them',
+      'Click "Copy report-back link" (top of this page) once to check it works. You\'ll paste it into the chat near the end',
+      'Presenter screen: open "What clubs are trying" to see how many report-backs there are. Fewer than five? Plan to show it only briefly (see slide 15)',
+      'Optional but powerful: ask one or two people from an earlier session (20 Nov Presidents meeting or a Pre-PELDS) to share a 60-second "what we tried" at slide 15'],
     links: [['pres', 'presenter.html', 'Presenter screen'], ['talk', 1, 'Talk: title slide']] },
 
   { id: 'welcome', t: 0, d: 2, title: 'Welcome and the honest question', talk: [1, 2],
@@ -112,6 +116,13 @@ var SECTIONS = [
     notes: ['Paste the join link into the Zoom chat: "Grab your phone and scan, or click the link."',
       'Slide 2: the vote opens on phones by itself. Read the top two answers'],
     links: [['talk', 1, 'Title'], ['talk', 2, 'What\'s holding us back? (vote)']] },
+
+  { id: 'tried', t: 2, d: 2, optional: true, title: 'Did you try it? (only if many were at an earlier session)',
+    say: 'Last time many of you picked one thing to try. Be honest: how did it go? "Not yet" is a perfectly good answer.',
+    notes: ['Use this only if a good number here were at the 20 Nov Presidents meeting or a Pre-PELDS. Adds 2 minutes; everything after runs 2 minutes later',
+      'Presenter screen → "Did you try it? (vote)", then Show live screen. Read the result, whatever it is: it tells everyone promises get followed up',
+      'Then Show talk and carry on with slide 3'],
+    links: [['pres', 'presenter.html', 'Presenter: Did you try it?']] },
 
   { id: 'approach', t: 2, d: 2, title: 'A new approach: three shifts', talk: [3],
     say: 'People didn\'t stop caring. The way they give their time changed, and our invitation didn\'t.',
@@ -156,8 +167,10 @@ var SECTIONS = [
 
   { id: 'loop', t: 26, d: 1.5, title: 'Someone has to go first', talk: [15],
     say: 'Everyone is looking for someone else to make a start. This is how you\'ll see who already has.',
-    notes: ['Walk the loop: pick your one thing, set the reminder, tell us how it went, see what other clubs are trying',
+    notes: ['This is the preview: "At the end you\'ll pick one thing. Here\'s what happens after that." Walk the four steps',
       'Click "Show what clubs are trying" on the slide (or presenter screen → What clubs are trying, then Show live screen). Then Show talk',
+      'If you lined up a 60-second "what we tried" story, hear it now. A real voice beats a wall',
+      'Wall nearly empty? Say so: "This wall is empty until you fill it. In two months we\'ll open the Presidents meeting with it."',
       '"Not yet" is a perfectly good answer. The only answer that doesn\'t help is no answer'],
     links: [['talk', 15, 'The loop'], ['pres', 'presenter.html', 'Presenter: What clubs are trying']] },
 
@@ -167,21 +180,28 @@ var SECTIONS = [
       'Also ask "I\'m in" people to put their name and club in the chat, in case the form is skipped'],
     links: [['talk', 16, 'Who\'s in? (vote)']] },
 
-  { id: 'summary', t: 29, d: 2, title: 'AI summary and "the one I\'ll try"', notes: [
-      'Presenter screen: "AI summary & ideas". Run sheet: Show live screen',
+  { id: 'summary', t: 29, d: 3, title: 'AI summary, pick one, reminder in the calendar now',
+    say: 'Pick one. Then put the reminder in your calendar now, while we\'re all here. I\'ll wait.',
+    notes: [
+      'Presenter screen: "AI summary & ideas". Run sheet: Show live screen. Read the five ideas briefly',
       'Everyone\'s phone shows the ideas: "Tap the one you\'ll try in your club"',
-      'Remind them: after tapping, the phone offers to make it a commitment with a calendar reminder. "Say yes to the reminder." Then Show talk'],
+      'After tapping, the phone offers to make it an action. For "by when", ask everyone to choose 30 days: the reminder then arrives halfway to the next Presidents meeting',
+      '"Add to calendar" now. Give it a full minute of quiet. "Give me a thumbs-up reaction in Zoom when it\'s in your calendar." Count the thumbs aloud',
+      'Click "Copy report-back link" (top of this page) and paste it into the Zoom chat: "This is also where you tell us how it went. It\'s in your reminder too."',
+      'Glance at the picks tally on the summary screen and read the top one. Then Show talk'],
     links: [['pres', 'presenter.html', 'Presenter screen: AI summary']] },
 
-  { id: 'close', t: 31, d: 0.5, title: 'It\'s in your hands', talk: [17],
+  { id: 'close', t: 32, d: 0.5, title: 'It\'s in your hands', talk: [17],
     say: 'Open your door, put ten minutes on your next Board agenda, book a club night, and tell us you\'re in.',
     links: [['talk', 17, 'Next 30 days and the library']] },
 
-  { id: 'after', t: 31.5, d: 5, optional: true, title: 'After the session', checks: [
-      'Save the Zoom chat (names of the "I\'m in" people)',
-      'Presenter screen: Download results and Save the summary',
-      'Within a week: email everyone the talk link, and invite the "I\'m in" people to the first drivers\' circle',
-      'In a month: open the next session with "Did you try it?" and show What clubs are trying'],
+  { id: 'after', t: 32.5, d: 5, optional: true, title: 'After the session: keep the loop turning', checks: [
+      'Same day: save the Zoom chat (names of the "I\'m in" people). Presenter screen: Download results and Save the summary',
+      'Within a week: email everyone the talk link and the report-back link, and invite the "I\'m in" people to the first drivers\' circle',
+      'About 3 weeks: a two-line nudge (District Membership Chair if he will): "Your reminder lands this week. One minute to tell us how it went."',
+      'About 5 weeks: Monthly AI roundup (presenter screen) → Save the roundup → send it to Presidents and Membership Chairs as "What clubs are trying"',
+      'Next Presidents meeting: open with "Did you try it?" (vote) → two minutes for report-backs in the room (report-back link in the chat or as a QR) → What clubs are trying → the roundup, ideally presented by the District Membership Chair',
+      'Then every month: roundup → email. Every Presidents meeting: vote → wall → roundup'],
     links: [['pres', 'presenter.html', 'Presenter screen'], ['web', 'drivers.html#17', 'Talk: the library']] }
 ];
 
@@ -296,6 +316,20 @@ var SECTIONS = [
         var ok = function () { btn.textContent = 'Copied ✓ paste into Zoom chat'; setTimeout(function () { btn.textContent = 'Copy join link for Zoom chat'; }, 3000); };
         if (navigator.clipboard) navigator.clipboard.writeText(msg).then(ok, function () { PEnote(msg); }); else PEnote(msg);
         if (!/^membership-?drivers/i.test(room)) PEnote('Heads up: the presenter screen is on session "' + esc(room) + '". Switch it to "Membership: It\'s in your hands" so answers land in the right place.');
+      }).catch(function () { PEnote('Could not reach the online service. Check the internet connection.'); });
+  };
+  /* report-back link for the Zoom chat (report.html with the access code, so nobody has to type it) */
+  document.getElementById('pReport').onclick = function () {
+    var C = window.PE_CONFIG || {}, admin = '', room = 'membership-drivers', btn = this;
+    try { admin = localStorage.getItem('pe-admin') || ''; room = localStorage.getItem('pe-room') || room; } catch (e) {}
+    if (!C.AI_URL || !admin) { PEnote('Sign in on the presenter screen first (gold button), then click again.'); return; }
+    fetch(String(C.AI_URL).replace(/\/+$/, '') + '/api/live/whoami', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ admin: admin, room: room }) })
+      .then(function (r) { return r.json(); }).then(function (r) {
+        if (!r.ok) { PEnote('The presenter sign-in was not accepted. Sign in again on the presenter screen.'); return; }
+        var url = (C.SITE_URL || '') + 'report.html?code=' + encodeURIComponent(r.accessCode) + '&s=' + encodeURIComponent(room);
+        var msg = 'Tried your one thing? Tell us how it went (one minute, anonymous, "not yet" is fine): ' + url;
+        var ok = function () { btn.textContent = 'Copied ✓ paste into Zoom chat'; setTimeout(function () { btn.textContent = 'Copy report-back link'; }, 3000); };
+        if (navigator.clipboard) navigator.clipboard.writeText(msg).then(ok, function () { PEnote(msg); }); else PEnote(msg);
       }).catch(function () { PEnote('Could not reach the online service. Check the internet connection.'); });
   };
   /* blue buttons: move the projector's talk instead of opening a new window */
