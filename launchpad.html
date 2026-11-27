@@ -23,7 +23,7 @@ h1 em{color:var(--gold);font-weight:500}
 .rb{display:flex;height:6px}.rb i{flex:1}
 main{max-width:960px;margin:0 auto;padding:18px 16px 50px}
 /* path picker */
-.paths{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 6px}
+.paths{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 6px}
 .path{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;font:inherit;color:inherit;cursor:pointer;display:block;text-decoration:none}
 .path:hover{border-color:var(--azure)}
 .path.on{border-color:var(--gold);box-shadow:0 0 0 3px rgba(247,168,27,.3)}
@@ -70,6 +70,7 @@ footer em{font-family:var(--display);color:var(--royal);font-size:1.15rem;displa
 /* welcome mode: the page a leader forwards to someone new */
 body.welcome .leaders{display:none}
 body:not(.welcome) .welcome-only{display:none}
+@media (max-width:980px){.paths{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:820px){.paths{grid-template-columns:1fr 1fr}.moves,.goals,.three{grid-template-columns:1fr}}
 @media (max-width:520px){.item .go{display:none}}
 @media print{.paths,.btns,.share textarea{display:none}section.pane{display:block}.hero{padding:14px}}
@@ -90,6 +91,7 @@ body:not(.welcome) .welcome-only{display:none}
   <div class="paths" role="tablist">
     <button class="path" data-p="pe" role="tab"><div class="ic">🌱</div><b>I'm a President-Elect</b><span>Getting ready for 1 July.</span></button>
     <button class="path" data-p="pres" role="tab"><div class="ic">🧭</div><b>I'm President now</b><span>Running the year, growing members.</span></button>
+    <button class="path" data-p="mc" role="tab"><div class="ic">👥</div><b>I'm a Membership Chair</b><span>Keeping members, growing the club.</span></button>
     <button class="path" data-p="next" role="tab"><div class="ic">🤝</div><b>Bringing someone in</b><span>A future President or a new member.</span></button>
     <button class="path" data-p="help" role="tab"><div class="ic">🛟</div><b>Help, any time</b><span>Who to call and where to look.</span></button>
   </div>
@@ -196,6 +198,57 @@ body:not(.welcome) .welcome-only{display:none}
     </div>
   </section>
 
+  <!-- ============ MEMBERSHIP CHAIR ============ -->
+  <section class="pane" id="sec-mc">
+    <h2>👥 Keeping members, growing your club</h2>
+    <p class="sub">Growth is the outcome. The club experience is the driver. You're the person most likely to change your club's future, and membership is the whole Board's job, not yours alone.</p>
+    <div class="list" style="margin-bottom:6px"><a class="item web" href="START%20HERE.html?role=mc" data-keep><div class="ic">👥</div><div><b>Your path in the toolkit</b><span>A step-by-step path for Membership Chairs that ticks off as you go, with an "it feels like it's all on me" button when you need it.</span></div><span class="go">Open →</span></a></div>
+
+    <h3><span class="n">1</span> Your first three moves</h3>
+    <div class="moves">
+      <div class="move"><b>This week</b>Get your club's real numbers: the five-minute club snapshot.</div>
+      <div class="move"><b>This month</b>Sit down with your President. Agree goals and who does what.</div>
+      <div class="move"><b>Next Board meeting</b>Ten minutes of membership on the agenda, every meeting.</div>
+    </div>
+
+    <h3><span class="n">2</span> Know where your club stands</h3>
+    <div class="list">
+      <a class="item web" href="club-snapshot.html" data-keep><div class="ic">NUM</div><div><b>Club membership snapshot</b><span>Retention, growth and how many new members you need, printed for the Board.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="START%20HERE.html#/m/membership-partnership/2" data-keep><div class="ic">HEALTH</div><div><b>Club experience health check</b><span>Rate it separately from your President, then compare notes.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="START%20HERE.html#/m/membership-plan/0" data-keep><div class="ic">PLAN</div><div><b>Build your membership plan</b><span>Your numbers, goals and first three moves. Your answers become a plan to print for your Board.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="START%20HERE.html#/m/membership-partnership/10" data-keep><div class="ic">TEAM</div><div><b>Your agreement with the President</b><span>Goals, who does what, and your first three moves together.</span></div><span class="go">Open →</span></a>
+    </div>
+
+    <h3><span class="n">3</span> Keep the members you have</h3>
+    <p class="sub">Keeping the members you have is the fastest growth there is.</p>
+    <div class="list">
+      <a class="item web" href="START%20HERE.html#/m/membership-partnership/7" data-keep><div class="ic">90</div><div><b>The first year: 90 days, then 3, 6 and 12 months</b><span>Onboarding that keeps people: a buddy, an induction and real check-ins.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="START%20HERE.html#/m/membership-partnership/3" data-keep><div class="ic">REAL</div><div><b>The new member who went quiet</b><span>What works when someone starts to drift.</span></div><span class="go">Open →</span></a>
+      <a class="item ai" href="START%20HERE.html#/m/membership-partnership/8" data-keep><div class="ic">AI</div><div><b>Practise a stay conversation</b><span>Call Graham, a member who has drifted, and find out why.</span></div><span class="go">Practise →</span></a>
+      <a class="item ext" href="https://clubassistrsp.z26.web.core.windows.net/?sub=Retention+%26+engagement&jur=Victoria" target="_blank" rel="noopener"><div class="ic">VIDEO</div><div><b>Club Assist: retention and engagement</b><span>Short videos and guides to share with your Board.</span></div><span class="go">Open ↗</span></a>
+    </div>
+
+    <h3><span class="n">4</span> Start the conversation in your club</h3>
+    <div class="list">
+      <a class="item web" href="im-in.html" data-keep><div class="ic">KIT</div><div><b>Membership drivers' kit</b><span>Put your name down, and everything you need: snapshot, Board pack, club night guide and invitation kit.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="board-pack.html" data-keep><div class="ic">CARDS</div><div><b>Board conversation pack (10 minutes)</b><span>A membership agenda item and conversation cards to print and cut out.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="grow-your-club.html" data-keep><div class="ic">90</div><div><b>Club night: Grow your club, grow your people</b><span>A 90-minute conversation where the whole club writes its own plan.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="club-night-guide.html" data-keep><div class="ic">GUIDE</div><div><b>Club night facilitator guide</b><span>Preparation, running order and what to do afterwards.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="membership-explorer.html" data-keep><div class="ic">🧭</div><div><b>Membership Pathways Explorer</b><span>The District's plan in one picture. Ideas to borrow, experiments to try, conversation cards.</span></div><span class="go">Open →</span></a>
+      <a class="item ext" href="https://www.rotary9815.org.au/page/membership-flow" target="_blank" rel="noopener"><div class="ic">HUB</div><div><b>Membership Hub (District 9815)</b><span>Attract, onboard, engage and retain, with the District's growth strategy.</span></div><span class="go">Open ↗</span></a>
+    </div>
+
+    <h3><span class="n">5</span> You're not doing this alone</h3>
+    <p class="sub">Membership Chairs across the District are trying things right now. Borrow what works, and share what you try.</p>
+    <div class="list">
+      <a class="item web" href="drivers-circle.html" data-keep><div class="ic">CIRCLE</div><div><b>The drivers' circle</b><span>30 minutes on Zoom, once a month, swapping what's working with other clubs.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="report.html" data-keep><div class="ic">✓</div><div><b>Tried something? Tell us how it went</b><span>One minute, anonymous. "Not yet" is a perfectly good answer. It goes into the monthly roundup of what clubs are trying.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="share-a-story.html" data-keep><div class="ic">STORY</div><div><b>Share a story from your club</b><span>Something that worked, so the next club can borrow it.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="START%20HERE.html#/m/membership-partnership/6" data-keep><div class="ic">!</div><div><b>Feeling it's all on you?</b><span>"The Membership Chair doing it alone": what to take to your President.</span></div><span class="go">Open →</span></a>
+      <a class="item pdf" href="resources/417-strengthening-your-membership-en.pdf" target="_blank"><div class="ic">PDF</div><div><b>Strengthening Your Membership (Rotary International)</b><span>Club health check, member satisfaction survey, exit survey and more.</span></div><span class="go">Open ↗</span></a>
+    </div>
+  </section>
+
   <!-- ============ BRINGING SOMEONE IN ============ -->
   <section class="pane" id="sec-next">
     <h2>🤝 Bring the next person with you</h2>
@@ -243,7 +296,7 @@ body:not(.welcome) .welcome-only{display:none}
       <a class="item ext" href="https://www.rotary9815.org.au/page/leadership-flow" target="_blank" rel="noopener"><div class="ic">HUBS</div><div><b>District hubs: Your Role</b><span>rotary9815.org.au → Your Role. Leadership, Membership, Foundation, Public Image, Secretary and Treasurer hubs.</span></div><span class="go">Open ↗</span></a>
       <a class="item ext" href="https://rotarysouthpacific.org/Page/rotary-club-assist" target="_blank" rel="noopener"><div class="ic">ASSIST</div><div><b>Club Assist and Ask a Zone Specialist</b><span>Choose Victoria, then "Club President". Or ask a specialist a question.</span></div><span class="go">Open ↗</span></a>
       <a class="item web" href="START%20HERE.html#/actions" data-keep><div class="ic">✓</div><div><b>My actions</b><span>Everything you've committed to: calendar reminders, someone to tell, Board agenda items, and "How did it go?".</span></div><span class="go">Open →</span></a>
-      <a class="item web" href="START%20HERE.html" data-keep><div class="ic">KIT</div><div><b>The PE Toolkit: your mentor in your pocket</b><span>All the modules, My Plan, a Library of documents and Board mode for the big screen.</span></div><span class="go">Open →</span></a>
+      <a class="item web" href="START%20HERE.html" data-keep><div class="ic">KIT</div><div><b>The Club Leaders' Toolkit: your mentor in your pocket</b><span>All the modules, My Plan, a Library of documents and Board mode for the big screen.</span></div><span class="go">Open →</span></a>
       <a class="item web" href="talk.html" data-keep target="_blank"><div class="ic">TALK</div><div><b>The Pre-PELDS presentation</b><span>"From Why me? to Why not me?" Use the arrow keys, or swipe on a phone.</span></div><span class="go">Open ↗</span></a>
     </div>
     <div class="note"><b>Help with these pages?</b> Email David Button at <a href="mailto:david.button@rotary9815.org.au">david.button@rotary9815.org.au</a>.</div>
@@ -315,8 +368,8 @@ body:not(.welcome) .welcome-only{display:none}
     a.setAttribute('href', base + (base.indexOf('?') < 0 ? '?' : '&') + 'code=' + m[1] + hash);
   });
 
-  /* path picker: one section at a time; remembered on this device; #pe #pres #next #help also work */
-  var KEY = 'pe-launchpad-path', ids = ['pe', 'pres', 'next', 'help'];
+  /* path picker: one section at a time; remembered on this device; #pe #pres #mc #next #help also work */
+  var KEY = 'pe-launchpad-path', ids = ['pe', 'pres', 'mc', 'next', 'help'];
   function pick(id, scroll) {
     if (ids.indexOf(id) < 0) id = 'pe';
     document.querySelectorAll('.path').forEach(function (b) { var on = b.dataset.p === id; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
